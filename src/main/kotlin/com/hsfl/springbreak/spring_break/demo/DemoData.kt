@@ -7,14 +7,7 @@ import javax.persistence.Id
 
 @Entity
 data class DemoData(
-    @Id @GeneratedValue val id: Long? = null,
+    @Id @GeneratedValue val id: Long? = -1,
     @Column(nullable = false) val firstName: String,
     @Column(nullable = false) val lastName: String
-) {
-    fun toDao(): DemoDataDao = DemoDataDao(firstName, lastName)
-}
-
-data class DemoDataDao(val firstName: String, val lastName: String) {
-    fun toEntry(): DemoData = DemoData(firstName = firstName, lastName = lastName)
-}
-
+)
