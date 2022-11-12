@@ -1,7 +1,8 @@
 # Software Engineering 2 Project
 
-## Docker
-### Datenbank
+## Datenbank
+
+### Docker
 Postgres Images holen
 ```
 docker pull postgres:latest
@@ -30,3 +31,14 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cont
 
 **Einbindung Intellij**
 ![](docs/image/datasource_postgres_intellij.png)
+
+### Nativ
+Wird die Datenbank nicht über Docker bereitgestellt, müssen folgende Parameter in der Datenbank konfiguriert werden, um die Spring-Konfigurationsdatei nicht ändern zu müssen
+
+```
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=springbreak
+POSTGRES_USER=spring
+POSTGRES_PASSWORD=super_mega_secret_password
+```
