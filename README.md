@@ -42,3 +42,10 @@ POSTGRES_DB=springbreak
 POSTGRES_USER=spring
 POSTGRES_PASSWORD=super_mega_secret_password
 ```
+
+```postgresql
+create database springbreak;
+create user spring with password 'super_mega_secret_password';
+grant all on schema public to spring;
+alter user spring set search_path to public;
+```
