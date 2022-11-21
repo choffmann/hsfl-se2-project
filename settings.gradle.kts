@@ -1,1 +1,3 @@
-rootProject.name = "Spring_Break"
+rootProject.name = "SpringBreak"
+include(":backend")
+include(":frontend")

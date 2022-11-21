@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.spring_break.demo
+package com.hsfl.springbreak.backend.demo
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -8,6 +8,6 @@ import javax.persistence.Id
 @Entity
 data class DemoData(
     @Id @GeneratedValue val id: Long? = -1,
-    @Column(nullable = false) val firstName: String,
+    @Column val firstName: String,
     @Column(nullable = false) val lastName: String
 )

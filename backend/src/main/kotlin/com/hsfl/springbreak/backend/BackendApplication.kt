@@ -1,11 +1,11 @@
-package com.hsfl.springbreak.spring_break
+package com.hsfl.springbreak.backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SpringBreakApplication
+class BackendApplication
 
 fun main(args: Array<String>) {
-    runApplication<SpringBreakApplication>(*args)
+	runApplication<BackendApplication>(*args)
 }
