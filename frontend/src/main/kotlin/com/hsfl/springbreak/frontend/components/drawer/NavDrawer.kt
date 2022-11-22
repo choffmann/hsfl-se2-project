@@ -12,10 +12,12 @@ import react.FC
 import react.PropsWithChildren
 import react.useState
 
+external interface NavDrawerProps: PropsWithChildren {
+    var isAuthorized: Boolean
+}
 
+val NavDrawer = FC<NavDrawerProps> { props ->
 
-val NavDrawer = FC<PropsWithChildren> {
-    val isAuthorized by useState(true)
     Drawer {
         sx {
             flexShrink = number(0.0)
@@ -24,10 +26,11 @@ val NavDrawer = FC<PropsWithChildren> {
         variant = DrawerVariant.permanent
         anchor = DrawerAnchor.left
         Toolbar()
-        if (isAuthorized) {
+        if (props.isAuthorized) {
             AuthorizedList()
         } else {
             UnauthorizedList()
         }
+        DebugList()
     }
 }

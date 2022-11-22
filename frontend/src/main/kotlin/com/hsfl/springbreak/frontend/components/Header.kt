@@ -17,6 +17,7 @@ import react.dom.html.ReactHTML.main
 
 interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
+    var isAuthorized: Boolean
 }
 
 // TODO: Get drawer width
@@ -49,13 +50,15 @@ val Header = FC<HeaderProps> { props ->
                     color = IconButtonColor.inherit
                     Search()
                 }
-                Button {
-                    color = ButtonColor.inherit
-                    +"Anmelden"
+                if (!props.isAuthorized) {
+                    Button {
+                        color = ButtonColor.inherit
+                        +"Anmelden"
+                    }
                 }
             }
         }
-        NavDrawer()
+        NavDrawer { isAuthorized = props.isAuthorized }
         Box {
             component = main
             sx {
