@@ -1,5 +1,8 @@
 package com.hsfl.springbreak.common
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Long,
     val firstName: String,
@@ -7,6 +10,7 @@ data class User(
     val email: String,
     val password: String
 ) {
+    @Serializable
     data class Login(
         val email: String,
         val password: String

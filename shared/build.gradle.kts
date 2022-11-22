@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.7.21"
 }
 
 repositories {
@@ -16,6 +17,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
 
@@ -23,6 +25,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.4.1")
             }
         }
 
@@ -42,12 +45,14 @@ kotlin {
         js().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.4.1")
             }
         }
 
         js().compilations["test"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.4.1")
             }
         }
     }
