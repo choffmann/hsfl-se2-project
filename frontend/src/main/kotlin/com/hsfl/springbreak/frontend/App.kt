@@ -2,9 +2,7 @@ package com.hsfl.springbreak.frontend
 
 import browser.document
 import com.hsfl.springbreak.frontend.components.Header
-import com.hsfl.springbreak.frontend.components.NavDrawer
 import mui.material.CssBaseline
-import mui.material.LinearProgress
 import mui.material.Typography
 import react.FC
 import react.Props

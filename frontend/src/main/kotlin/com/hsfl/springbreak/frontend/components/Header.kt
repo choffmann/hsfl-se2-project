@@ -1,12 +1,11 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.utils.color
+import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
 import mui.icons.material.*
 import mui.material.*
-import mui.material.List
 import mui.material.Size
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -15,7 +14,6 @@ import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
-import react.useState
 
 interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
