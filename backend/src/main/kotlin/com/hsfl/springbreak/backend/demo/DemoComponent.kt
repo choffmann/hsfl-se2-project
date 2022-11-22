@@ -16,5 +16,6 @@ class DemoComponent(val repository: DemoDataRepository): ApplicationRunner {
         ).forEach { data ->
             repository.save(data)
         }
+
     }
 }
