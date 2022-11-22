@@ -18,7 +18,7 @@ fun main() {
 }
 
 private val App = FC<Props> {
-    var authorized by useState(true)
+    var authorized by useState(false)
     var loginDialogOpen by useState(false)
 
     val handleOnToggleAuthorized: MouseEventHandler<HTMLButtonElement> = {

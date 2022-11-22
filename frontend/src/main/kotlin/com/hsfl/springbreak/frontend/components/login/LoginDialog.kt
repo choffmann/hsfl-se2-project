@@ -39,6 +39,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                     container = true
                     direction = responsive(GridDirection.column)
                     spacing = responsive(2)
+                    sx { paddingTop = 8.px }
 
                     // Email TextField
                     Grid {
