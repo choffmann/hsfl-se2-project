@@ -2,12 +2,14 @@ package com.hsfl.springbreak.frontend
 
 import browser.document
 import com.hsfl.springbreak.frontend.components.Header
+import dom.html.HTMLButtonElement
 import mui.material.CssBaseline
 import mui.material.Typography
 import react.FC
 import react.Props
 import react.create
 import react.dom.client.createRoot
+import react.dom.events.MouseEventHandler
 import react.useState
 
 fun main() {
@@ -16,7 +18,11 @@ fun main() {
 }
 
 private val App = FC<Props> {
-    val authorized by useState(true)
+    var authorized by useState(true)
+
+    val handleOnToggleAuthorized: MouseEventHandler<HTMLButtonElement>? = {
+        authorized = !authorized
+    }
 
     CssBaseline()
     Header {
@@ -24,6 +30,7 @@ private val App = FC<Props> {
         onLogoClicked = {
             println("click")
         }
+        onToggleAuthorized = handleOnToggleAuthorized
         Typography {+"Hello World"}
     }
 
