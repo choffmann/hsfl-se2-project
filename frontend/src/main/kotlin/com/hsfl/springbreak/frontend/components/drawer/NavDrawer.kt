@@ -5,6 +5,7 @@ import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
 import csstype.number
 import dom.html.HTMLButtonElement
+import dom.html.HTMLElement
 import mui.icons.material.*
 import mui.material.*
 import mui.material.List
@@ -17,6 +18,7 @@ import react.useState
 external interface NavDrawerProps: PropsWithChildren {
     var isAuthorized: Boolean
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
+    var onLoginButtonClicked: MouseEventHandler<HTMLElement>?
 }
 
 val NavDrawer = FC<NavDrawerProps> { props ->
@@ -32,7 +34,7 @@ val NavDrawer = FC<NavDrawerProps> { props ->
         if (props.isAuthorized) {
             AuthorizedList()
         } else {
-            UnauthorizedList()
+            UnauthorizedList { onLoginButtonClicked = props.onLoginButtonClicked }
         }
         DebugList {
             isAuthorized = props.isAuthorized

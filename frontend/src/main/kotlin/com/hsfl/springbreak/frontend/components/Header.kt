@@ -3,7 +3,9 @@ package com.hsfl.springbreak.frontend.components
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.*
+import dom.html.HTML
 import dom.html.HTMLButtonElement
+import dom.html.HTMLElement
 import mui.icons.material.*
 import mui.material.*
 import mui.material.Size
@@ -15,22 +17,30 @@ import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
 
-interface HeaderProps : PropsWithChildren {
+external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
     var isAuthorized: Boolean
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
+    var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
 // TODO: Get drawer width
 val drawerWidth = 328.inMuiPx()
 
 val Header = FC<HeaderProps> { props ->
+
+    val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
+        props.onLoginButtonClicked
+    }
+
     Box {
         sx { display = Display.flex }
         AppBar {
             position = AppBarPosition.fixed
+            // Change zIndex, so the AppBar is in front of the drawer
             sx { zIndex = integer(1201) }
             Toolbar {
+                // Logo
                 IconButton {
                     size = Size.large
                     edge = IconButtonEdge.start
@@ -39,6 +49,7 @@ val Header = FC<HeaderProps> { props ->
                     onClick = props.onLogoClicked
                     SoupKitchen()
                 }
+                // Text
                 Typography {
                     variant = TypographyVariant.h6
                     component = div
@@ -46,14 +57,17 @@ val Header = FC<HeaderProps> { props ->
                     sx { flexGrow = number(1.0) }
                     +"Studentenküche"
                 }
+                // Search Icon
                 IconButton {
                     size = Size.large
                     color = IconButtonColor.inherit
                     Search()
                 }
+                // If authorized, show login button
                 if (!props.isAuthorized) {
                     Button {
                         color = ButtonColor.inherit
+                        onClick = props.onLoginButtonClicked
                         +"Anmelden"
                     }
                 }
@@ -62,7 +76,9 @@ val Header = FC<HeaderProps> { props ->
         NavDrawer {
             isAuthorized = props.isAuthorized
             onToggleAuthorized = props.onToggleAuthorized
+            onLoginButtonClicked = props.onLoginButtonClicked as MouseEventHandler<HTMLElement>?
         }
+        // Main component
         Box {
             component = main
             sx {
