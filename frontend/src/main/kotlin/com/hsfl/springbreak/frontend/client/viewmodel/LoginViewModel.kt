@@ -1,13 +1,15 @@
 package com.hsfl.springbreak.frontend.client.viewmodel
 
-import com.hsfl.springbreak.common.User
+import com.hsfl.springbreak.frontend.client.model.User
 import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.await
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import react.redux.useDispatch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase, private val scope: CoroutineScope
@@ -21,10 +23,10 @@ class LoginViewModel(
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.EnteredEmail -> _emailText.value = event.value
-            is LoginEvent.EnteredPassword -> _emailText.value = event.value
+            is LoginEvent.EnteredPassword -> _passwordText.value = event.value
             is LoginEvent.OnLogin -> onLogin()
-            is LoginEvent.OnRegister -> {}
-            is LoginEvent.OnCloseDialog -> {}
+            is LoginEvent.OnRegister -> onRegister()
+            is LoginEvent.OnCloseDialog -> onCloseDialog()
         }
     }
 
@@ -33,9 +35,26 @@ class LoginViewModel(
             response.handleDataResponse<User>(
                 onLoading = { println("Loading...") },
                 onSuccess = { println(it) },
-                onError = { println("Error") },
+                onError = { println(it) },
                 onUnauthorized = { println("Unauthorized") })
         }
+
+    }
+
+    fun onRegister() = scope.launch {
+        //println("LoginViewModel::onRegister()")
+        val response = window
+            .fetch("http://localhost:8080/test")
+            .await()
+            .text()
+            .await()
+        println(response)
+        val j: User.Response = Json.decodeFromString(response)
+        println(j)
+    }
+
+    fun onCloseDialog() {
+        println("LoginViewModel::onCloseDialog()")
     }
 }
 

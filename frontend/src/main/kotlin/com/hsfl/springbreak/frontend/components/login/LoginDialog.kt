@@ -11,6 +11,7 @@ import csstype.number
 import csstype.px
 import dom.html.HTMLButtonElement
 import dom.html.HTMLDivElement
+import dom.html.HTMLInputElement
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -34,8 +35,11 @@ external interface LoginDialogProps : Props {
 }
 
 val LoginDialog = FC<LoginDialogProps> { props ->
-    val viewModel: LoginViewModel = LoginViewModel(LoginUseCase(UserRepositoryImpl(Client())), CoroutineScope(
-        Dispatchers.Main + SupervisorJob()))
+    val viewModel = LoginViewModel(
+        LoginUseCase(UserRepositoryImpl(Client())), CoroutineScope(
+            Dispatchers.Main + SupervisorJob()
+        )
+    )
     val handleOnCancelClicked: MouseEventHandler<HTMLButtonElement> = {
         props.onClose(it, "onCancelButton")
     }
@@ -63,8 +67,8 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             label = Typography.create { +"Email" }
                             fullWidth = true
                             onChange = { event ->
-                                println(event)
-                                viewModel.onEvent(LoginEvent.EnteredEmail(event.target.toString()))
+                                val target = event.target as HTMLInputElement
+                                viewModel.onEvent(LoginEvent.EnteredEmail(target.value))
                             }
                         }
                     }
@@ -76,7 +80,10 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             type = InputType.password
                             label = Typography.create { +"Password" }
                             fullWidth = true
-                            // TODO: onChange = ...
+                            onChange = { event ->
+                                val target = event.target as HTMLInputElement
+                                viewModel.onEvent(LoginEvent.EnteredPassword(target.value))
+                            }
                         }
                     }
 
@@ -84,6 +91,9 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                     Grid {
                         item = true
                         Button {
+                            onClick = { _ ->
+                                viewModel.onRegister()
+                            }
                             +"Oder registriere dich hier"
                         }
                     }
@@ -100,6 +110,9 @@ val LoginDialog = FC<LoginDialogProps> { props ->
             Button {
                 variant = ButtonVariant.contained
                 color = ButtonColor.primary
+                onClick = {
+                    viewModel.onLogin()
+                }
                 +"Anmelden"
             }
         }

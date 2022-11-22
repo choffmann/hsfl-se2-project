@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-    kotlin("js") version "1.7.20"
+    kotlin("js") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
 }
 
@@ -24,7 +24,7 @@ kotlin {
             dependencies {
                 // Coroutines & serialization
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
                 // Ktor Client
                 implementation("io.ktor:ktor-client-core:2.1.3")
@@ -47,7 +47,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.434")
 
                 // Shared module
-                implementation(project(":shared"))
+                //implementation(project(":shared"))
             }
         }
 
