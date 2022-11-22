@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     kotlin("js") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.21"
@@ -8,9 +10,13 @@ repositories {
 }
 
 kotlin {
-    target {
-        useCommonJs()
-        browser()
+    js {
+        browser {
+            runTask {
+                devServer = devServer?.copy(port = 3000)
+            }
+        }
+        binaries.executable()
     }
 
     sourceSets {
@@ -20,7 +26,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
-                // Ktor
+                // Ktor Client
                 implementation("io.ktor:ktor-client-core:2.1.3")
                 implementation("io.ktor:ktor-client-js:2.1.3")
                 implementation("io.ktor:ktor-client-serialization:2.1.3")
@@ -40,6 +46,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.9.1-pre.435")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.434")
 
+                // Shared module
                 implementation(project(":shared"))
             }
         }
