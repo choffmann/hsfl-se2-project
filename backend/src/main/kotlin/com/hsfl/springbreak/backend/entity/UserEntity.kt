@@ -1,6 +1,6 @@
-package com.hsfl.springbreak.backend.data
+package com.hsfl.springbreak.backend.entity
 
-import com.hsfl.springbreak.common.User
+import com.hsfl.springbreak.backend.model.User
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

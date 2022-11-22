@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.backend.data
+package com.hsfl.springbreak.backend.entity
 
 interface DataEntity<D, T> {
     fun toDto(): D

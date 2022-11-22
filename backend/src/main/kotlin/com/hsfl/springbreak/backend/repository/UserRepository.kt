@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.backend.repository
 
-import com.hsfl.springbreak.backend.data.UserEntity
+import com.hsfl.springbreak.backend.entity.UserEntity
 import org.springframework.data.repository.CrudRepository
 
 interface UserRepository: CrudRepository<UserEntity, Long> {

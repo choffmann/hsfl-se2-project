@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.common
+package com.hsfl.springbreak.backend.model
 
 data class User(
     val id: Long,
@@ -6,9 +6,9 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String
-)
-
-data class Login(
-    val email: String,
-    val password: String
-)
+) {
+    data class Login(
+        val email: String,
+        val password: String
+    )
+}

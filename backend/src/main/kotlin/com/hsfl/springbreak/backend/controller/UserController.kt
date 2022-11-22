@@ -1,9 +1,8 @@
 package com.hsfl.springbreak.backend.controller
 
 import com.hsfl.springbreak.backend.repository.UserRepository
-import com.hsfl.springbreak.common.ApiResponse
-import com.hsfl.springbreak.common.Login
-import com.hsfl.springbreak.common.User
+import com.hsfl.springbreak.backend.model.ApiResponse
+import com.hsfl.springbreak.backend.model.User
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(val repository: UserRepository) {
 
     @PostMapping("login")
-    fun login(@RequestBody loginUser: Login): ApiResponse<User> {
+    fun login(@RequestBody loginUser: User.Login): ApiResponse<User> {
         repository.findByEmail(loginUser.email)?.let {user ->
             return if (user.password == loginUser.password) {
                 ApiResponse(data = user.toDto(), success = true)

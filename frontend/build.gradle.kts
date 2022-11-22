@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-
 plugins {
     kotlin("js") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
@@ -45,9 +43,6 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.10.5-pre.434")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.9.1-pre.435")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.434")
-
-                // Shared module
-                //implementation(project(":shared"))
             }
         }
 

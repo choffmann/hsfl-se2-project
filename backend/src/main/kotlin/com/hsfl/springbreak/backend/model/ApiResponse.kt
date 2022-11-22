@@ -1,5 +1,4 @@
-package com.hsfl.springbreak.common
-
+package com.hsfl.springbreak.backend.model
 
 data class ApiResponse<T>(
     val error: String? = null,
