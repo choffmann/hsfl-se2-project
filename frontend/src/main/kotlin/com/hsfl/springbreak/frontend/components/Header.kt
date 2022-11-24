@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.frontend.components
 
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
+import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.*
 import dom.html.HTML
@@ -21,12 +22,12 @@ import react.useContext
 
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
-    var isAuthorized: Boolean
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
     var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
 val Header = FC<HeaderProps> { props ->
+    val isAuthorized = useContext(AuthorizedContext)
 
     val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
         props.onLoginButtonClicked
@@ -63,7 +64,7 @@ val Header = FC<HeaderProps> { props ->
                     Search()
                 }
                 // If authorized, show login button
-                if (!props.isAuthorized) {
+                if (!isAuthorized) {
                     Button {
                         color = ButtonColor.inherit
                         onClick = props.onLoginButtonClicked
@@ -75,7 +76,6 @@ val Header = FC<HeaderProps> { props ->
         }
 
         NavDrawer {
-            isAuthorized = props.isAuthorized
             onToggleAuthorized = props.onToggleAuthorized
             onLoginButtonClicked = props.onLoginButtonClicked as MouseEventHandler<HTMLElement>?
         }

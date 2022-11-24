@@ -27,7 +27,10 @@ fun <T> StateFlow<T>.collectAsState(): T {
     this.let { flow ->
         useEffect(Unit) {
             MainScope().launch {
-                flow.collect { setStat(it) }
+                flow.collect {
+                    println("collectAsState::$it")
+                    setStat(it)
+                }
             }
         }
     }

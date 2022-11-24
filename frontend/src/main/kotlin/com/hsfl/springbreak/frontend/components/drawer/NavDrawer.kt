@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
+import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.BoxSizing
 import csstype.Overflow
@@ -15,9 +16,9 @@ import react.FC
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.style
+import react.useContext
 
 external interface NavDrawerProps : PropsWithChildren {
-    var isAuthorized: Boolean
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
     var onLoginButtonClicked: MouseEventHandler<HTMLElement>?
 }
@@ -25,6 +26,7 @@ external interface NavDrawerProps : PropsWithChildren {
 val drawerWidth = 328.inMuiPx()
 
 val NavDrawer = FC<NavDrawerProps> { props ->
+    val isAuthorized = useContext(AuthorizedContext)
     Drawer {
         sx {
             flexShrink = number(0.0)
@@ -40,7 +42,7 @@ val NavDrawer = FC<NavDrawerProps> { props ->
         Box {
             sx { overflow = Overflow.hidden }
         }
-        if (props.isAuthorized) {
+        if (isAuthorized) {
             AuthorizedList()
         } else {
             UnauthorizedList { onLoginButtonClicked = props.onLoginButtonClicked }

@@ -23,7 +23,6 @@ val UnauthorizedList = FC<UnauthorizedListProps> { props ->
                 Typography { +"Anmelden" }
             }
         }
-        Divider()
         ListItemButton {
             ListItemIcon {
                 Category()

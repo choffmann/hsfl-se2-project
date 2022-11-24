@@ -1,41 +1,37 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
 import com.hsfl.springbreak.frontend.client.viewmodel.DebugEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.DebugListData
 import com.hsfl.springbreak.frontend.client.viewmodel.DebugViewModel
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
-import com.hsfl.springbreak.frontend.context.UiStateContext
+import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.collectAsState
-import dom.html.HTMLButtonElement
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import mui.icons.material.ThumbUp
+import mui.icons.material.Error
 import mui.material.*
 import react.*
-import react.dom.events.MouseEventHandler
 
 
-val DebugContext = createContext(DebugListData())
 val DebugListProvider = FC<Props> {
-    val auth = DebugViewModel.authState.collectAsState()
-
-
-    DebugContext.Provider {
-        value = auth
-        DebugListChild()
+    val loading = DebugViewModel.showLoading.collectAsState()
+    val authorized = DebugViewModel.authState.collectAsState()
+    DebugList {
+        showLoading = loading
+        isAuthorized = authorized
     }
 }
 
-val DebugListChild = FC<Props> {
-    val auth = useContext(DebugContext)
-    val uiEvent = useContext(UiStateContext)
+external interface DebugListProps : Props {
+    var showLoading: Boolean
+    var isAuthorized: Boolean
+}
+
+private val DebugList = FC<DebugListProps> { props ->
 
     List {
         Divider()
+        ListSubheader { +"Debug List" }
         ListItem {
             ListItemIcon {
                 Switch {
-                    defaultChecked = auth.auth
+                    checked = props.isAuthorized
                     onClick = { _ ->
                         DebugViewModel.onEvent(DebugEvent.OnSwitchAuthorized)
                     }
@@ -43,24 +39,25 @@ val DebugListChild = FC<Props> {
             }
             ListItemText { +"Authorized" }
         }
-        if (auth.auth) {
-            ListItem {
-                ListItemIcon {
-                    ThumbUp()
-                }
-                ListItemText { +"Is Authorized" }
-            }
-        }
         ListItem {
             ListItemIcon {
                 Switch {
-                    defaultChecked = uiEvent is UiEvent.ShowLoading
+                    checked = props.showLoading
                     onClick = { _ ->
                         DebugViewModel.onEvent(DebugEvent.OnSwitchShowLoading)
                     }
                 }
             }
             ListItemText { +"Show Loading" }
+        }
+        ListItemButton {
+            onClick = {
+                DebugViewModel.onEvent(DebugEvent.OnThrowError("Throw an error on the debug list"))
+            }
+            ListItemIcon {
+                Error()
+            }
+            ListItemText { +"Throw Error" }
         }
     }
 }
