@@ -1,45 +1,61 @@
 package com.hsfl.springbreak.frontend.components.login
 
 import com.hsfl.springbreak.frontend.client.Client
-import com.hsfl.springbreak.frontend.client.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
 import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginViewModel
-import csstype.integer
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.number
 import csstype.px
 import dom.html.HTMLButtonElement
-import dom.html.HTMLDivElement
 import dom.html.HTMLInputElement
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
-import react.FC
-import react.Props
-import react.ReactNode
-import react.create
-import react.dom.events.FormEvent
+import react.*
 import react.dom.events.MouseEventHandler
 import react.dom.html.InputType
 import react.dom.onChange
-import web.events.EventType
-import web.events.addEventHandler
 
-external interface LoginDialogProps : Props {
+external interface LoginDialogProviderProps : Props {
     var open: Boolean
     var onClose: (event: dynamic, reason: String) -> Unit
 }
 
-val LoginDialog = FC<LoginDialogProps> { props ->
+val LoginTextContext = createContext("")
+val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
     val viewModel = LoginViewModel(
-        LoginUseCase(UserRepositoryImpl(Client())), CoroutineScope(
-            Dispatchers.Main + SupervisorJob()
-        )
+        LoginUseCase(UserRepositoryImpl(Client())), MainScope()
     )
+    val emailText = viewModel.emailText.collectAsState()
+
+
+    LoginTextContext.Provider {
+        value = emailText
+        LoginDialog {
+            open = props.open
+            onClose = props.onClose
+            onChange = {
+                println(it)
+                viewModel.onEvent(LoginEvent.EnteredEmail(it))
+            }
+            onLogin = { viewModel.onEvent(LoginEvent.OnLogin) }
+            onRegister = { viewModel.onEvent(LoginEvent.OnRegister) }
+        }
+    }
+}
+
+external interface LoginDialogProps : Props {
+    var open: Boolean
+    var onClose: (event: dynamic, reason: String) -> Unit
+    var onChange: (value: String) -> Unit
+    var onRegister: () -> Unit
+    var onLogin: () -> Unit
+}
+
+val LoginDialog = FC<LoginDialogProps> { props ->
     val handleOnCancelClicked: MouseEventHandler<HTMLButtonElement> = {
         props.onClose(it, "onCancelButton")
     }
@@ -68,7 +84,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             fullWidth = true
                             onChange = { event ->
                                 val target = event.target as HTMLInputElement
-                                viewModel.onEvent(LoginEvent.EnteredEmail(target.value))
+                                props.onChange(target.value)
                             }
                         }
                     }
@@ -82,7 +98,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             fullWidth = true
                             onChange = { event ->
                                 val target = event.target as HTMLInputElement
-                                viewModel.onEvent(LoginEvent.EnteredPassword(target.value))
+                                println("PasswordTextField::${target.value}")
                             }
                         }
                     }
@@ -92,7 +108,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                         item = true
                         Button {
                             onClick = { _ ->
-                                viewModel.onRegister()
+                                props.onRegister()
                             }
                             +"Oder registriere dich hier"
                         }
@@ -111,7 +127,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                 variant = ButtonVariant.contained
                 color = ButtonColor.primary
                 onClick = {
-                    viewModel.onLogin()
+                    props.onLogin()
                 }
                 +"Anmelden"
             }

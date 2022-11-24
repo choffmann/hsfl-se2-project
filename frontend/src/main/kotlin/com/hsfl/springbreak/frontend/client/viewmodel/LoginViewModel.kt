@@ -20,28 +20,29 @@ class LoginViewModel(
     private val _passwordText = MutableStateFlow("")
     val passwordText: StateFlow<String> = _passwordText
 
+
     fun onEvent(event: LoginEvent) {
         when (event) {
-            is LoginEvent.EnteredEmail -> _emailText.value = event.value
-            is LoginEvent.EnteredPassword -> _passwordText.value = event.value
+            is LoginEvent.EnteredEmail -> { _emailText.value = event.value }
+            is LoginEvent.EnteredPassword -> _passwordText.value = passwordText.value
             is LoginEvent.OnLogin -> onLogin()
             is LoginEvent.OnRegister -> onRegister()
             is LoginEvent.OnCloseDialog -> onCloseDialog()
         }
     }
 
-    fun onLogin() = scope.launch {
+    private fun onLogin() = scope.launch {
         loginUseCase(User.Login(email = emailText.value, password = passwordText.value)).collect { response ->
             response.handleDataResponse<User>(
                 onLoading = { println("Loading...") },
                 onSuccess = { println(it) },
                 onError = { println(it) },
-                onUnauthorized = { println("Unauthorized") })
+                onUnauthorized = { println(it) })
         }
 
     }
 
-    fun onRegister() = scope.launch {
+    private fun onRegister() = scope.launch {
         //println("LoginViewModel::onRegister()")
         val response = window
             .fetch("http://localhost:8080/test")

@@ -17,6 +17,7 @@ import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
+import react.useContext
 
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
@@ -30,8 +31,6 @@ val Header = FC<HeaderProps> { props ->
     val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
         props.onLoginButtonClicked
     }
-
-
 
     Box {
         sx { display = Display.flex }
@@ -72,7 +71,9 @@ val Header = FC<HeaderProps> { props ->
                     }
                 }
             }
+            LoadingBar()
         }
+
         NavDrawer {
             isAuthorized = props.isAuthorized
             onToggleAuthorized = props.onToggleAuthorized
