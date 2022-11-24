@@ -34,9 +34,7 @@ class LoginViewModel(
     private fun onLogin() = scope.launch {
         loginUseCase(User.Login(email = emailText.value, password = passwordText.value)).collect { response ->
             response.handleDataResponse<User>(
-                onLoading = { println("Loading...") },
                 onSuccess = { println(it) },
-                onError = { println(it) },
                 onUnauthorized = { println(it) })
         }
 
