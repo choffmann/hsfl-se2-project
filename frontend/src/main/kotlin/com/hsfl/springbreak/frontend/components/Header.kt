@@ -10,6 +10,7 @@ import mui.icons.material.*
 import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
+import mui.system.SxProps
 import mui.system.sx
 import react.FC
 import react.PropsWithChildren
@@ -24,14 +25,13 @@ external interface HeaderProps : PropsWithChildren {
     var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
-// TODO: Get drawer width
-val drawerWidth = 328.inMuiPx()
-
 val Header = FC<HeaderProps> { props ->
 
     val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
         props.onLoginButtonClicked
     }
+
+
 
     Box {
         sx { display = Display.flex }
