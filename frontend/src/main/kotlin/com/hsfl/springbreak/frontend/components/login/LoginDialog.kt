@@ -5,6 +5,7 @@ import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
 import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginViewModel
+import com.hsfl.springbreak.frontend.components.LoadingBar
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.number
 import csstype.px
@@ -21,38 +22,39 @@ import react.dom.onChange
 
 external interface LoginDialogProviderProps : Props {
     var open: Boolean
-    var onClose: (event: dynamic, reason: String) -> Unit
 }
 
-val LoginTextContext = createContext("")
 val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
     val viewModel = LoginViewModel(
-        LoginUseCase(UserRepositoryImpl(Client())), MainScope()
+        LoginUseCase(UserRepositoryImpl(Client()))
     )
-    val emailText = viewModel.emailText.collectAsState()
-
-
-    LoginTextContext.Provider {
-        value = emailText
-        LoginDialog {
-            open = props.open
-            onClose = props.onClose
-            onChange = {
-                println(it)
-                viewModel.onEvent(LoginEvent.EnteredEmail(it))
-            }
-            onLogin = { viewModel.onEvent(LoginEvent.OnLogin) }
-            onRegister = { viewModel.onEvent(LoginEvent.OnRegister) }
+    val openDialog = viewModel.openDialog.collectAsState()
+    useEffect(props.open) {
+        if (props.open) {
+            println("LoginDialogProvider::${props.open}")
+            viewModel.onEvent(LoginEvent.OnOpenDialog)
         }
+    }
+
+    LoginDialog {
+        open = openDialog
+        onClose = { event, reason ->
+            viewModel.onEvent(LoginEvent.OnCloseDialog(event, reason))
+        }
+        onLogin = { viewModel.onEvent(LoginEvent.OnLogin) }
+        onRegister = { viewModel.onEvent(LoginEvent.OnRegister) }
+        onEmailTextChanged = { viewModel.onEvent(LoginEvent.EnteredEmail(it)) }
+        onPasswordTextChanged = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) }
     }
 }
 
 external interface LoginDialogProps : Props {
     var open: Boolean
     var onClose: (event: dynamic, reason: String) -> Unit
-    var onChange: (value: String) -> Unit
     var onRegister: () -> Unit
     var onLogin: () -> Unit
+    var onEmailTextChanged: (String) -> Unit
+    var onPasswordTextChanged: (String) -> Unit
 }
 
 val LoginDialog = FC<LoginDialogProps> { props ->
@@ -64,7 +66,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
         open = props.open
         onClose = props.onClose
         fullWidth = true
-
+        LoadingBar()
         DialogTitle { +"Anmelden" }
         DialogContent {
             Box {
@@ -84,7 +86,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             fullWidth = true
                             onChange = { event ->
                                 val target = event.target as HTMLInputElement
-                                props.onChange(target.value)
+                                props.onEmailTextChanged(target.value)
                             }
                         }
                     }
@@ -98,7 +100,7 @@ val LoginDialog = FC<LoginDialogProps> { props ->
                             fullWidth = true
                             onChange = { event ->
                                 val target = event.target as HTMLInputElement
-                                println("PasswordTextField::${target.value}")
+                                props.onPasswordTextChanged(target.value)
                             }
                         }
                     }

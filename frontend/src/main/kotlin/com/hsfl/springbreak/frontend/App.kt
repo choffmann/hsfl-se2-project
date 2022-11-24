@@ -4,9 +4,10 @@ import browser.document
 import com.hsfl.springbreak.frontend.client.viewmodel.AuthViewModel
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
-import com.hsfl.springbreak.frontend.components.ErrorSnackbar
+import com.hsfl.springbreak.frontend.components.snackbar.ErrorSnackbar
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.login.LoginDialogProvider
+import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.utils.collectAsState
@@ -54,10 +55,10 @@ private val App = FC<Props> {props ->
     // Login Dialog
     LoginDialogProvider {
         open = loginDialogOpen
-        onClose = handleOnLoginDialogClose
     }
 
     ErrorSnackbar()
+    MessageSnackbar()
 
     // Display Header
     Header {
@@ -73,6 +74,7 @@ private val App = FC<Props> {props ->
         val uiStateString = when (uiState) {
             is UiEvent.Idle -> "Idle"
             is UiEvent.ShowError -> "Error(msg: ${uiState.error})"
+            is UiEvent.ShowMessage -> "Message(msg: ${uiState.msg})"
             is UiEvent.ShowLoading -> "Loading"
         }
         Typography { +"\tUiState: $uiStateString" }

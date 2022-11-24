@@ -1,17 +1,17 @@
 package com.hsfl.springbreak.frontend.components
 
+import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.*
-import dom.html.HTML
 import dom.html.HTMLButtonElement
 import dom.html.HTMLElement
 import mui.icons.material.*
 import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
-import mui.system.SxProps
 import mui.system.sx
 import react.FC
 import react.PropsWithChildren
@@ -28,10 +28,6 @@ external interface HeaderProps : PropsWithChildren {
 
 val Header = FC<HeaderProps> { props ->
     val isAuthorized = useContext(AuthorizedContext)
-
-    val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
-        props.onLoginButtonClicked
-    }
 
     Box {
         sx { display = Display.flex }
@@ -67,7 +63,9 @@ val Header = FC<HeaderProps> { props ->
                 if (!isAuthorized) {
                     Button {
                         color = ButtonColor.inherit
-                        onClick = props.onLoginButtonClicked
+                        onClick = {
+                            NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                        }
                         +"Anmelden"
                     }
                 }
@@ -77,7 +75,9 @@ val Header = FC<HeaderProps> { props ->
 
         NavDrawer {
             onToggleAuthorized = props.onToggleAuthorized
-            onLoginButtonClicked = props.onLoginButtonClicked as MouseEventHandler<HTMLElement>?
+            onLoginButtonClicked = {
+                NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+            }
         }
         // Main component
         Box {

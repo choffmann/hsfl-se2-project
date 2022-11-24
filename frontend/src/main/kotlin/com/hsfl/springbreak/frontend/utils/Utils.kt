@@ -27,10 +27,7 @@ fun <T> StateFlow<T>.collectAsState(): T {
     this.let { flow ->
         useEffect(Unit) {
             MainScope().launch {
-                flow.collect {
-                    println("collectAsState::$it")
-                    setStat(it)
-                }
+                flow.collectLatest { setStat(it) }
             }
         }
     }

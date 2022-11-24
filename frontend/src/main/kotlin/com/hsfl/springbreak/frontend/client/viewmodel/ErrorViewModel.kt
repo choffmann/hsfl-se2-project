@@ -11,10 +11,10 @@ object ErrorViewModel {
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
 
-    fun onEvent(event: ErrorEvent) {
+    fun onEvent(event: SnackbarEvent) {
         when (event) {
-            is ErrorEvent.ShowError -> showError()
-            is ErrorEvent.CloseError -> closeSnackbar()
+            is SnackbarEvent.Show -> showError()
+            is SnackbarEvent.Close -> closeSnackbar()
         }
     }
 
@@ -29,10 +29,4 @@ object ErrorViewModel {
         _openErrorSnackbar.value = false
         UiEventViewModel.onEvent(UiEvent.Idle)
     }
-
-}
-
-sealed class ErrorEvent {
-    data class ShowError(val value: String) : ErrorEvent()
-    data class CloseError(val event: dynamic, val reason: SnackbarCloseReason) : ErrorEvent()
 }

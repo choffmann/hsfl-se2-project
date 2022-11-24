@@ -1,12 +1,12 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
+import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
-import mui.icons.material.Add
-import mui.icons.material.Book
-import mui.icons.material.Category
-import mui.icons.material.Favorite
+import mui.icons.material.*
 import mui.material.*
+import mui.material.List
 import mui.system.sx
 import react.FC
 import react.Props
@@ -59,6 +59,26 @@ val AuthorizedList = FC<Props> {
             }
             ListItemText {
                 Typography { +"Rezept erstellen" }
+            }
+        }
+        //Divider()
+        ListItemButton {
+            ListItemIcon {
+                Settings()
+            }
+            ListItemText {
+                Typography { +"Einstellungen" }
+            }
+        }
+        ListItemButton {
+            onClick = {
+                NavViewModel.onEvent(NavEvent.OnLogout)
+            }
+            ListItemIcon {
+                Logout()
+            }
+            ListItemText {
+                Typography { +"Abmelden" }
             }
         }
     }

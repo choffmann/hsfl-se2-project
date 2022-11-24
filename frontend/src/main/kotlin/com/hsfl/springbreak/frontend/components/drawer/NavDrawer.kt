@@ -45,12 +45,8 @@ val NavDrawer = FC<NavDrawerProps> { props ->
         if (isAuthorized) {
             AuthorizedList()
         } else {
-            UnauthorizedList { onLoginButtonClicked = props.onLoginButtonClicked }
+            UnauthorizedList()
         }
-        DebugListProvider {
-            //isAuthorized = props.isAuthorized
-            //onToggleAuthorized = props.onToggleAuthorized
-        }
-
+        DebugListProvider()
     }
 }

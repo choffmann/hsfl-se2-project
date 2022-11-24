@@ -12,10 +12,16 @@ object UiEventViewModel {
         when (event) {
             is UiEvent.ShowLoading -> _uiState.value = UiEvent.ShowLoading
             is UiEvent.ShowError -> {
+                // TODO: Don't call ErrorViewModel.onEvent here
                 _uiState.value = UiEvent.ShowError(event.error)
-                ErrorViewModel.onEvent(ErrorEvent.ShowError(event.error))
+                ErrorViewModel.onEvent(SnackbarEvent.Show(event.error))
             }
             is UiEvent.Idle -> _uiState.value = UiEvent.Idle
+            is UiEvent.ShowMessage -> {
+                // TODO: Don't call MessageViewModel.onEvent here
+                _uiState.value = UiEvent.ShowMessage(event.msg)
+                MessageViewModel.onEvent(SnackbarEvent.Show(event.msg))
+            }
         }
     }
 }
@@ -26,6 +32,8 @@ sealed class UiEvent {
 
     // Show error in snackbar
     data class ShowError(val error: String): UiEvent()
+
+    data class ShowMessage(val msg: String): UiEvent()
 
     // Call on success
     object Idle: UiEvent()

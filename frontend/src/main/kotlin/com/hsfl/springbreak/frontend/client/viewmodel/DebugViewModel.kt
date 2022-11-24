@@ -24,11 +24,15 @@ object DebugViewModel {
             is DebugEvent.OnSwitchAuthorized -> onSwitchAuthorized()
             is DebugEvent.OnSwitchShowLoading -> showLoading()
             is DebugEvent.OnThrowError -> throwError(event.msg)
+            is DebugEvent.SendMessage -> senMessage(event.msg)
         }
     }
 
     private fun throwError(msg: String) {
         UiEventViewModel.onEvent(UiEvent.ShowError(msg))
+    }
+    private fun senMessage(msg: String) {
+        UiEventViewModel.onEvent(UiEvent.ShowMessage(msg))
     }
 
     private fun showLoading() {
@@ -52,4 +56,5 @@ sealed class DebugEvent {
     object OnSwitchAuthorized : DebugEvent()
     object OnSwitchShowLoading : DebugEvent()
     data class OnThrowError(val msg: String) : DebugEvent()
+    data class SendMessage(val msg: String): DebugEvent()
 }
