@@ -32,17 +32,18 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.346")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.346")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.346")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-router-dom:6.3.0-pre.346")
-                implementation( "org.jetbrains.kotlin-wrappers:kotlin-redux:4.1.2-pre.346")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-redux:7.2.6-pre.346")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-legacy:18.2.0-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-router-dom:6.3.0-pre.447")
+                implementation( "org.jetbrains.kotlin-wrappers:kotlin-redux:4.1.2-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-redux:7.2.6-pre.447")
 
                 // Material Design Wrapper
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.10.5-pre.434")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.9.1-pre.435")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.434")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.10.5-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.9.1-pre.447")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.447")
             }
         }
 
