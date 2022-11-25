@@ -73,8 +73,8 @@ private val App = FC<Props> {props ->
         }
         val uiStateString = when (uiState) {
             is UiEvent.Idle -> "Idle"
-            is UiEvent.ShowError -> "Error(msg: ${uiState.error})"
-            is UiEvent.ShowMessage -> "Message(msg: ${uiState.msg})"
+            is UiEvent.ShowError -> "ShowError(msg: ${uiState.error})"
+            is UiEvent.ShowMessage -> "ShowMessage(msg: ${uiState.msg})"
             is UiEvent.ShowLoading -> "Loading"
         }
         Typography { +"\tUiState: $uiStateString" }
