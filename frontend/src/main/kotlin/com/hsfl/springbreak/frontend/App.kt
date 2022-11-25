@@ -4,7 +4,6 @@ import browser.document
 import com.hsfl.springbreak.frontend.client.viewmodel.AuthViewModel
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
-import com.hsfl.springbreak.frontend.components.snackbar.ErrorSnackbar
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.login.LoginDialogProvider
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
@@ -57,7 +56,6 @@ private val App = FC<Props> {props ->
         open = loginDialogOpen
     }
 
-    ErrorSnackbar()
     MessageSnackbar()
 
     // Display Header

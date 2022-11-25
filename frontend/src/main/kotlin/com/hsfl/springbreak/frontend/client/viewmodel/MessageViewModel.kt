@@ -13,16 +13,14 @@ object MessageViewModel {
 
     fun onEvent(event: SnackbarEvent) {
         when (event) {
-            is SnackbarEvent.Show -> showError()
+            is SnackbarEvent.Show -> showMessage(event.value)
             is SnackbarEvent.Close -> closeSnackbar()
         }
     }
 
-    private fun showError() {
-        if (UiEventViewModel.uiState.value is UiEvent.ShowMessage) {
-            _openSnackbar.value = true
-            _message.value = (UiEventViewModel.uiState.value as UiEvent.ShowMessage).msg
-        }
+    private fun showMessage(msg: String) {
+        _openSnackbar.value = true
+        _message.value = msg
     }
 
     private fun closeSnackbar() {
