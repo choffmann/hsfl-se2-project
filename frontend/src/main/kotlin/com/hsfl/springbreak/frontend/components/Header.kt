@@ -4,10 +4,9 @@ import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
-import com.hsfl.springbreak.frontend.utils.inMuiPx
+import com.hsfl.springbreak.frontend.utils.toMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
-import dom.html.HTMLElement
 import mui.icons.material.*
 import mui.material.*
 import mui.material.Size
@@ -41,7 +40,7 @@ val Header = FC<HeaderProps> { props ->
                     size = Size.large
                     edge = IconButtonEdge.start
                     color = IconButtonColor.inherit
-                    sx { marginRight = 8.px }
+                    sx { marginRight = 1.toMuiPx() }
                     onClick = props.onLogoClicked
                     SoupKitchen()
                 }
@@ -84,7 +83,7 @@ val Header = FC<HeaderProps> { props ->
             component = main
             sx {
                 flexGrow = number(1.0)
-                padding = 3.inMuiPx()
+                padding = 1.toMuiPx()
             }
             Toolbar()
             +props.children
