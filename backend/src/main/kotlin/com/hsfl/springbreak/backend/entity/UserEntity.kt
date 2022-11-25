@@ -1,12 +1,7 @@
 package com.hsfl.springbreak.backend.entity
 
-import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToMany
+import javax.persistence.*
 
 @Entity(name = "users")
 data class UserEntity(
@@ -15,11 +10,14 @@ data class UserEntity(
     @Column val lastName: String,
     @Column val email: String,
     @Column val password: String,
-    @ManyToMany val favorite: MutableList<RecipeEntity> = mutableListOf()
+    @ManyToMany @JoinTable(
+        name = "user_recipe",
+        joinColumns = [JoinColumn(name = "users_id")],
+        inverseJoinColumns = [JoinColumn(name = "recipe_id")]
+    ) val favoriteRecipe: List<RecipeEntity>? = null
+) {
 
-) : DataEntity<User, UserEntity> {
-
-    override fun toDto(): User = User(
+    fun toDto(): User = User(
         id = this.id!!,
         firstName = this.firstName,
         lastName = this.lastName,
@@ -27,11 +25,13 @@ data class UserEntity(
         password = this.password
     )
 
-    override fun fromDto(dto: User): UserEntity = UserEntity(
-        id = dto.id,
-        firstName = dto.firstName,
-        lastName = dto.lastName,
-        email = dto.email,
-        password = dto.password
-    )
+    companion object {
+        fun fromDto(dto: User): UserEntity = UserEntity(
+            id = dto.id,
+            firstName = dto.firstName,
+            lastName = dto.lastName,
+            email = dto.email,
+            password = dto.password
+        )
+    }
 }

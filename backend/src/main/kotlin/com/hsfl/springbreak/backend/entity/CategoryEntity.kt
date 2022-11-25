@@ -11,14 +11,17 @@ import javax.persistence.Id
 data class CategoryEntity(
     @Id @GeneratedValue val id: Long? = null,
     @Column val name: String
-) : DataEntity<Category, CategoryEntity> {
+) {
 
-    override fun toDto(): Category = Category(
+    fun toDto(): Category = Category(
         id = this.id!!,
         name = this.name
     )
 
-    override fun fromDto(dto: Category): CategoryEntity {
-        TODO("Not yet implemented")
+    companion object {
+        fun fromDto(dto: Category): CategoryEntity = CategoryEntity(
+            id = dto.id,
+            name = dto.name
+        )
     }
 }

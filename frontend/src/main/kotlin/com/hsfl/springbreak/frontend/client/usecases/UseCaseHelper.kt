@@ -17,6 +17,7 @@ suspend fun <T> FlowCollector<DataResponse<User>>.useCaseHelper(callback: suspen
         }
     } catch (e: Error) {
         e.printStackTrace()
+        println(e.cause)
         emit(DataResponse.Error(e.message ?: "An unexpected error occurred"))
     }
 }

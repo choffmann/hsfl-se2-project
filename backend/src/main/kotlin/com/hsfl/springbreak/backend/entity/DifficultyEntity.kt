@@ -8,15 +8,18 @@ import javax.persistence.*
 data class DifficultyEntity(
     @Id @GeneratedValue val id: Long? = null,
     @Column val name: String
-) : DataEntity<Difficulty, DifficultyEntity> {
+) {
 
-    override fun toDto(): Difficulty = Difficulty(
+    fun toDto(): Difficulty = Difficulty(
         id = this.id!!,
         name = this.name
     )
 
-    override fun fromDto(dto: Difficulty): DifficultyEntity {
-        TODO("Not yet implemented")
+    companion object {
+        fun fromDto(dto: Difficulty): DifficultyEntity = DifficultyEntity(
+            id = dto.id,
+            name = dto.name
+        )
     }
 }
 
