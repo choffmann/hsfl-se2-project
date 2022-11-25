@@ -13,7 +13,7 @@ data class RatingEntity(
 
     fun toDto(): Rating = Rating(
         id = this.id!!,
-        like = this.likes,
+        likes = this.likes,
         dislike = this.dislike,
         recipe = this.recipe.toDto()
     )
@@ -21,7 +21,7 @@ data class RatingEntity(
     companion object {
         fun fromDto(dto: Rating): RatingEntity = RatingEntity(
             id = dto.id,
-            likes = dto.like,
+            likes = dto.likes,
             dislike = dto.dislike,
             recipe = RecipeEntity.fromDto(dto.recipe)
         )
