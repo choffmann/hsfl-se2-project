@@ -34,7 +34,6 @@ class LoginViewModel(
             is LoginEvent.EnteredPassword -> _passwordText.value = event.value
             is LoginEvent.OnLogin -> onLogin()
             is LoginEvent.OnRegister -> onRegister()
-            is LoginEvent.OnOpenDialog -> onOpenDialog()
             is LoginEvent.OnCloseDialog -> onCloseDialog()
         }
     }
@@ -56,12 +55,7 @@ class LoginViewModel(
         TODO("Not implemented yet!")
     }
 
-    private fun onOpenDialog() {
-        //_openDialog.value = true
-    }
-
     private fun onCloseDialog() {
-        //_openDialog.value = false
         NavViewModel.onEvent(NavEvent.OnCloseLoginDialog)
     }
 }
@@ -71,6 +65,5 @@ sealed class LoginEvent {
     data class EnteredPassword(val value: String) : LoginEvent()
     object OnLogin : LoginEvent()
     object OnRegister : LoginEvent()
-    object OnOpenDialog : LoginEvent()
     data class OnCloseDialog(val event: dynamic, val reason: String) : LoginEvent()
 }

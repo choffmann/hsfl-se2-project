@@ -11,7 +11,6 @@ import csstype.number
 import csstype.px
 import dom.html.HTMLButtonElement
 import dom.html.HTMLInputElement
-import kotlinx.coroutines.*
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
@@ -29,12 +28,6 @@ val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
         LoginUseCase(UserRepositoryImpl(Client()))
     )
     val openDialog = viewModel.openDialog.collectAsState()
-    useEffect(props.open) {
-        if (props.open) {
-            println("LoginDialogProvider::${props.open}")
-            viewModel.onEvent(LoginEvent.OnOpenDialog)
-        }
-    }
 
     LoginDialog {
         open = openDialog
