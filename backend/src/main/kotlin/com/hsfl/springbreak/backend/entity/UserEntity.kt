@@ -11,7 +11,7 @@ data class UserEntity(
     @Column val email: String,
     @Column val password: String,
     @ManyToMany @JoinTable(
-        name = "user_recipe",
+        name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],
         inverseJoinColumns = [JoinColumn(name = "recipe_id")]
     ) val favoriteRecipe: List<RecipeEntity>? = null
