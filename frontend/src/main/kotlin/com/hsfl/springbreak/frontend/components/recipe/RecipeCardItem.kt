@@ -24,6 +24,7 @@ external interface RecipeCardItemProps : Props {
     var title: String
     var createdDate: String
     var creator: String
+    var creatorImg: String?
     var imageSrc: String
     var shortDescription: String
     var cost: String
@@ -64,12 +65,14 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
     }
 
     Card {
-        sx { maxWidth = recipeCardWidth.px }
+        sx { width = recipeCardWidth.px }
         CardHeader {
             avatar = Tooltip.create {
                 title = Typography.create { +props.creator }
                 Avatar {
-                    +userNameInLetter(props.creator)
+                    props.creatorImg?.let {
+                        src = it
+                    } ?: +userNameInLetter(props.creator)
                 }
             }
             action = IconButton.create {
