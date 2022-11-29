@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.components.login
+package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.client.Client
 import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
@@ -18,35 +18,6 @@ import react.*
 import react.dom.events.MouseEventHandler
 import react.dom.html.InputType
 import react.dom.onChange
-
-external interface LoginDialogProviderProps : Props {
-    var open: Boolean
-}
-
-val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
-    val viewModel = LoginViewModel(
-        LoginUseCase(UserRepositoryImpl(Client()))
-    )
-    val openDialog = viewModel.openDialog.collectAsState()
-
-    /*LoginDialog {
-        open = openDialog
-        onClose = { event, reason ->
-            viewModel.onEvent(LoginEvent.OnCloseDialog(event, reason))
-        }
-        onLogin = { viewModel.onEvent(LoginEvent.OnLogin) }
-        onRegister = { viewModel.onEvent(LoginEvent.OnRegister) }
-        onEmailTextChanged = { viewModel.onEvent(LoginEvent.EnteredEmail(it)) }
-        onPasswordTextChanged = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) }
-    }*/
-
-    RegisterDialog {
-        open = openDialog
-        onClose = { event, reason ->
-            viewModel.onEvent(LoginEvent.OnCloseDialog(event, reason))
-        }
-    }
-}
 
 external interface LoginDialogProps : Props {
     var open: Boolean

@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.components.login
+package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.components.LoadingBar
 import csstype.*

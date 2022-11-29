@@ -5,7 +5,7 @@ import com.hsfl.springbreak.frontend.client.viewmodel.AuthViewModel
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
 import com.hsfl.springbreak.frontend.components.Header
-import com.hsfl.springbreak.frontend.components.login.LoginDialogProvider
+import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.routes.Home
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -49,7 +49,7 @@ private val App = FC<Props> {props ->
     CssBaseline()
 
     // Login Dialog
-    LoginDialogProvider {
+    AuthDialogProvider {
         open = loginDialogOpen
     }
 
