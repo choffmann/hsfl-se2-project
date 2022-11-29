@@ -16,12 +16,10 @@ var Home = FC<Props> {
     Box {
         sx {
             flexGrow = number(1.0)
-            margin = 16.px
+            margin = 8.px
         }
         Grid {
-            sx {
-                justifyContent = JustifyContent.center
-            }
+            sx { justifyContent = JustifyContent.center }
             container = true
             spacing = responsive(2)
             direction = responsive(GridDirection.row)

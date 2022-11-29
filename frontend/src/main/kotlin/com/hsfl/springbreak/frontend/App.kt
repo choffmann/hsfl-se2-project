@@ -6,7 +6,6 @@ import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.login.LoginDialogProvider
-import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
 import com.hsfl.springbreak.frontend.components.routes.Home
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -46,10 +45,6 @@ private val App = FC<Props> {props ->
         loginDialogOpen = true
     }
 
-    val handleOnLoginDialogClose = { _: dynamic, _: String ->
-        loginDialogOpen = false
-    }
-
     // Default Css
     CssBaseline()
 
@@ -79,8 +74,7 @@ private val App = FC<Props> {props ->
         }
         Typography { +"\tUiState: $uiStateString" }
         Typography { +"\tisAuthorized: $isAuthorized" }
-        //Home()
-        RecipeCard()
+        Home()
     }
 
 }
