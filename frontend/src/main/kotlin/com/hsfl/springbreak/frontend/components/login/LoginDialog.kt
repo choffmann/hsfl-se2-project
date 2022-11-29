@@ -29,7 +29,7 @@ val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
     )
     val openDialog = viewModel.openDialog.collectAsState()
 
-    LoginDialog {
+    /*LoginDialog {
         open = openDialog
         onClose = { event, reason ->
             viewModel.onEvent(LoginEvent.OnCloseDialog(event, reason))
@@ -38,6 +38,13 @@ val LoginDialogProvider = FC<LoginDialogProviderProps> { props ->
         onRegister = { viewModel.onEvent(LoginEvent.OnRegister) }
         onEmailTextChanged = { viewModel.onEvent(LoginEvent.EnteredEmail(it)) }
         onPasswordTextChanged = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) }
+    }*/
+
+    RegisterDialog {
+        open = openDialog
+        onClose = { event, reason ->
+            viewModel.onEvent(LoginEvent.OnCloseDialog(event, reason))
+        }
     }
 }
 
