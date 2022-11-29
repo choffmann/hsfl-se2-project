@@ -10,6 +10,7 @@ data class UserEntity(
     @Column val lastName: String,
     @Column val email: String,
     @Column val password: String,
+    @Column val image: String? = null,
     @ManyToMany @JoinTable(
         name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],
@@ -22,7 +23,8 @@ data class UserEntity(
         firstName = this.firstName,
         lastName = this.lastName,
         email = this.email,
-        password = this.password
+        password = this.password,
+        image = this.image
     )
 
     companion object {
@@ -31,7 +33,8 @@ data class UserEntity(
             firstName = dto.firstName,
             lastName = dto.lastName,
             email = dto.email,
-            password = dto.password
+            password = dto.password,
+            image = dto.image
         )
     }
 }
