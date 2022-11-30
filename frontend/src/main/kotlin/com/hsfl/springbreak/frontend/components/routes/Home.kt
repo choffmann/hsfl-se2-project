@@ -1,13 +1,14 @@
 package com.hsfl.springbreak.frontend.components.routes
 
-import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
-import csstype.*
-import mui.lab.Masonry
+import com.hsfl.springbreak.frontend.components.routes.home.AllTab
+import com.hsfl.springbreak.frontend.components.routes.home.CheapTab
+import com.hsfl.springbreak.frontend.components.routes.home.FastTab
+import com.hsfl.springbreak.frontend.components.routes.home.PopularTab
 import mui.material.*
-import mui.system.responsive
-import mui.system.sx
-import react.FC
-import react.Props
+import react.*
+import react.dom.aria.AriaRole
+import react.dom.events.SyntheticEvent
+import react.dom.html.ReactHTML.div
 
 data class Recipe(
     val title: String,
@@ -21,8 +22,22 @@ data class Recipe(
     val difficulty: String
 )
 
+external interface TabPanelProps : PropsWithChildren {
+    var index: Int
+    var value: Int
+}
+
+var TabPanel = FC<TabPanelProps> { props ->
+    div {
+        role = AriaRole.tabpanel
+        hidden = props.value != props.index
+        if (props.value == props.index) +props.children
+    }
+}
+
+
 var Home = FC<Props> {
-    val recipeList = listOf(
+    val list = listOf(
         Recipe(
             title = "Chicken Tikka Masala",
             createdDate = "November 13, 2022",
@@ -31,7 +46,7 @@ var Home = FC<Props> {
             "https://image.essen-und-trinken.de/11854764/t/Gb/v8/w960/r1/-/chicken-tikka-masala-c3c77cebac45a391e04fcbcff54bee08-chicken-tikka-masala-jpg--20494-.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "1",
             duration = "45 min",
             difficulty = "Mittel"
         ),
@@ -56,7 +71,7 @@ var Home = FC<Props> {
             "https://stillcracking.com/wp-content/uploads/2016/02/Ratatouille1-550x375.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "3",
             duration = "45 min",
             difficulty = "Mittel"
         ), Recipe(
@@ -67,7 +82,7 @@ var Home = FC<Props> {
             "https://www.springlane.de/magazin/wp-content/uploads/2016/01/Spaghetti_Carbonara_23727_Featured.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "1",
             duration = "45 min",
             difficulty = "Mittel"
         ), Recipe(
@@ -78,7 +93,7 @@ var Home = FC<Props> {
             "https://image.essen-und-trinken.de/11854764/t/Gb/v8/w960/r1/-/chicken-tikka-masala-c3c77cebac45a391e04fcbcff54bee08-chicken-tikka-masala-jpg--20494-.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "6",
             duration = "45 min",
             difficulty = "Mittel"
         ), Recipe(
@@ -90,7 +105,7 @@ var Home = FC<Props> {
             "https://stillcracking.com/wp-content/uploads/2016/02/Ratatouille1-550x375.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "10",
             duration = "45 min",
             difficulty = "Mittel"
         ),
@@ -103,7 +118,7 @@ var Home = FC<Props> {
             "https://img.chefkoch-cdn.de/rezepte/1112251217261411/bilder/1021874/crop-960x720/einfacher-flammkuchen.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "15",
             duration = "45 min",
             difficulty = "Mittel"
         ), Recipe(
@@ -114,40 +129,60 @@ var Home = FC<Props> {
             "https://www.springlane.de/magazin/wp-content/uploads/2016/01/Spaghetti_Carbonara_23727_Featured.jpg",
             shortDescription =
             "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
+            cost = "3",
             duration = "45 min",
             difficulty = "Mittel"
         )
     )
 
-    Box {
-        sx {
-            flexGrow = number(1.0)
-            margin = 8.px
-            display = Display.flex
-            justifyContent = JustifyContent.center
-        }
+    var tabValue by useState(0)
 
-        Masonry {
-            sx {
-                minWidth = 1000.px
-                maxWidth = 1400.px
-            }
-            columns = responsive(3)
-            spacing = responsive(2)
-            recipeList.forEach {
-                RecipeCard {
-                    title = it.title
-                    createdDate = it.createdDate
-                    creator = it.creator
-                    imageSrc = it.imageSrc
-                    shortDescription = it.shortDescription
-                    cost = it.cost
-                    duration = it.duration
-                    difficulty = it.difficulty
-                    creatorImg = it.creatorImg
+    val handleChange: (SyntheticEvent<*, *>, Int) -> Unit = { _, newValue ->
+        tabValue = newValue
+    }
+
+    Box {
+        Box {
+            Tabs {
+                value = tabValue
+                onChange = handleChange
+                Tab {
+                    label = Typography.create { +"Günstig" }
                 }
+                Tab {
+                    label = Typography.create { +"Schnell" }
+                }
+                Tab {
+                    label = Typography.create { +"Beliebt" }
+                }
+                Tab {
+                    label = Typography.create { +"Alle" }
+                }
+
             }
+            Divider()
+        }
+        TabPanel {
+            value = tabValue
+            index = 0
+            CheapTab { recipeList = list.sortedBy { it.title } }
+        }
+        TabPanel {
+            value = tabValue
+            index = 1
+            FastTab { recipeList = list.sortedBy { it.creator } }
+        }
+        TabPanel {
+            value = tabValue
+            index = 2
+            PopularTab { recipeList = list.sortedBy { it.cost } }
+        }
+        TabPanel {
+            value = tabValue
+            index = 3
+            AllTab { recipeList = list }
         }
     }
+
+
 }
