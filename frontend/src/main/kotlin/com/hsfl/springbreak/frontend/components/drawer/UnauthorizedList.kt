@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
+import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
 import dom.html.HTMLElement
 import mui.icons.material.Category
 import mui.icons.material.Login
@@ -8,14 +10,10 @@ import react.FC
 import react.Props
 import react.dom.events.MouseEventHandler
 
-external interface UnauthorizedListProps: Props {
-    var onLoginButtonClicked: MouseEventHandler<HTMLElement>?
-}
-
-val UnauthorizedList = FC<UnauthorizedListProps> { props ->
+val UnauthorizedList = FC<Props> { props ->
     List {
         ListItemButton {
-            onClick = props.onLoginButtonClicked
+            onClick = { NavViewModel.onEvent(NavEvent.OnOpenLoginDialog) }
             ListItemIcon {
                 Login()
             }
@@ -23,7 +21,6 @@ val UnauthorizedList = FC<UnauthorizedListProps> { props ->
                 Typography { +"Anmelden" }
             }
         }
-        Divider()
         ListItemButton {
             ListItemIcon {
                 Category()

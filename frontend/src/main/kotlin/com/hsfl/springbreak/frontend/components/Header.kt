@@ -1,9 +1,11 @@
 package com.hsfl.springbreak.frontend.components
 
+import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
+import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.inMuiPx
 import csstype.*
-import dom.html.HTML
 import dom.html.HTMLButtonElement
 import dom.html.HTMLElement
 import mui.icons.material.*
@@ -16,22 +18,16 @@ import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
+import react.useContext
 
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
-    var isAuthorized: Boolean
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
     var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
-// TODO: Get drawer width
-val drawerWidth = 328.inMuiPx()
-
 val Header = FC<HeaderProps> { props ->
-
-    val handleOnDrawerLoginButtonClicked: MouseEventHandler<HTMLElement> = {
-        props.onLoginButtonClicked
-    }
+    val isAuthorized = useContext(AuthorizedContext)
 
     Box {
         sx { display = Display.flex }
@@ -64,19 +60,24 @@ val Header = FC<HeaderProps> { props ->
                     Search()
                 }
                 // If authorized, show login button
-                if (!props.isAuthorized) {
+                if (!isAuthorized) {
                     Button {
                         color = ButtonColor.inherit
-                        onClick = props.onLoginButtonClicked
+                        onClick = {
+                            NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                        }
                         +"Anmelden"
                     }
                 }
             }
+            LoadingBar()
         }
+
         NavDrawer {
-            isAuthorized = props.isAuthorized
             onToggleAuthorized = props.onToggleAuthorized
-            onLoginButtonClicked = props.onLoginButtonClicked as MouseEventHandler<HTMLElement>?
+            onLoginButtonClicked = {
+                NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+            }
         }
         // Main component
         Box {

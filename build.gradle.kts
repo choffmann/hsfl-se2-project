@@ -1,6 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.6.21" apply false
-    kotlin("js") version "1.7.20" apply false
+    kotlin("jvm") version "1.7.21" apply false
+    kotlin("js") version "1.7.21" apply false
+    kotlin("plugin.spring") version "1.7.21" apply false
+    kotlin("plugin.jpa") version "1.7.21" apply false
 }
 
 allprojects {
@@ -18,6 +20,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21")
     }
 }
