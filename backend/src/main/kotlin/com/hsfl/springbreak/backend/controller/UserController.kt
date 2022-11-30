@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UserController(val repository: UserRepository) {
 
+    @PostMapping("register")
+    fun register(@RequestBody newUser: User): ApiResponse<User> =
+        ApiResponse(data = repository.createNewUser(newUser)?.toDto(), success = true)
+
     @PostMapping("login")
     fun login(@RequestBody loginUser: User.Login): ApiResponse<User> {
         repository.findByEmail(loginUser.email)?.let {user ->

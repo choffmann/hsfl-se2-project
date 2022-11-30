@@ -17,4 +17,6 @@ data class Recipe(
     val image: String,
     val longDescription: String,
     val views: Int
-)
+) {
+
+}
