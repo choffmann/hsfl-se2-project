@@ -50,61 +50,78 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
             }
             LoadingBar()
         }
-
-        Box {
-            component = form
-            sx {
-                margin = 8.px
-                padding = 8.px
-                justifyContent = JustifyContent.center
-            }
-            Stack {
-                spacing = responsive(2)
-                direction = responsive(StackDirection.column)
-
-                Stack {
-                    spacing = responsive(2)
-                    direction = responsive(StackDirection.row)
-                    TextField {
-                        fullWidth = true
-                        label = Typography.create { +"Vorname" }
-                    }
-                    TextField {
-                        fullWidth = true
-                        label = Typography.create { +"Nachname" }
-                    }
+        DialogContent {
+            Box {
+                component = form
+                sx {
+                    margin = 8.px
+                    padding = 8.px
+                    justifyContent = JustifyContent.center
                 }
                 Stack {
                     spacing = responsive(2)
                     direction = responsive(StackDirection.column)
-                    TextField {
-                        fullWidth = true
-                        type = InputType.email
-                        label = Typography.create { +"Email" }
-                    }
-                    TextField {
-                        fullWidth = true
-                        type = InputType.password
-                        label = Typography.create { +"Password" }
-                    }
 
-                    Button {
-                        variant = ButtonVariant.outlined
-                        startIcon = Icon.create { Upload() }
-                        +"Profilbild"
-                        onClick = {
-                            input {
-                                hidden = true
-                                accept = "image/*"
-                                multiple = false
-                                type = InputType.file
+                    Stack {
+                        spacing = responsive(2)
+                        direction = responsive(StackDirection.row)
+                        TextField {
+                            fullWidth = true
+                            label = Typography.create { +"Vorname" }
+                        }
+                        TextField {
+                            fullWidth = true
+                            label = Typography.create { +"Nachname" }
+                        }
+                    }
+                    Stack {
+                        spacing = responsive(2)
+                        direction = responsive(StackDirection.column)
+                        TextField {
+                            fullWidth = true
+                            type = InputType.email
+                            label = Typography.create { +"Email" }
+                        }
+                        TextField {
+                            fullWidth = true
+                            type = InputType.password
+                            label = Typography.create { +"Password" }
+                        }
+
+                        Button {
+                            variant = ButtonVariant.outlined
+                            startIcon = Icon.create { Upload() }
+                            +"Profilbild"
+                            onClick = {
+                                input {
+                                    hidden = true
+                                    accept = "image/*"
+                                    multiple = false
+                                    type = InputType.file
+                                }
                             }
                         }
                     }
-
                 }
             }
         }
-
+        DialogActions {
+            Button {
+                variant = ButtonVariant.outlined
+                color = ButtonColor.secondary
+                onClick =  {
+                    props.onClose(it, "onCancelButton")
+                }
+                +"Abbrechen"
+            }
+            Button {
+                variant = ButtonVariant.contained
+                color = ButtonColor.primary
+                onClick = {
+                    props.onLogin()
+                }
+                +"Anmelden"
+            }
+        }
     }
 }
