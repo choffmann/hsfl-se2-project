@@ -4,7 +4,9 @@ import com.hsfl.springbreak.frontend.components.routes.home.AllTab
 import com.hsfl.springbreak.frontend.components.routes.home.CheapTab
 import com.hsfl.springbreak.frontend.components.routes.home.FastTab
 import com.hsfl.springbreak.frontend.components.routes.home.PopularTab
+import mui.icons.material.*
 import mui.material.*
+import mui.material.Tab
 import react.*
 import react.dom.aria.AriaRole
 import react.dom.events.SyntheticEvent
@@ -147,15 +149,23 @@ var Home = FC<Props> {
                 value = tabValue
                 onChange = handleChange
                 Tab {
+                    icon = Icon.create { AttachMoney() }
+                    iconPosition = IconPosition.start
                     label = Typography.create { +"Günstig" }
                 }
                 Tab {
+                    icon = Icon.create { AccessAlarm() }
+                    iconPosition = IconPosition.start
                     label = Typography.create { +"Schnell" }
                 }
                 Tab {
+                    icon = Icon.create { TrendingUp() }
+                    iconPosition = IconPosition.start
                     label = Typography.create { +"Beliebt" }
                 }
                 Tab {
+                    icon = Icon.create { AllInclusive() }
+                    iconPosition = IconPosition.start
                     label = Typography.create { +"Alle" }
                 }
 
