@@ -2,7 +2,9 @@ package com.hsfl.springbreak.frontend.components.drawer
 
 import com.hsfl.springbreak.frontend.client.viewmodel.DebugEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.DebugViewModel
+import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
+import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.icons.material.*
 import mui.material.*
@@ -26,6 +28,8 @@ external interface DebugListProps : Props {
 
 private val DebugList = FC<DebugListProps> { props ->
     var open by useState(false)
+    val uiState = useContext(UiStateContext)
+    val isAuthorized = useContext(AuthorizedContext)
 
     List {
         Divider()
@@ -80,6 +84,21 @@ private val DebugList = FC<DebugListProps> { props ->
                         Message()
                     }
                     ListItemText { +"Send info message" }
+                }
+
+                // Show information
+                ListSubheader { +"Debug View" }
+                ListItem {
+                    val uiStateString = when (uiState) {
+                        is UiEvent.Idle -> "Idle"
+                        is UiEvent.ShowError -> "ShowError(msg: ${uiState.error})"
+                        is UiEvent.ShowMessage -> "ShowMessage(msg: ${uiState.msg})"
+                        is UiEvent.ShowLoading -> "Loading"
+                    }
+                    ListItemText { +"UiState: $uiStateString" }
+                }
+                ListItem {
+                    ListItemText { +"isAuthorized: $isAuthorized" }
                 }
             }
         }

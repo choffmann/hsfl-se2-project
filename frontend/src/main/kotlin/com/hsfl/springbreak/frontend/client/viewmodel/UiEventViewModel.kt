@@ -14,7 +14,7 @@ object UiEventViewModel {
             is UiEvent.ShowError -> {
                 // TODO: Don't call ErrorViewModel.onEvent here
                 _uiState.value = UiEvent.ShowError(event.error)
-                ErrorViewModel.onEvent(SnackbarEvent.Show(event.error))
+                MessageViewModel.onEvent(SnackbarEvent.Show(event.error))
             }
             is UiEvent.Idle -> _uiState.value = UiEvent.Idle
             is UiEvent.ShowMessage -> {

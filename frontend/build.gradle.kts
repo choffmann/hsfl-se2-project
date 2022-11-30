@@ -9,6 +9,7 @@ repositories {
 
 kotlin {
     js {
+        moduleName = "frontend"
         browser {
             runTask {
                 devServer = devServer?.copy(port = 3000)
