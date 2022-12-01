@@ -7,20 +7,20 @@ import javax.persistence.*
 @Entity(name = "recipe")
 data class RecipeEntity(
     @Id @GeneratedValue val id: Long? = null,
-    @Column val title: String,
-    @Column val shortDescription: String,
-    @Column val price: Double,
-    @Column val duration: Double,
-    @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn val rating: RatingEntity,
-    @ManyToOne val difficulty: DifficultyEntity,
-    @ManyToOne val category: CategoryEntity,
-    @ManyToOne val creator: UserEntity,
-    @Column val createTime: LocalDate,
-    @OneToMany(mappedBy = "ingredient") val ingredients: List<IngredientRecipeEntity>,
-    @Column val image: String,
-    @Column val longDescription: String,
-    @Column val views: Int,
-    @ManyToMany(mappedBy = "favoriteRecipe") val userFavorites: List<UserEntity>? = null
+    @Column var title: String,
+    @Column var shortDescription: String,
+    @Column var price: Double,
+    @Column var duration: Double,
+    @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity,
+    @ManyToOne var difficulty: DifficultyEntity,
+    @ManyToOne var category: CategoryEntity,
+    @ManyToOne var creator: UserEntity,
+    @Column var createTime: LocalDate,
+    @OneToMany(mappedBy = "ingredient") var ingredients: List<IngredientRecipeEntity>,
+    @Column var image: String,
+    @Column var longDescription: String,
+    @Column var views: Int,
+    @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
 ) {
 
     fun toDto(): Recipe = Recipe(

@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.backend.controller
 
+import com.hsfl.springbreak.backend.entity.UserEntity
 import com.hsfl.springbreak.backend.repository.UserRepository
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.User
@@ -15,7 +16,7 @@ class UserController(val repository: UserRepository) {
 
     @PostMapping("register")
     fun register(@RequestBody newUser: User): ApiResponse<User> =
-        ApiResponse(data = repository.createNewUser(newUser)?.toDto(), success = true)
+        ApiResponse(data = repository.save(UserEntity.fromDto(newUser)).toDto(), success = true)
 
     @PostMapping("login")
     fun login(@RequestBody loginUser: User.Login): ApiResponse<User> {
