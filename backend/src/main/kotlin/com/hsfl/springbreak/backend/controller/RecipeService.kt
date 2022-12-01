@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.util.*
 
+// TODO: Analog gibt es für 'User' das 'UserRepository'?
+
 @Service
 class RecipeService(private val repository: RecipeRepository) {
 

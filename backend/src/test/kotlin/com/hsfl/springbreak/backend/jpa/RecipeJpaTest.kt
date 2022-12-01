@@ -28,11 +28,7 @@ class RecipeJpaTest {
         shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
         price = 5.00,
         duration = 10.00,
-        rating = RatingEntity(
-            recipe = null,  // TODO: Wie übergibt RecipeEntity sich selbst, wenn diese noch nicht instanziert ist?
-            likes = 0,
-            dislike = 0
-        ),
+        rating = null,
         difficulty = DifficultyEntity(
             name = "Leicht"
         ),
@@ -45,19 +41,8 @@ class RecipeJpaTest {
             email = "jonathan.duval@monster-inc.com",
             password = "secret"
         ),
-        createTime = LocalDate(2022, 12, 1),
-        ingredients = listOf(IngredientRecipeEntity(
-            id = IngredientRecipeKey(   // ?
-                ingredientId = 0,       // ?
-                recipeId = 0            // ?
-            ),
-            recipe = null,
-            ingredient = IngredientEntity(
-                name = "Zucker"
-            ),
-            unit = "Gramm",
-            amount = 15
-        )),
+        createTime = LocalDate.now(),
+        ingredients = null,
         image = "https://www.einfachbacken.de/sites/einfachbacken.de/files/styles/700_530/public/2019-05/schokomuffins.jpg?h=a1e1a043&itok=by_zr_C7",
         longDescription = "Butter mit Zucker und Vanillezucker verrühren. Eier unterrühren. Zartbitterschokolade grob hacken. Ofen auf 180 Grad (Umluft: 160 Grad) vorheizen. Mehl mit Kakaopulver, Salz und Backpulver vermischen. Mehlmischung mit der Milch zur Butter-Zuckermischung geben und alles gut verrühren. Etwa zwei Drittel der gehackten Schokolade unterheben",
         views = 0
