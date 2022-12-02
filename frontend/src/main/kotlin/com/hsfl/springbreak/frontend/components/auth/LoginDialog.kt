@@ -1,12 +1,6 @@
 package com.hsfl.springbreak.frontend.components.auth
 
-import com.hsfl.springbreak.frontend.client.Client
-import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
-import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
-import com.hsfl.springbreak.frontend.client.viewmodel.LoginEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.LoginViewModel
 import com.hsfl.springbreak.frontend.components.LoadingBar
-import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.number
 import csstype.px
 import dom.html.HTMLButtonElement

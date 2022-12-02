@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.client.viewmodel
 
 import com.hsfl.springbreak.frontend.client.model.User
-import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
+import com.hsfl.springbreak.frontend.client.repository.UserRepository
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val userRepository: UserRepository
 ) {
     private val _emailText = MutableStateFlow("")
     val emailText: StateFlow<String> = _emailText
@@ -49,7 +49,7 @@ class LoginViewModel(
     }
 
     private fun onLogin() = MainScope().launch {
-        loginUseCase(User.Login(email = emailText.value, password = passwordText.value)).collect { response ->
+        userRepository.login(User.Login(email = emailText.value, password = passwordText.value)).collect { response ->
             response.handleDataResponse<User>(
                 onSuccess = {
                     println(it)

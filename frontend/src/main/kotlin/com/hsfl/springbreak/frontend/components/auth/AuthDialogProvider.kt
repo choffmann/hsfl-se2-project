@@ -2,7 +2,6 @@ package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.client.Client
 import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
-import com.hsfl.springbreak.frontend.client.usecases.LoginUseCase
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginEvent
 import com.hsfl.springbreak.frontend.client.viewmodel.LoginViewModel
 import com.hsfl.springbreak.frontend.client.viewmodel.RegisterEvent
@@ -17,7 +16,7 @@ external interface LoginDialogProviderProps : Props {
 
 val AuthDialogProvider = FC<LoginDialogProviderProps> { props ->
     val loginViewModel = LoginViewModel(
-        LoginUseCase(UserRepositoryImpl(Client()))
+        UserRepositoryImpl(Client())
     )
     val registerViewModel = RegisterViewModel()
     val openLoginDialog = loginViewModel.openDialog.collectAsState()

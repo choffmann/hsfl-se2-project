@@ -1,13 +1,10 @@
-package com.hsfl.springbreak.frontend.client.usecases
+package com.hsfl.springbreak.frontend.client.repository
 
 import com.hsfl.springbreak.frontend.client.DataResponse
-import com.hsfl.springbreak.frontend.client.model.User
-import io.ktor.client.network.sockets.*
-import io.ktor.utils.io.errors.*
-import kotlinx.coroutines.CoroutineExceptionHandler
+import com.hsfl.springbreak.frontend.client.model.APIResponse
 import kotlinx.coroutines.flow.FlowCollector
 
-suspend fun <T> FlowCollector<DataResponse<User>>.useCaseHelper(callback: suspend () -> User.Response) {
+suspend fun <T> FlowCollector<DataResponse<T>>.repositoryHelper(callback: suspend () -> APIResponse<T>) {
     try {
         emit(DataResponse.Loading())
         callback().let { response ->
