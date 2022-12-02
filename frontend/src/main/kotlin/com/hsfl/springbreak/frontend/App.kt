@@ -9,8 +9,10 @@ import com.hsfl.springbreak.frontend.components.routes.Home
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
+import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.CssBaseline
+import org.kodein.di.instance
 import react.*
 import react.dom.client.createRoot
 
@@ -19,8 +21,9 @@ fun main() {
 }
 
 private val Root = FC<Props> {
+    val authorizedState: AuthState by di.instance()
     val uiState = UiEventViewModel.uiState.collectAsState()
-    val authorized = AuthState.authorized.collectAsState()
+    val authorized = authorizedState.authorized.collectAsState()
 
     AuthorizedContext.Provider(value = authorized) {
         UiStateContext.Provider(value = uiState) {

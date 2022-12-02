@@ -3,7 +3,7 @@ package com.hsfl.springbreak.frontend.client.presentation.state
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-object AuthState {
+class AuthState {
     private val _authorized = MutableStateFlow(false)
     val authorized: StateFlow<Boolean> = _authorized
 

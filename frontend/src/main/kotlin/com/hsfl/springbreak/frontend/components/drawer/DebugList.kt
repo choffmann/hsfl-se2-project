@@ -5,16 +5,19 @@ import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugViewMode
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
+import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.icons.material.*
 import mui.material.*
 import mui.material.List
+import org.kodein.di.instance
 import react.*
 
 
 val DebugListProvider = FC<Props> {
-    val loading = DebugViewModel.showLoading.collectAsState()
-    val authorized = DebugViewModel.authState.collectAsState()
+    val debugViewModel: DebugViewModel by di.instance()
+    val loading = debugViewModel.showLoading.collectAsState()
+    val authorized = debugViewModel.authState.collectAsState()
     DebugList {
         showLoading = loading
         isAuthorized = authorized
@@ -27,6 +30,7 @@ external interface DebugListProps : Props {
 }
 
 private val DebugList = FC<DebugListProps> { props ->
+    val debugViewModel: DebugViewModel by di.instance()
     var open by useState(false)
     val uiState = useContext(UiStateContext)
     val isAuthorized = useContext(AuthorizedContext)
@@ -50,7 +54,7 @@ private val DebugList = FC<DebugListProps> { props ->
                         Switch {
                             checked = props.isAuthorized
                             onClick = { _ ->
-                                DebugViewModel.onEvent(DebugEvent.OnSwitchAuthorized)
+                                debugViewModel.onEvent(DebugEvent.OnSwitchAuthorized)
                             }
                         }
                     }
@@ -61,7 +65,7 @@ private val DebugList = FC<DebugListProps> { props ->
                         Switch {
                             checked = props.showLoading
                             onClick = { _ ->
-                                DebugViewModel.onEvent(DebugEvent.OnSwitchShowLoading)
+                                debugViewModel.onEvent(DebugEvent.OnSwitchShowLoading)
                             }
                         }
                     }
@@ -69,7 +73,7 @@ private val DebugList = FC<DebugListProps> { props ->
                 }
                 ListItemButton {
                     onClick = {
-                        DebugViewModel.onEvent(DebugEvent.OnThrowError("Throw an error from the debug list"))
+                        debugViewModel.onEvent(DebugEvent.OnThrowError("Throw an error from the debug list"))
                     }
                     ListItemIcon {
                         Error()
@@ -78,7 +82,7 @@ private val DebugList = FC<DebugListProps> { props ->
                 }
                 ListItemButton {
                     onClick = {
-                        DebugViewModel.onEvent(DebugEvent.SendMessage("A friendly message to the user \uD83C\uDF89"))
+                        debugViewModel.onEvent(DebugEvent.SendMessage("A friendly message to the user \uD83C\uDF89"))
                     }
                     ListItemIcon {
                         Message()

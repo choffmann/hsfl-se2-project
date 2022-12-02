@@ -6,8 +6,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-object DebugViewModel {
-    val authState: StateFlow<Boolean> = AuthState.authorized
+class DebugViewModel(private val authorizedState: AuthState) {
+    val authState: StateFlow<Boolean> = authorizedState.authorized
 
     private var _showLoading = MutableStateFlow(false)
     val showLoading: StateFlow<Boolean> = _showLoading
@@ -47,9 +47,9 @@ object DebugViewModel {
 
     private fun onSwitchAuthorized() {
         if (authState.value) {
-            AuthState.onEvent(AuthEvent.IsUnauthorized)
+            authorizedState.onEvent(AuthEvent.IsUnauthorized)
         } else {
-            AuthState.onEvent(AuthEvent.IsAuthorized)
+            authorizedState.onEvent(AuthEvent.IsAuthorized)
         }
     }
 }
