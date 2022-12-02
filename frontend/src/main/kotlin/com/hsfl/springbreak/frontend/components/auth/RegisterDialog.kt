@@ -2,11 +2,13 @@ package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
+import kotlinx.js.get
 import mui.icons.material.Person
 import mui.icons.material.Upload
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
+import org.w3c.dom.url.URL
 import react.*
 import react.dom.html.InputType
 import react.dom.html.ReactHTML
@@ -23,19 +25,8 @@ external interface RegisterDialogProps : Props {
     var onPasswordTextChanged: (String) -> Unit
 }
 
-external interface ProfileImageUploadButtonProps :
-    IconButtonProps,
-    mui.types.PropsWithComponent {
-    override var component: ElementType<*>?
-}
-
-val ProfileImageUploadButton = FC<ProfileImageUploadButtonProps> { props ->
-
-}
-
 val RegisterDialog = FC<RegisterDialogProps> { props ->
-    var clickUploadButton by useState(false)
-    var inputFile = useRef(null)
+    var profileImage by useState<String>()
     Dialog {
         open = props.open
         onClose = props.onClose
@@ -86,6 +77,10 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                         hidden = true
                                         accept = "image/*"
                                         type = InputType.file
+                                        onChange = {
+                                            profileImage = it.target.files?.get(0)
+                                                ?.let { it1 -> URL.Companion.createObjectURL(it1) }
+                                        }
                                     }
                                     Upload()
                                 }
@@ -95,12 +90,14 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                     width = 100.px
                                     height = 100.px
                                 }
-                                Person {
-                                    sx {
-                                        width = 80.px
-                                        height = 80.px
+                                profileImage?.let {
+                                    src = it
+                                } ?: Person {
+                                        sx {
+                                            width = 80.px
+                                            height = 80.px
+                                        }
                                     }
-                                }
                             }
                         }
                     }
