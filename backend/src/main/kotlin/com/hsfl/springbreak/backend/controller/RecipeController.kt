@@ -1,8 +1,10 @@
 package com.hsfl.springbreak.backend.controller
 
 import com.hsfl.springbreak.backend.entity.RecipeEntity
+import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.RecipeRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,13 +21,30 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 class RecipeController(val recipeRepository: RecipeRepository) {
 
+   /*
    @GetMapping("api/recipes/{id}")
    fun findRecipeById(@PathVariable("id") recipeId: Long): Recipe = recipeRepository.findById(recipeId)
       .orElseThrow().toDto()
 
+    */
+
+   @GetMapping("api/recipes/{id}")
+   fun findRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> {
+      recipeRepository.findByIdOrNull(recipeId)?.let { recipe ->
+         return ApiResponse(data = recipe.toDto(), success = true)
+      } ?: return ApiResponse(error = "No Recipe with the ID: $recipeId", success = false)
+   }
+
    @PostMapping("api/recipes")
-   fun createNewRecipe(@RequestBody newRecipe: Recipe): Recipe =
-      recipeRepository.save(RecipeEntity.fromDto(newRecipe)).toDto()
+   fun createNewRecipe(@RequestBody newRecipe: Recipe): ApiResponse<Recipe> {
+      val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(newRecipe)).toDto()
+      return if (savedRecipe != null) {
+         ApiResponse(data = savedRecipe, success = true)
+      } else {
+         ApiResponse(error = "Error by saving", success = false)
+      }
+   }
+
 
    @PutMapping("api/recipes/{id}")
    fun updateRecipe(@PathVariable("id") recipeId: Long, @RequestBody recipe: Recipe): Recipe =

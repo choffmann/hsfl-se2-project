@@ -2,14 +2,12 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Category
 import com.hsfl.springbreak.backend.model.Difficulty
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity(name = "category")
 data class CategoryEntity(
     @Id @GeneratedValue val id: Long? = null,
+    //@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = [CascadeType.ALL]) val recipes: List<RecipeEntity>,
     @Column val name: String
 ) {
 

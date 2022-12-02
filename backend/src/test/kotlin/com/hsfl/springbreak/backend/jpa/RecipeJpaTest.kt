@@ -58,18 +58,18 @@ class RecipeJpaTest {
     @Test
     fun testPostRecipe() {
         // Test correct POST
-        val apiResponse = controller.createRecipe(testRecipe.toDto())
+        val apiResponse = controller.createNewRecipe(testRecipe.toDto())
         assertEquals(apiResponse?.success, true)
     }
 
     @Test
     fun testGetRecipe() {
         // Test correct GET
-        var apiResponse = controller.getRecipeById(0)
+        var apiResponse = controller.findRecipeById(0)
         assertEquals(apiResponse.success, true)
 
         // Test faulty GET
-        apiResponse = controller.getRecipeById(10)
+        apiResponse = controller.findRecipeById(10)
         assertEquals(apiResponse.success, false)
     }
 
@@ -82,11 +82,11 @@ class RecipeJpaTest {
     @Test
     fun testDeleteRecipe() {
         // Test correct DELETE
-        var apiResponse = controller.getRecipeById(0)
+        var apiResponse = controller.findRecipeById(0)
         assertEquals(apiResponse.success, true)
 
         controller.deleteRecipe(0)
-        apiResponse = controller.getRecipeById(0)
+        apiResponse = controller.findRecipeById(0)
         assertEquals(apiResponse.success, false)
 
         // Test faulty DELETE
