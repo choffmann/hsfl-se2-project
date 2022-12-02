@@ -53,8 +53,18 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                             badgeContent = Tooltip.create {
                                 title = Typography.create { +"Profilbild hochladen" }
                                 IconButton {
-                                    // TODO: Overwrite IconButton style class
-                                    sx { backgroundColor = Color("white") }
+                                    sx {
+                                        backgroundColor = Color("white")
+                                        boxShadow = BoxShadow(
+                                            offsetX = 3.px,
+                                            offsetY = 3.px,
+                                            blurRadius = 3.px,
+                                            color = Color("lightgrey")
+                                        )
+                                        hover {
+                                            backgroundColor = Color("white")
+                                        }
+                                    }
                                     Upload()
                                 }
                             }
