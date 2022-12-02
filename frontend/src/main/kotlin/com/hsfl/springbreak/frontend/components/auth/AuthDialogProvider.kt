@@ -7,25 +7,42 @@ import com.hsfl.springbreak.frontend.utils.collectAsState
 import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.useState
+import web.file.File
 
-external interface LoginDialogProviderProps : Props {
-    var loginButtonPressed: Boolean
-}
 
-val AuthDialogProvider = FC<LoginDialogProviderProps> { props ->
+val AuthDialogProvider = FC<Props> {
     val controller: AuthDialogController by di.instance()
     val openLoginDialog = controller.loginDialogOpen.collectAsState()
     val openRegisterDialog = controller.registerDialogOpen.collectAsState()
+
+    var loginEmailText by useState("")
+    var loginPasswordText by useState("")
+
+    var registerFirstNameText by useState("")
+    var registerLastNameText by useState("")
+    var registerEmailText by useState("")
+    var registerPasswordText by useState("")
+    var registerConfirmedPasswordText by useState("")
+    var registerProfileImage by useState<File>()
+
 
     LoginDialog {
         open = openLoginDialog
         onClose = { event, reason ->
             controller.onEvent(AuthDialogControllerEvent.OnCloseLoginDialog(event, reason))
         }
-        onLogin = { controller.onEvent(AuthDialogControllerEvent.OnLogin) }
+        onLogin = {
+            controller.onEvent(
+                AuthDialogControllerEvent.OnLogin(
+                    email = loginEmailText,
+                    password = loginPasswordText
+                )
+            )
+        }
         onRegister = { controller.onEvent(AuthDialogControllerEvent.OpenRegisterDialog) }
-        onEmailTextChanged = { /*controller.onEvent(LoginEvent.EnteredEmail(it))*/ }
-        onPasswordTextChanged = { /*controller.onEvent(LoginEvent.EnteredPassword(it)) */ }
+        onEmailTextChanged = { loginEmailText = it }
+        onPasswordTextChanged = { loginPasswordText = it }
     }
 
     RegisterDialog {
@@ -33,5 +50,23 @@ val AuthDialogProvider = FC<LoginDialogProviderProps> { props ->
         onClose = { event, reason ->
             controller.onEvent(AuthDialogControllerEvent.OnCloseRegisterDialog(event, reason))
         }
+        onRegister = {
+            controller.onEvent(
+                AuthDialogControllerEvent.OnRegister(
+                    firstName = registerFirstNameText,
+                    lastName = registerLastNameText,
+                    email = registerEmailText,
+                    password = registerPasswordText,
+                    confirmedPassword = registerConfirmedPasswordText,
+                    profileImage = registerProfileImage,
+                )
+            )
+        }
+        onFirstNameText = { registerFirstNameText = it }
+        onLastNameNameText = { registerLastNameText = it }
+        onEmailText = { registerEmailText = it }
+        onPasswordText = { registerPasswordText = it }
+        onConfirmedPasswordText = { registerConfirmedPasswordText = it }
+        onProfileImageChanged = { registerProfileImage = it }
     }
 }

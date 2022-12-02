@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
+import dom.html.HTMLInputElement
 import kotlinx.js.get
 import mui.icons.material.Person
 import mui.icons.material.Upload
@@ -15,14 +16,19 @@ import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.form
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
+import react.dom.onChange
+import web.file.File
 
 external interface RegisterDialogProps : Props {
     var open: Boolean
     var onClose: (event: dynamic, reason: String) -> Unit
     var onRegister: () -> Unit
-    var onLogin: () -> Unit
-    var onEmailTextChanged: (String) -> Unit
-    var onPasswordTextChanged: (String) -> Unit
+    var onFirstNameText: (String) -> Unit
+    var onLastNameNameText: (String) -> Unit
+    var onEmailText: (String) -> Unit
+    var onPasswordText: (String) -> Unit
+    var onConfirmedPasswordText: (String) -> Unit
+    var onProfileImageChanged: (File) -> Unit
 }
 
 val RegisterDialog = FC<RegisterDialogProps> { props ->
@@ -78,8 +84,12 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                         accept = "image/*"
                                         type = InputType.file
                                         onChange = {
-                                            profileImage = it.target.files?.get(0)
-                                                ?.let { it1 -> URL.Companion.createObjectURL(it1) }
+                                            if (it.target.files?.length != 0) {
+                                                it.target.files?.get(0)?.let { file ->
+                                                    profileImage = URL.Companion.createObjectURL(file)
+                                                    props.onProfileImageChanged(file)
+                                                }
+                                            }
                                         }
                                     }
                                     Upload()
@@ -93,11 +103,11 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                 profileImage?.let {
                                     src = it
                                 } ?: Person {
-                                        sx {
-                                            width = 80.px
-                                            height = 80.px
-                                        }
+                                    sx {
+                                        width = 80.px
+                                        height = 80.px
                                     }
+                                }
                             }
                         }
                     }
@@ -105,10 +115,18 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                     TextField {
                         fullWidth = true
                         label = Typography.create { +"Vorname" }
+                        onChange = {
+                            val target = it.target as HTMLInputElement
+                            props.onFirstNameText(target.value)
+                        }
                     }
                     TextField {
                         fullWidth = true
                         label = Typography.create { +"Nachname" }
+                        onChange = {
+                            val target = it.target as HTMLInputElement
+                            props.onLastNameNameText(target.value)
+                        }
                     }
                     Stack {
                         spacing = responsive(2)
@@ -117,6 +135,10 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                             fullWidth = true
                             type = InputType.email
                             label = Typography.create { +"Email" }
+                            onChange = {
+                                val target = it.target as HTMLInputElement
+                                props.onEmailText(target.value)
+                            }
                         }
                         Stack {
                             spacing = responsive(2)
@@ -126,12 +148,20 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                 fullWidth = true
                                 type = InputType.password
                                 label = Typography.create { +"Passwort" }
+                                onChange = {
+                                    val target = it.target as HTMLInputElement
+                                    props.onPasswordText(target.value)
+                                }
                             }
 
                             TextField {
                                 fullWidth = true
                                 type = InputType.password
                                 label = Typography.create { +"Passwort bestätigen" }
+                                onChange = {
+                                    val target = it.target as HTMLInputElement
+                                    props.onConfirmedPasswordText(target.value)
+                                }
                             }
                         }
                     }
@@ -151,7 +181,7 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 variant = ButtonVariant.contained
                 color = ButtonColor.primary
                 onClick = {
-                    props.onLogin()
+                    props.onRegister()
                 }
                 +"Registrieren"
             }

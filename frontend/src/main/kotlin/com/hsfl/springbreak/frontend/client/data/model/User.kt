@@ -17,6 +17,14 @@ data class User(
     )
 
     @Serializable
+    data class Register(
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val password: String
+    )
+
+    @Serializable
     data class Response(
         val error: String? = null,
         val data: User? = null,
