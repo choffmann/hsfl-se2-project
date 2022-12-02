@@ -1,18 +1,14 @@
 package com.hsfl.springbreak.frontend.components.auth
 
-import com.hsfl.springbreak.frontend.components.LoadingBar
 import csstype.*
-import mui.icons.material.CloseOutlined
+import mui.icons.material.Person
 import mui.icons.material.Upload
 import mui.material.*
-import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import react.*
 import react.dom.html.InputType
-import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.form
-import react.dom.html.ReactHTML.input
 
 external interface RegisterDialogProps : Props {
     var open: Boolean
@@ -27,29 +23,9 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
     Dialog {
         open = props.open
         onClose = props.onClose
-        fullScreen = true
+        fullScreen = false
 
-        DialogTitle { +"Hello World!" }
-        AppBar {
-            Toolbar {
-                IconButton {
-                    edge = IconButtonEdge.start
-                    color = IconButtonColor.inherit
-                    onClick = { props.onClose(it, "OnAppBarClose") }
-                    CloseOutlined()
-                }
-                Typography {
-                    sx {
-                        marginLeft = 16.px
-                        flex = number(1.0)
-                    }
-                    variant = TypographyVariant.h6
-                    component = div
-                    +"Erstelle dein Account"
-                }
-            }
-            LoadingBar()
-        }
+        DialogTitle { +"Erstelle dein Account" }
         DialogContent {
             Box {
                 component = form
@@ -61,18 +37,49 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 Stack {
                     spacing = responsive(2)
                     direction = responsive(StackDirection.column)
+                    Box {
+                        sx {
+                            display = Display.flex
+                            justifyContent = JustifyContent.spaceEvenly
+                            alignItems = AlignItems.center
+                        }
+                        Badge {
+                            overlap = BadgeOverlap.circular
+                            anchorOrigin = object : BadgeOrigin {
+                                override var horizontal = BadgeOriginHorizontal.right
+                                override var vertical = BadgeOriginVertical.bottom
 
-                    Stack {
-                        spacing = responsive(2)
-                        direction = responsive(StackDirection.row)
-                        TextField {
-                            fullWidth = true
-                            label = Typography.create { +"Vorname" }
+                            }
+                            badgeContent = Tooltip.create {
+                                title = Typography.create { +"Profilbild hochladen" }
+                                IconButton {
+                                    // TODO: Overwrite IconButton style class
+                                    sx { backgroundColor = Color("white") }
+                                    Upload()
+                                }
+                            }
+                            Avatar {
+                                sx {
+                                    width = 100.px
+                                    height = 100.px
+                                }
+                                Person {
+                                    sx {
+                                        width = 80.px
+                                        height = 80.px
+                                    }
+                                }
+                            }
                         }
-                        TextField {
-                            fullWidth = true
-                            label = Typography.create { +"Nachname" }
-                        }
+                    }
+
+                    TextField {
+                        fullWidth = true
+                        label = Typography.create { +"Vorname" }
+                    }
+                    TextField {
+                        fullWidth = true
+                        label = Typography.create { +"Nachname" }
                     }
                     Stack {
                         spacing = responsive(2)
@@ -82,23 +89,20 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                             type = InputType.email
                             label = Typography.create { +"Email" }
                         }
-                        TextField {
-                            fullWidth = true
-                            type = InputType.password
-                            label = Typography.create { +"Password" }
-                        }
+                        Stack {
+                            spacing = responsive(2)
+                            direction = responsive(StackDirection.row)
 
-                        Button {
-                            variant = ButtonVariant.outlined
-                            startIcon = Icon.create { Upload() }
-                            +"Profilbild"
-                            onClick = {
-                                input {
-                                    hidden = true
-                                    accept = "image/*"
-                                    multiple = false
-                                    type = InputType.file
-                                }
+                            TextField {
+                                fullWidth = true
+                                type = InputType.password
+                                label = Typography.create { +"Passwort" }
+                            }
+
+                            TextField {
+                                fullWidth = true
+                                type = InputType.password
+                                label = Typography.create { +"Passwort bestätigen" }
                             }
                         }
                     }
@@ -109,7 +113,7 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
             Button {
                 variant = ButtonVariant.outlined
                 color = ButtonColor.secondary
-                onClick =  {
+                onClick = {
                     props.onClose(it, "onCancelButton")
                 }
                 +"Abbrechen"
