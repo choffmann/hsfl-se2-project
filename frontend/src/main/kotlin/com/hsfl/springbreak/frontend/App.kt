@@ -4,7 +4,6 @@ import browser.document
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEventViewModel
 import com.hsfl.springbreak.frontend.components.Header
-import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.routes.Home
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -33,12 +32,6 @@ private val Root = FC<Props> {
 }
 
 private val App = FC<Props> {props ->
-    var loginDialogOpen by useState(false)
-
-    val handleOnLoginButtonClicked: () -> Unit = {
-        loginDialogOpen = true
-    }
-
     // Default Css
     CssBaseline()
 

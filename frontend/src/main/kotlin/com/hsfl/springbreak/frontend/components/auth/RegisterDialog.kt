@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.components.auth
 
+import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
 import mui.icons.material.Person
 import mui.icons.material.Upload
@@ -8,7 +9,10 @@ import mui.system.responsive
 import mui.system.sx
 import react.*
 import react.dom.html.InputType
+import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.form
+import react.dom.html.ReactHTML.input
+import react.dom.html.ReactHTML.label
 
 external interface RegisterDialogProps : Props {
     var open: Boolean
@@ -19,7 +23,19 @@ external interface RegisterDialogProps : Props {
     var onPasswordTextChanged: (String) -> Unit
 }
 
+external interface ProfileImageUploadButtonProps :
+    IconButtonProps,
+    mui.types.PropsWithComponent {
+    override var component: ElementType<*>?
+}
+
+val ProfileImageUploadButton = FC<ProfileImageUploadButtonProps> { props ->
+
+}
+
 val RegisterDialog = FC<RegisterDialogProps> { props ->
+    var clickUploadButton by useState(false)
+    var inputFile = useRef(null)
     Dialog {
         open = props.open
         onClose = props.onClose
@@ -48,7 +64,6 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                             anchorOrigin = object : BadgeOrigin {
                                 override var horizontal = BadgeOriginHorizontal.right
                                 override var vertical = BadgeOriginVertical.bottom
-
                             }
                             badgeContent = Tooltip.create {
                                 title = Typography.create { +"Profilbild hochladen" }
@@ -64,6 +79,13 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                         hover {
                                             backgroundColor = Color("white")
                                         }
+
+                                    }
+                                    component = label
+                                    ReactHTML.input {
+                                        hidden = true
+                                        accept = "image/*"
+                                        type = InputType.file
                                     }
                                     Upload()
                                 }
@@ -134,8 +156,14 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 onClick = {
                     props.onLogin()
                 }
-                +"Anmelden"
+                +"Registrieren"
             }
+        }
+
+        input {
+            hidden = true
+            accept = "image/*"
+            type = InputType.file
         }
     }
 }
