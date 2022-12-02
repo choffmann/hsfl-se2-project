@@ -3,7 +3,7 @@ package com.hsfl.springbreak.frontend.di
 import com.hsfl.springbreak.frontend.client.data.Client
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepositoryImpl
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthController
+import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.LoginViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.RegisterViewModel
 import org.kodein.di.DI
@@ -22,5 +22,5 @@ val di = DI {
     bindSingleton { RegisterViewModel(instance()) }
 
     // Controllers
-    bindSingleton { AuthController(instance(), instance()) }
+    bindSingleton { AuthDialogController(instance(), instance()) }
 }

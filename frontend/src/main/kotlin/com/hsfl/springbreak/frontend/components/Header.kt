@@ -1,8 +1,11 @@
 package com.hsfl.springbreak.frontend.components
 
+import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
+import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogControllerEvent
 import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
+import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.toMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
@@ -11,13 +14,13 @@ import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
 import mui.system.sx
+import org.kodein.di.instance
 import react.FC
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
 import react.useContext
-import react.useState
 
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
@@ -27,11 +30,7 @@ external interface HeaderProps : PropsWithChildren {
 
 val Header = FC<HeaderProps> { props ->
     val isAuthorized = useContext(AuthorizedContext)
-    var openDialog by useState(false)
-
-    val handleOnLoginButtonClicked: () -> Unit = {
-        openDialog = true
-    }
+    val authDialogController: AuthDialogController by di.instance()
 
     Box {
         sx { display = Display.flex }
@@ -68,7 +67,7 @@ val Header = FC<HeaderProps> { props ->
                     Button {
                         color = ButtonColor.inherit
                         onClick = {
-                            handleOnLoginButtonClicked()
+                            authDialogController.onEvent(AuthDialogControllerEvent.OpenLoginDialog)
                         }
                         +"Anmelden"
                     }
@@ -95,9 +94,7 @@ val Header = FC<HeaderProps> { props ->
         }
 
         // Login Dialog
-        AuthDialogProvider {
-            loginButtonPressed = openDialog
-        }
+        AuthDialogProvider {}
     }
 }
 

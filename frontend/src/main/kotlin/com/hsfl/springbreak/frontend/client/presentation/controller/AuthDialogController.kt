@@ -4,7 +4,7 @@ import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class AuthController(
+class AuthDialogController(
     private val loginViewModel: LoginViewModel,
     private val registerViewModel: RegisterViewModel
 ) {
@@ -14,14 +14,14 @@ class AuthController(
     private val _registerDialogOpen = MutableStateFlow(false)
     val registerDialogOpen: StateFlow<Boolean> = _registerDialogOpen
 
-    fun onEvent(event: LoginControllerEvent) {
+    fun onEvent(event: AuthDialogControllerEvent) {
         when (event) {
-            is LoginControllerEvent.OpenLoginDialog -> openLoginDialog()
-            is LoginControllerEvent.OpenRegisterDialog -> openRegisterDialog()
-            is LoginControllerEvent.OnCloseLoginDialog -> closeLoginDialog()
-            is LoginControllerEvent.OnCloseRegisterDialog -> closeRegisterDialog()
-            is LoginControllerEvent.OnLogin -> {}
-            is LoginControllerEvent.OnRegister -> {}
+            is AuthDialogControllerEvent.OpenLoginDialog -> openLoginDialog()
+            is AuthDialogControllerEvent.OpenRegisterDialog -> openRegisterDialog()
+            is AuthDialogControllerEvent.OnCloseLoginDialog -> closeLoginDialog()
+            is AuthDialogControllerEvent.OnCloseRegisterDialog -> closeRegisterDialog()
+            is AuthDialogControllerEvent.OnLogin -> {}
+            is AuthDialogControllerEvent.OnRegister -> {}
         }
     }
 
@@ -43,11 +43,11 @@ class AuthController(
     }
 }
 
-sealed class LoginControllerEvent {
-    object OpenLoginDialog : LoginControllerEvent()
-    object OpenRegisterDialog : LoginControllerEvent()
-    data class OnCloseLoginDialog(val event: dynamic, val reason: String) : LoginControllerEvent()
-    data class OnCloseRegisterDialog(val event: dynamic, val reason: String) : LoginControllerEvent()
-    object OnLogin : LoginControllerEvent()
-    object OnRegister : LoginControllerEvent()
+sealed class AuthDialogControllerEvent {
+    object OpenLoginDialog : AuthDialogControllerEvent()
+    object OpenRegisterDialog : AuthDialogControllerEvent()
+    data class OnCloseLoginDialog(val event: dynamic, val reason: String) : AuthDialogControllerEvent()
+    data class OnCloseRegisterDialog(val event: dynamic, val reason: String) : AuthDialogControllerEvent()
+    object OnLogin : AuthDialogControllerEvent()
+    object OnRegister : AuthDialogControllerEvent()
 }
