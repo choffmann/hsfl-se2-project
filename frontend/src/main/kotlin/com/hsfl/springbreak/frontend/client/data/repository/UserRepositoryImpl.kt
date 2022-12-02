@@ -16,16 +16,19 @@ class UserRepositoryImpl(private val client: Client) : UserRepository {
         }
     }
 
-    override suspend fun register(user: User.Register, profileImage: File?): Flow<DataResponse<User>> = flow {
+    override suspend fun register(user: User.Register): Flow<DataResponse<User>> = flow {
         repositoryHelper {
             val response = client.register(user)
             APIResponse.fromResponse(response.error, response.data, response.success)
         }
-        profileImage?.let { file ->
-            repositoryHelper {
-                val response = client.updateProfileImage(file)
-                APIResponse.fromResponse(response.error, response.data, response.success)
-            }
+    }
+
+    override suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.ProfileImage>> = flow {
+        repositoryHelper {
+            val response: User.Response = client.updateProfileImage(profileImage)
+            response.data?.let {
+                APIResponse.fromResponse(data = User.ProfileImage(it.imageUrl), success = true, error = null)
+            } ?: APIResponse.fromResponse(error = "Error on fetching profile image", success = false, data = null)
         }
     }
 }

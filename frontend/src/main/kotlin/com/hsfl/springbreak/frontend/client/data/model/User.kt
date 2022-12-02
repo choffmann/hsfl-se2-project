@@ -8,7 +8,8 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val password: String
+    val password: String,
+    val imageUrl: String
 ) {
     @Serializable
     data class Login(
@@ -22,6 +23,11 @@ data class User(
         val lastName: String,
         val email: String,
         val password: String
+    )
+
+    @Serializable
+    data class ProfileImage(
+        val imageUrl: String
     )
 
     @Serializable

@@ -7,5 +7,6 @@ import web.file.File
 
 interface UserRepository {
     suspend fun login(user: User.Login): Flow<DataResponse<User>>
-    suspend fun register(user: User.Register, profileImage: File?): Flow<DataResponse<User>>
+    suspend fun register(user: User.Register): Flow<DataResponse<User>>
+    suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.ProfileImage>>
 }
