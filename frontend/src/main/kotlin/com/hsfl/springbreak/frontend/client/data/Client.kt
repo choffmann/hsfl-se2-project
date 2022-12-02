@@ -18,7 +18,8 @@ import org.w3c.xhr.FormData
 
 interface ApiClient {
     suspend fun login(user: User.Login): User.Response
-    suspend fun register(user: User.Register, profileImage: File?): User.Response
+    suspend fun register(user: User.Register): User.Response
+    suspend fun updateProfileImage(profileImage: File?): User.Response
 }
 
 class Client : ApiClient {
@@ -40,17 +41,20 @@ class Client : ApiClient {
         }.body()
     }
 
-    override suspend fun register(user: User.Register, profileImage: File?): User.Response {
+    override suspend fun register(user: User.Register): User.Response {
+        return client.post(urlString = "http://localhost:8080/register") {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }.body()
+    }
+
+    override suspend fun updateProfileImage(profileImage: File?): User.Response {
         // Have to use window.fetch. Ktor didn't support uploading File from JS File package for now
         val formData = FormData()
         profileImage?.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        formData.append("firstName", user.firstName)
-        formData.append("lastName", user.lastName)
-        formData.append("email", user.email)
-        formData.append("password", user.password)
-        val response = window.fetch(input = "http://localhost:8080/register", init = RequestInit(
+        val response = window.fetch(input = "http://localhost:8080/upload-profile-image", init = RequestInit(
             method = "POST",
             body = formData
         ))
