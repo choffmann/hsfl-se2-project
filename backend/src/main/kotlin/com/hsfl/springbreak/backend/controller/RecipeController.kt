@@ -47,27 +47,29 @@ class RecipeController(val recipeRepository: RecipeRepository) {
 
 
    @PutMapping("api/recipes/{id}")
-   fun updateRecipe(@PathVariable("id") recipeId: Long, @RequestBody recipe: Recipe): Recipe =
-      recipeRepository.findById(recipeId).map {
-         it.title = RecipeEntity.fromDto(recipe).title
-         it.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
-         it.price = RecipeEntity.fromDto(recipe).price
-         it.duration = RecipeEntity.fromDto(recipe).duration
-         it.rating = RecipeEntity.fromDto(recipe).rating
-         it.difficulty = RecipeEntity.fromDto(recipe).difficulty
-         it.category = RecipeEntity.fromDto(recipe).category
-         it.creator = RecipeEntity.fromDto(recipe).creator
-         it.createTime = RecipeEntity.fromDto(recipe).createTime
-         it.ingredients = RecipeEntity.fromDto(recipe).ingredients
-         it.image = RecipeEntity.fromDto(recipe).image
-         it.longDescription = RecipeEntity.fromDto(recipe).longDescription
-         it.views = RecipeEntity.fromDto(recipe).views
-         it.userFavorites = RecipeEntity.fromDto(recipe).userFavorites
-         return@map recipeRepository.save(it)
-      }.orElseGet {
-         // recipe.id = recipeId
-         return@orElseGet recipeRepository.save(RecipeEntity.fromDto(recipe))
-      }.toDto()
+   fun updateRecipe(@PathVariable("id") recipeId: Long, @RequestBody recipe: Recipe): ApiResponse<Recipe> {
+      return if (recipeRepository.existsById(recipeId)) {
+         val result =  recipeRepository.findById(recipeId).get()
+         result.title = RecipeEntity.fromDto(recipe).title
+         result.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
+         result.price = RecipeEntity.fromDto(recipe).price
+         result.duration = RecipeEntity.fromDto(recipe).duration
+         result.category = RecipeEntity.fromDto(recipe).category
+         result.creator = RecipeEntity.fromDto(recipe).creator
+         return ApiResponse(data = recipeRepository.save(result).toDto(), success = true)
+         /*
+        it.rating = RecipeEntity.fromDto(recipe).rating
+        it.difficulty = RecipeEntity.fromDto(recipe).difficulty
+        it.createTime = RecipeEntity.fromDto(recipe).createTime
+        it.ingredients = RecipeEntity.fromDto(recipe).ingredients
+        it.image = RecipeEntity.fromDto(recipe).image
+        it.longDescription = RecipeEntity.fromDto(recipe).longDescription
+        it.views = RecipeEntity.fromDto(recipe).views
+        it.userFavorites = RecipeEntity.fromDto(recipe).userFavorites
+        return@map recipeRepository.save(it)
+         */
+      } else return ApiResponse(error = "No Recipe with the ID: $recipeId", success = false)
+   }
 
    @DeleteMapping("api/recipes/{id}")
    fun deleteRecipe(@PathVariable("id")recipeId: Long): Unit =
@@ -76,6 +78,31 @@ class RecipeController(val recipeRepository: RecipeRepository) {
       } else {
          throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID \"$recipeId\" doesn't exist")
       }
+
+   /*
+recipeRepository.findById(recipeId).map {
+      it.title = RecipeEntity.fromDto(recipe).title
+      it.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
+      it.price = RecipeEntity.fromDto(recipe).price
+      it.duration = RecipeEntity.fromDto(recipe).duration
+      it.category = RecipeEntity.fromDto(recipe).category
+      it.creator = RecipeEntity.fromDto(recipe).creator
+      /*
+      it.rating = RecipeEntity.fromDto(recipe).rating
+      it.difficulty = RecipeEntity.fromDto(recipe).difficulty
+      it.createTime = RecipeEntity.fromDto(recipe).createTime
+      it.ingredients = RecipeEntity.fromDto(recipe).ingredients
+      it.image = RecipeEntity.fromDto(recipe).image
+      it.longDescription = RecipeEntity.fromDto(recipe).longDescription
+      it.views = RecipeEntity.fromDto(recipe).views
+      it.userFavorites = RecipeEntity.fromDto(recipe).userFavorites
+      return@map recipeRepository.save(it)
+       */
+   }.orElseGet {
+      // recipe.id = recipeId
+      return@orElseGet recipeRepository.save(RecipeEntity.fromDto(recipe)))
+   }.toDto()
+ */
 
    /*
    @GetMapping("api/recipes/{id}")

@@ -7,16 +7,19 @@ data class Recipe(
     val title: String,
     val shortDescription: String,
     val price: Double,
-    val rating: Rating,
     val duration: Double,
-    val difficulty: Difficulty,
     val category: Category,
-    val creator: User,
+    val creator: User
+    /*
+    val rating: Rating,
+    val difficulty: Difficulty,
     val createTime: LocalDate,
     val ingredients: List<Ingredient>,
     val image: String,
     val longDescription: String,
     val views: Int
+
+     */
 ) {
 
 }
