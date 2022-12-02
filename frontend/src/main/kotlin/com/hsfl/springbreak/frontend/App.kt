@@ -10,11 +10,9 @@ import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.utils.collectAsState
-import dom.html.HTMLButtonElement
 import mui.material.CssBaseline
 import react.*
 import react.dom.client.createRoot
-import react.dom.events.MouseEventHandler
 
 fun main() {
     createRoot(document.createElement("div").also { document.body.appendChild(it) }).render(Root.create())
@@ -34,24 +32,18 @@ private val Root = FC<Props> {
 private val App = FC<Props> {props ->
     var loginDialogOpen by useState(false)
 
-    val handleOnLoginButtonClicked: MouseEventHandler<HTMLButtonElement> = {
+    val handleOnLoginButtonClicked: () -> Unit = {
         loginDialogOpen = true
     }
 
     // Default Css
     CssBaseline()
 
-    // Login Dialog
-    AuthDialogProvider {
-        open = loginDialogOpen
-    }
-
     MessageSnackbar()
 
     // Display Header
     Header {
         onLogoClicked = { println("click") }
-        onLoginButtonClicked = handleOnLoginButtonClicked
         Home()
     }
 }

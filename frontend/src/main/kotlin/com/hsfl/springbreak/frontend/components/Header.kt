@@ -1,7 +1,6 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.toMuiPx
@@ -18,15 +17,21 @@ import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.main
 import react.useContext
+import react.useState
 
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
-    var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
+    //var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
 val Header = FC<HeaderProps> { props ->
     val isAuthorized = useContext(AuthorizedContext)
+    var openDialog by useState(false)
+
+    val handleOnLoginButtonClicked: () -> Unit = {
+        openDialog = true
+    }
 
     Box {
         sx { display = Display.flex }
@@ -63,7 +68,7 @@ val Header = FC<HeaderProps> { props ->
                     Button {
                         color = ButtonColor.inherit
                         onClick = {
-                            NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                            handleOnLoginButtonClicked()
                         }
                         +"Anmelden"
                     }
@@ -75,7 +80,7 @@ val Header = FC<HeaderProps> { props ->
         NavDrawer {
             onToggleAuthorized = props.onToggleAuthorized
             onLoginButtonClicked = {
-                NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                //handleOnLoginButtonClicked()
             }
         }
         // Main component
@@ -87,6 +92,11 @@ val Header = FC<HeaderProps> { props ->
             }
             Toolbar()
             +props.children
+        }
+
+        // Login Dialog
+        AuthDialogProvider {
+            loginButtonPressed = openDialog
         }
     }
 }
