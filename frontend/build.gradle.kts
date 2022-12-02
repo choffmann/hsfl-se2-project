@@ -45,6 +45,9 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.10.5-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.9.1-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.10.9-pre.447")
+
+                // Kodein
+                implementation("org.kodein.di:kodein-di:7.16.0")
             }
         }
 
