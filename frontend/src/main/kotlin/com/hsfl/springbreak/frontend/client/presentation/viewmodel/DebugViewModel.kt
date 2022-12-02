@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.client.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*

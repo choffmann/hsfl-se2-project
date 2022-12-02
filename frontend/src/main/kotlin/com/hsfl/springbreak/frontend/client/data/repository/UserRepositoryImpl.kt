@@ -1,9 +1,9 @@
-package com.hsfl.springbreak.frontend.client.repository
+package com.hsfl.springbreak.frontend.client.data.repository
 
-import com.hsfl.springbreak.frontend.client.Client
-import com.hsfl.springbreak.frontend.client.DataResponse
-import com.hsfl.springbreak.frontend.client.model.APIResponse
-import com.hsfl.springbreak.frontend.client.model.User
+import com.hsfl.springbreak.frontend.client.data.Client
+import com.hsfl.springbreak.frontend.client.data.DataResponse
+import com.hsfl.springbreak.frontend.client.data.model.APIResponse
+import com.hsfl.springbreak.frontend.client.data.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

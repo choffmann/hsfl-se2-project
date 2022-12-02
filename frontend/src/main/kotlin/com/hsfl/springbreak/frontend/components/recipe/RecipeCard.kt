@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.frontend.components.recipe
 
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import react.FC
 import react.useContext

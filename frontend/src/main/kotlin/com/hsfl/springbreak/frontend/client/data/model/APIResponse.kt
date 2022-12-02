@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.client.model
+package com.hsfl.springbreak.frontend.client.data.model
 
 import kotlinx.serialization.Serializable
 

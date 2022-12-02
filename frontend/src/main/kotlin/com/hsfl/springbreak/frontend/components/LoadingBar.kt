@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import mui.material.LinearProgress
 import react.FC

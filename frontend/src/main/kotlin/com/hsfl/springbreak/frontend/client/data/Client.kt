@@ -1,12 +1,10 @@
-package com.hsfl.springbreak.frontend.client
+package com.hsfl.springbreak.frontend.client.data
 
-import com.hsfl.springbreak.frontend.client.model.User
-import csstype.url
+import com.hsfl.springbreak.frontend.client.data.model.User
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.json.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*

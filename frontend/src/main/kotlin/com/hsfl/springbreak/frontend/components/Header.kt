@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.utils.toMuiPx

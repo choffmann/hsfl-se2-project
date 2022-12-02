@@ -1,11 +1,11 @@
 package com.hsfl.springbreak.frontend.components.auth
 
-import com.hsfl.springbreak.frontend.client.Client
-import com.hsfl.springbreak.frontend.client.repository.UserRepositoryImpl
-import com.hsfl.springbreak.frontend.client.viewmodel.LoginEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.LoginViewModel
-import com.hsfl.springbreak.frontend.client.viewmodel.RegisterEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.RegisterViewModel
+import com.hsfl.springbreak.frontend.client.data.Client
+import com.hsfl.springbreak.frontend.client.data.repository.UserRepositoryImpl
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.LoginEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.LoginViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RegisterEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RegisterViewModel
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import react.FC
 import react.Props

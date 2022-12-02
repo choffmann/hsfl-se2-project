@@ -1,7 +1,7 @@
-package com.hsfl.springbreak.frontend.client
+package com.hsfl.springbreak.frontend.client.data
 
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEventViewModel
 
 sealed class DataResponse<T> {
     class Success<T>(val data: T) : DataResponse<T>()

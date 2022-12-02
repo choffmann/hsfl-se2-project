@@ -1,7 +1,7 @@
-package com.hsfl.springbreak.frontend.client.repository
+package com.hsfl.springbreak.frontend.client.data.repository
 
-import com.hsfl.springbreak.frontend.client.DataResponse
-import com.hsfl.springbreak.frontend.client.model.APIResponse
+import com.hsfl.springbreak.frontend.client.data.DataResponse
+import com.hsfl.springbreak.frontend.client.data.model.APIResponse
 import kotlinx.coroutines.flow.FlowCollector
 
 suspend fun <T> FlowCollector<DataResponse<T>>.repositoryHelper(callback: suspend () -> APIResponse<T>) {

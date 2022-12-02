@@ -1,8 +1,8 @@
 package com.hsfl.springbreak.frontend
 
 import browser.document
-import com.hsfl.springbreak.frontend.client.viewmodel.AuthViewModel
-import com.hsfl.springbreak.frontend.client.viewmodel.UiEventViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.AuthViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEventViewModel
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.routes.Home
