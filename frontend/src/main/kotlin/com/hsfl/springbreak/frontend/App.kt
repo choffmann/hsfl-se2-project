@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend
 
 import browser.document
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.AuthViewModel
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEventViewModel
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
@@ -22,7 +22,7 @@ fun main() {
 
 private val Root = FC<Props> {
     val uiState = UiEventViewModel.uiState.collectAsState()
-    val authorized = AuthViewModel.authorized.collectAsState()
+    val authorized = AuthState.authorized.collectAsState()
 
     AuthorizedContext.Provider(value = authorized) {
         UiStateContext.Provider(value = uiState) {

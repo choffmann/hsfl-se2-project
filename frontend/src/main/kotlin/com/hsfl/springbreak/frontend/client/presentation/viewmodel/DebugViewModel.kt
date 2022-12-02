@@ -1,11 +1,13 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 object DebugViewModel {
-    val authState: StateFlow<Boolean> = AuthViewModel.authorized
+    val authState: StateFlow<Boolean> = AuthState.authorized
 
     private var _showLoading = MutableStateFlow(false)
     val showLoading: StateFlow<Boolean> = _showLoading
@@ -45,9 +47,9 @@ object DebugViewModel {
 
     private fun onSwitchAuthorized() {
         if (authState.value) {
-            AuthViewModel.onEvent(AuthEvent.IsUnauthorized)
+            AuthState.onEvent(AuthEvent.IsUnauthorized)
         } else {
-            AuthViewModel.onEvent(AuthEvent.IsAuthorized)
+            AuthState.onEvent(AuthEvent.IsAuthorized)
         }
     }
 }

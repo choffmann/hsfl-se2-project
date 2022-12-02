@@ -2,6 +2,8 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
 import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,7 +55,7 @@ class LoginViewModel(
             response.handleDataResponse<User>(
                 onSuccess = {
                     println(it)
-                    AuthViewModel.onEvent(AuthEvent.IsAuthorized)
+                    AuthState.onEvent(AuthEvent.IsAuthorized)
                     onCloseDialog()
                     UiEventViewModel.onEvent(UiEvent.Idle)
                 },
