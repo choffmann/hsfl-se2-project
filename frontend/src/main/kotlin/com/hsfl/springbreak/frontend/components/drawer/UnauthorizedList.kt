@@ -1,9 +1,7 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogControllerEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
 import com.hsfl.springbreak.frontend.di.di
 import mui.icons.material.Category
 import mui.icons.material.Login
@@ -13,10 +11,10 @@ import react.FC
 import react.Props
 
 val UnauthorizedList = FC<Props> { props ->
-    val authDialogController: AuthDialogController by di.instance()
+    val authDialogViewModel: AuthDialogViewModel by di.instance()
     List {
         ListItemButton {
-            onClick = { authDialogController.onEvent(AuthDialogControllerEvent.OpenLoginDialog) }
+            onClick = { authDialogViewModel.onEvent(AuthDialogEvent.OpenLoginDialog) }
             ListItemIcon {
                 Login()
             }

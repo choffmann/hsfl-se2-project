@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components.auth
 
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogControllerEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import org.kodein.di.instance
@@ -12,7 +12,7 @@ import web.file.File
 
 
 val AuthDialogProvider = FC<Props> {
-    val controller: AuthDialogController by di.instance()
+    val controller: AuthDialogViewModel by di.instance()
     val openLoginDialog = controller.loginDialogOpen.collectAsState()
     val openRegisterDialog = controller.registerDialogOpen.collectAsState()
 
@@ -30,17 +30,17 @@ val AuthDialogProvider = FC<Props> {
     LoginDialog {
         open = openLoginDialog
         onClose = { event, reason ->
-            controller.onEvent(AuthDialogControllerEvent.OnCloseLoginDialog(event, reason))
+            controller.onEvent(AuthDialogEvent.OnCloseLoginDialog(event, reason))
         }
         onLogin = {
             controller.onEvent(
-                AuthDialogControllerEvent.OnLogin(
+                AuthDialogEvent.OnLogin(
                     email = loginEmailText,
                     password = loginPasswordText
                 )
             )
         }
-        onRegister = { controller.onEvent(AuthDialogControllerEvent.OpenRegisterDialog) }
+        onRegister = { controller.onEvent(AuthDialogEvent.OpenRegisterDialog) }
         onEmailTextChanged = { loginEmailText = it }
         onPasswordTextChanged = { loginPasswordText = it }
     }
@@ -48,11 +48,11 @@ val AuthDialogProvider = FC<Props> {
     RegisterDialog {
         open = openRegisterDialog
         onClose = { event, reason ->
-            controller.onEvent(AuthDialogControllerEvent.OnCloseRegisterDialog(event, reason))
+            controller.onEvent(AuthDialogEvent.OnCloseRegisterDialog(event, reason))
         }
         onRegister = {
             controller.onEvent(
-                AuthDialogControllerEvent.OnRegister(
+                AuthDialogEvent.OnRegister(
                     firstName = registerFirstNameText,
                     lastName = registerLastNameText,
                     email = registerEmailText,

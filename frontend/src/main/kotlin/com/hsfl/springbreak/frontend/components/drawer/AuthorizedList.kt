@@ -1,16 +1,13 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
-import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
 import mui.icons.material.*
 import mui.material.*
 import mui.material.List
 import mui.system.sx
-import org.kodein.di.instance
 import react.FC
 import react.Props
 

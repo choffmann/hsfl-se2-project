@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogController
-import com.hsfl.springbreak.frontend.client.presentation.controller.AuthDialogControllerEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
 import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -30,7 +30,7 @@ external interface HeaderProps : PropsWithChildren {
 
 val Header = FC<HeaderProps> { props ->
     val isAuthorized = useContext(AuthorizedContext)
-    val authDialogController: AuthDialogController by di.instance()
+    val authDialogViewModel: AuthDialogViewModel by di.instance()
 
     Box {
         sx { display = Display.flex }
@@ -67,7 +67,7 @@ val Header = FC<HeaderProps> { props ->
                     Button {
                         color = ButtonColor.inherit
                         onClick = {
-                            authDialogController.onEvent(AuthDialogControllerEvent.OpenLoginDialog)
+                            authDialogViewModel.onEvent(AuthDialogEvent.OpenLoginDialog)
                         }
                         +"Anmelden"
                     }
