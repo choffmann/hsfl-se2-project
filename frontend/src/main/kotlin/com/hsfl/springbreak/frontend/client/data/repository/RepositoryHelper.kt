@@ -15,6 +15,10 @@ suspend fun <T> FlowCollector<DataResponse<T>>.repositoryHelper(callback: suspen
     } catch (e: Error) {
         e.printStackTrace()
         println(e.cause)
-        emit(DataResponse.Error(e.message ?: "An unexpected error occurred"))
+        emit(DataResponse.Error("[DEBUG] ${e.message}"))
+    } catch (e: Exception) {
+        e.printStackTrace()
+        println(e.cause)
+        emit(DataResponse.Error("[DEBUG] ${e.message}"))
     }
 }

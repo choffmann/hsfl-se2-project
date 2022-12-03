@@ -29,6 +29,6 @@ class LoginViewModel(
     }
 }
 
-sealed class LoginEvent : AuthViewModelEvent {
+sealed class LoginEvent {
     object OnLogin : LoginEvent()
 }

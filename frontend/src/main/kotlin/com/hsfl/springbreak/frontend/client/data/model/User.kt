@@ -9,7 +9,7 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val imageUrl: String
+    val image: String? = null
 ) {
     @Serializable
     data class Login(

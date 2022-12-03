@@ -2,6 +2,8 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -14,7 +16,7 @@ class DebugViewModel(private val authorizedState: AuthState) {
 
     init {
         MainScope().launch {
-            UiEventViewModel.uiState.collectLatest {
+            UiEventState.uiState.collectLatest {
                 println("DebugViewModel::collectLatest::${it is UiEvent.ShowLoading}")
                 _showLoading.value = it is UiEvent.ShowLoading
             }
@@ -31,17 +33,17 @@ class DebugViewModel(private val authorizedState: AuthState) {
     }
 
     private fun throwError(msg: String) {
-        UiEventViewModel.onEvent(UiEvent.ShowError(msg))
+        UiEventState.onEvent(UiEvent.ShowError(msg))
     }
     private fun senMessage(msg: String) {
-        UiEventViewModel.onEvent(UiEvent.ShowMessage(msg))
+        UiEventState.onEvent(UiEvent.ShowMessage(msg))
     }
 
     private fun showLoading() {
         if (showLoading.value) {
-            UiEventViewModel.onEvent(UiEvent.Idle)
+            UiEventState.onEvent(UiEvent.Idle)
         } else {
-            UiEventViewModel.onEvent(UiEvent.ShowLoading)
+            UiEventState.onEvent(UiEvent.ShowLoading)
         }
     }
 

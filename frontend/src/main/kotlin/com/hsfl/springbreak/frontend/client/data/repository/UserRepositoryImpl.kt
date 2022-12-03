@@ -27,7 +27,8 @@ class UserRepositoryImpl(private val client: Client) : UserRepository {
         repositoryHelper {
             val response: User.Response = client.updateProfileImage(profileImage)
             response.data?.let {
-                APIResponse.fromResponse(data = User.ProfileImage(it.imageUrl), success = true, error = null)
+                APIResponse.fromResponse(data = User.ProfileImage(it.image!!), success = true, error = null)
+                // TODO: Fix type
             } ?: APIResponse.fromResponse(error = "Error on fetching profile image", success = false, data = null)
         }
     }

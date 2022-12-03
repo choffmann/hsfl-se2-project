@@ -2,7 +2,7 @@ package com.hsfl.springbreak.frontend.components.drawer
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di

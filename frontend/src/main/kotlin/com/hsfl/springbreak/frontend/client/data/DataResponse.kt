@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.client.data
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.UiEventViewModel
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 
 sealed class DataResponse<T> {
     class Success<T>(val data: T) : DataResponse<T>()
@@ -12,10 +12,10 @@ sealed class DataResponse<T> {
     suspend fun <out: T> handleDataResponse(
         onSuccess: suspend (T) -> Unit,
         onError: suspend (String) -> Unit = {
-            UiEventViewModel.onEvent(UiEvent.ShowError(it))
+            UiEventState.onEvent(UiEvent.ShowError(it))
         },
         onLoading: suspend () -> Unit = {
-            UiEventViewModel.onEvent(UiEvent.ShowLoading)
+            UiEventState.onEvent(UiEvent.ShowLoading)
         },
         onUnauthorized: suspend (String) -> Unit
     ) = when (this) {
