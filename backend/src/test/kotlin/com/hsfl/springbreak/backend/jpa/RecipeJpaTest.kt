@@ -20,32 +20,26 @@ import javax.transaction.Transactional
 class RecipeJpaTest {
 
     @Autowired
-    private lateinit var service: RecipeService
     private lateinit var controller: RecipeController
-
+    private var id: Long = 0
     private var testRecipe = RecipeEntity(
+        id = 999, //TODO: Id wird nicht automatisch vergeben
         title = "Schockomuffins",
         shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
         price = 5.00,
         duration = 10.00,
-        rating = null,
-        difficulty = DifficultyEntity(
-            name = "Leicht"
-        ),
         category = CategoryEntity(
+            id = 999, //TODO: Id wird nicht automatisch vergeben
+            recipes = listOf(),
             name = "Backen"
         ),
         creator = UserEntity(
-            firstName = "Jonathan",
-            lastName = "Duval",
-            email = "jonathan.duval@monster-inc.com",
-            password = "secret"
+            id = 1, //TODO: Id wird nicht automatisch vergeben
+            firstName = "Root",
+            lastName = "Administrator",
+            email = "root@admin.com",
+            password = "geheim"
         ),
-        createTime = LocalDate.now(),
-        ingredients = null,
-        image = "https://www.einfachbacken.de/sites/einfachbacken.de/files/styles/700_530/public/2019-05/schokomuffins.jpg?h=a1e1a043&itok=by_zr_C7",
-        longDescription = "Butter mit Zucker und Vanillezucker verrühren. Eier unterrühren. Zartbitterschokolade grob hacken. Ofen auf 180 Grad (Umluft: 160 Grad) vorheizen. Mehl mit Kakaopulver, Salz und Backpulver vermischen. Mehlmischung mit der Milch zur Butter-Zuckermischung geben und alles gut verrühren. Etwa zwei Drittel der gehackten Schokolade unterheben",
-        views = 0
     )
 
     /*
@@ -59,35 +53,45 @@ class RecipeJpaTest {
     fun testPostRecipe() {
         // Test correct POST
         val apiResponse = controller.createNewRecipe(testRecipe.toDto())
-        assertEquals(apiResponse?.success, true)
+        assertEquals(true, apiResponse.success)
+
+        if (apiResponse.success) {
+            id = apiResponse.data!!.id
+        }
+
+        println("Recipe saved to id: $id")
     }
 
     @Test
     fun testGetRecipe() {
         // Test correct GET
-        var apiResponse = controller.findRecipeById(0)
-        assertEquals(apiResponse.success, true)
+        var apiResponse = controller.findRecipeById(id)
+        assertEquals(true, apiResponse.success)
 
         // Test faulty GET
-        apiResponse = controller.findRecipeById(10)
-        assertEquals(apiResponse.success, false)
+        apiResponse = controller.findRecipeById(1234)
+        assertEquals(false, apiResponse.success)
     }
 
+    /*
     @Test
     fun testPutRecipe() {
         // change id
         // test GET
     }
 
+     */
+
+    /*
     @Test
     fun testDeleteRecipe() {
         // Test correct DELETE
-        var apiResponse = controller.findRecipeById(0)
-        assertEquals(apiResponse.success, true)
+        var apiResponse = controller.findRecipeById(3)
+        assertEquals(true, apiResponse.success)
 
         controller.deleteRecipe(0)
-        apiResponse = controller.findRecipeById(0)
-        assertEquals(apiResponse.success, false)
+        apiResponse = controller.findRecipeById(3)
+        assertEquals(false, apiResponse.success)
 
         // Test faulty DELETE
         controller.deleteRecipe(10)
@@ -95,4 +99,6 @@ class RecipeJpaTest {
         // TODO: Delete-ApiResponse has no success-field
 
     }
+
+     */
 }
