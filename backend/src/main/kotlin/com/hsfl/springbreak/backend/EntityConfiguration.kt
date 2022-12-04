@@ -23,6 +23,7 @@ class EntityConfiguration {
             recipeRepository.save(RecipeEntity(
                 id = null,
                 title = "Müsli", shortDescription = "lecker", price = 3.00, duration = 10.00,
+                difficulty = DifficultyEntity(id = null, recipes = listOf(), name = "schwer"),
                 category = CategoryEntity(id = null, recipes = listOf(), name = "Frühstück"),
                 creator = user
                 /*

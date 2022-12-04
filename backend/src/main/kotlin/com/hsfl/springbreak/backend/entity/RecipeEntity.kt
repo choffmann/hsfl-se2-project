@@ -12,7 +12,7 @@ data class RecipeEntity(
     @Column var price: Double,
     @Column var duration: Double,
     // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
-    // @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity?,
+    @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity?,
     @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "category_id") var category: CategoryEntity?,
     @ManyToOne var creator: UserEntity,
     /*
@@ -31,6 +31,7 @@ data class RecipeEntity(
         shortDescription = this.shortDescription,
         price = this.price,
         duration = this.duration,
+        difficulty = this.difficulty!!.toDto(),
         category = this.category!!.toDto(),
         creator = this.creator.toDto(),
         /*
@@ -51,11 +52,11 @@ data class RecipeEntity(
             shortDescription = dto.shortDescription,
             price = dto.price,
             duration = dto.duration,
+            difficulty = DifficultyEntity.fromDto(dto.difficulty),
             category = CategoryEntity.fromDto(dto.category),
             creator = UserEntity.fromDto(dto.creator)
             /*
             rating = RatingEntity.fromDto(dto.rating),
-            difficulty = DifficultyEntity.fromDto(dto.difficulty),
             createTime = dto.createTime,
             ingredients = dto.ingredients.map { IngredientRecipeEntity.fromIngredients(it, dto) },
             image = dto.image,
