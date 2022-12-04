@@ -20,7 +20,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	runtimeOnly("org.postgresql:postgresql")
+    implementation("junit:junit:4.13.1")
+	implementation("junit:junit:4.13.1")
+	implementation("junit:junit:4.13.1")
+    implementation("org.testng:testng:7.1.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

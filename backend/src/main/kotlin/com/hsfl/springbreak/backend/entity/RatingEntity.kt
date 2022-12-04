@@ -5,10 +5,11 @@ import javax.persistence.*
 
 @Entity(name = "rating")
 data class RatingEntity(
-    @Id @Column(name = "recipe_id") val id: Long? = null,
-    @OneToOne @MapsId @JoinColumn(name = "recipe_id") val recipe: RecipeEntity,
-    @Column val likes: Int,
-    @Column val dislike: Int
+   // @Id @Column(name = "recipe_id") val id: Long? = null,
+        @Id @GeneratedValue val id: Long? = null,
+        @Column var likes: Int,
+        @Column var dislike: Int,
+        @OneToOne @JoinColumn(name = "recipe_id") val recipe: RecipeEntity,
 ) {
 
     fun toDto(): Rating = Rating(

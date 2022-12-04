@@ -30,7 +30,6 @@ class RecipeJpaTest {
         duration = 10.00,
         category = CategoryEntity(
             id = 999, //TODO: Id wird nicht automatisch vergeben
-            recipes = listOf(),
             name = "Backen"
         ),
         creator = UserEntity(

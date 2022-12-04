@@ -11,7 +11,8 @@ import javax.persistence.OneToMany
 data class IngredientEntity(
     @Id @GeneratedValue val id: Long? = null,
     @Column val name: String,
-    @OneToMany(mappedBy = "recipe") val recipe: MutableList<IngredientRecipeEntity> = mutableListOf()
+    //@OneToMany(mappedBy = "recipe") val recipe: MutableList<IngredientRecipeEntity> = mutableListOf()
+
 ) {
 
     fun toDto(): Ingredient = Ingredient(
@@ -20,8 +21,10 @@ data class IngredientEntity(
     )
 
     companion object {
-        fun fromDto(dto: Ingredient): IngredientEntity {
-            TODO("Not yet implemented")
-        }
+        fun fromDto(dto: Ingredient): IngredientEntity= IngredientEntity(
+            id = dto.id!!,
+            name= dto.name
+
+            )
     }
 }
