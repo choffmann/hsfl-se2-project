@@ -5,6 +5,7 @@ import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.IngredientRecipeId
 import com.hsfl.springbreak.backend.model.Recipe
 import java.io.Serializable
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embeddable
 import javax.persistence.EmbeddedId
@@ -22,21 +23,21 @@ data class IngredientRecipeKey(
 @Entity
 data class IngredientRecipeEntity(
     @EmbeddedId val id: IngredientRecipeKey?,
-    @ManyToOne @MapsId("recipeId") @JoinColumn(name = "recipe_id") val recipe: RecipeEntity,
-    @ManyToOne @MapsId("ingredientId") @JoinColumn(name = "ingredient_id") val ingredient: IngredientEntity,
+    @ManyToOne(cascade = [CascadeType.ALL]) @MapsId("recipeId") @JoinColumn(name = "recipe_id") val recipe: RecipeEntity?,
+    @ManyToOne(cascade = [CascadeType.ALL]) @MapsId("ingredientId") @JoinColumn(name = "ingredient_id") val ingredient: IngredientEntity?,
     @Column val unit: String,
     @Column val amount: Int
 ) {
     fun toDto(): IngredientRecipe = IngredientRecipe(
-        id = IngredientRecipeId(recipeId = this.recipe.id!!, ingredientId = this.ingredient.id!!),
+        id = IngredientRecipeId(recipeId = this.recipe?.id!!, ingredientId = this.ingredient?.id!!),
         recipe = this.recipe.toDto(),
         ingredient = this.ingredient.toDto(),
         unit = this.unit,
         amount = this.amount
     )
 
-    fun toIngredient(): Ingredient = this.ingredient.toDto()
-    fun toRecipe(): Recipe = this.recipe.toDto()
+    fun toIngredient(): Ingredient = this.ingredient!!.toDto()
+    fun toRecipe(): Recipe = this.recipe!!.toDto()
 
     companion object {
         fun fromDto(dto: IngredientRecipe): IngredientRecipeEntity = IngredientRecipeEntity(

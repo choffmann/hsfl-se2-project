@@ -38,11 +38,7 @@ class RecipeController(val recipeRepository: RecipeRepository) {
    @PostMapping("api/recipes")
    fun createNewRecipe(@RequestBody newRecipe: Recipe): ApiResponse<Recipe> {
       val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(newRecipe)).toDto()
-      return if (savedRecipe != null) {
-         ApiResponse(data = savedRecipe, success = true)
-      } else {
-         ApiResponse(error = "Error by saving", success = false)
-      }
+      return ApiResponse(data = savedRecipe, success = true)
    }
 
 
@@ -54,12 +50,12 @@ class RecipeController(val recipeRepository: RecipeRepository) {
          result.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
          result.price = RecipeEntity.fromDto(recipe).price
          result.duration = RecipeEntity.fromDto(recipe).duration
+         result.difficulty = RecipeEntity.fromDto(recipe).difficulty
          result.category = RecipeEntity.fromDto(recipe).category
          result.creator = RecipeEntity.fromDto(recipe).creator
          return ApiResponse(data = recipeRepository.save(result).toDto(), success = true)
          /*
         it.rating = RecipeEntity.fromDto(recipe).rating
-        it.difficulty = RecipeEntity.fromDto(recipe).difficulty
         it.createTime = RecipeEntity.fromDto(recipe).createTime
         it.ingredients = RecipeEntity.fromDto(recipe).ingredients
         it.image = RecipeEntity.fromDto(recipe).image

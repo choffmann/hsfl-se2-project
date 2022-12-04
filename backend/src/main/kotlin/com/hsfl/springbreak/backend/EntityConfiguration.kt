@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.backend
 
 import com.hsfl.springbreak.backend.entity.*
+import com.hsfl.springbreak.backend.repository.IngredientRepository
 import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.boot.ApplicationRunner
@@ -12,20 +13,22 @@ import java.time.LocalDate
 class EntityConfiguration {
 
     @Bean
-    fun databaseInitializer(recipeRepository: RecipeRepository, userRepository: UserRepository) =
+    fun databaseInitializer(recipeRepository: RecipeRepository, userRepository: UserRepository, ingredientRepository: IngredientRepository) =
         ApplicationRunner {
             val user = userRepository.save(UserEntity(
                 firstName = "Hektor", lastName = "Panzer", email = "panzer@",
                 password = "secret", image = "DickPic.png", favoriteRecipe = listOf()
             ))
 
+            val ingredient = ingredientRepository.save(IngredientEntity(id = 1, name = "Milch", recipes = listOf()))
 
             recipeRepository.save(RecipeEntity(
-                id = null,
                 title = "Müsli", shortDescription = "lecker", price = 3.00, duration = 10.00,
+                likes = 0, dislikes = 0,
                 difficulty = DifficultyEntity(id = null, recipes = listOf(), name = "schwer"),
                 category = CategoryEntity(id = null, recipes = listOf(), name = "Frühstück"),
-                creator = user
+                creator = user,  createTime = LocalDate.now(), image = "Müsli.png", longDescription = "seeehhr lecker", views = 0
+                // ingredients = listOf(IngredientRecipeEntity(id = null, recipe = null, ingredient = ingredient, amount = 2, unit = "Liter"))
                 /*
                 rating = null,
                 difficulty = difficulty,
