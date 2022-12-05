@@ -5,6 +5,7 @@ import com.hsfl.springbreak.backend.repository.*
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.time.LocalDate
 
 @Configuration
 class EntityConfiguration {
@@ -36,15 +37,15 @@ class EntityConfiguration {
 
 
                 val diff = difficultyRepository.save(DifficultyEntity(
-                        name = "Easy"
+                        name = "Easy",
                 ))
 
                 val recipe = recipeRepository.save(RecipeEntity(
                         title = "Hektor", shortDescription = "Panzer", price = 25.9,
-                        duration = 10.8, category= cat, creator= user ,difficulty=diff
+                        duration = 10.8, difficulty=diff,category= cat, creator= user ,
+                        createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100
                 ))
                 print("recipe:" + recipe)
-
 
                 val rating = ratingRepository.save(RatingEntity(
                         likes= 6, dislike= 7,  recipe= recipe

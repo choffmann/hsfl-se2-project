@@ -12,12 +12,12 @@ import javax.persistence.OneToMany
 data class IngredientEntity(
     @Id @GeneratedValue val id: Long? = null,
     @Column val name: String,
-    @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL]) val recipes: List<IngredientRecipeEntity>?
+   // @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL]) val recipes: List<IngredientRecipeEntity>?
 ) {
 
     fun toDto(): Ingredient = Ingredient(
         id = this.id!!,
-        recipes = this.recipes!!.map { it.toRecipe() },
+        //recipes = this.recipes!!.map { it.toRecipe() },
         name = this.name
     )
 
@@ -25,7 +25,7 @@ data class IngredientEntity(
         fun fromDto(dto: Ingredient): IngredientEntity = IngredientEntity(
             id = dto.id,
             name = dto.name,
-            recipes = dto.recipes.map { IngredientRecipeEntity.fromIngredients(dto, it) }
+            //recipes = dto.recipes.map { IngredientRecipeEntity.fromIngredients(dto, it) }
         )
     }
 }
