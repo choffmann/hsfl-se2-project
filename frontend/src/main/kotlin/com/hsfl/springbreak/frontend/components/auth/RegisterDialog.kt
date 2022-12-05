@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.components.auth
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.RegisterPasswordTextState
 import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
 import dom.html.HTMLInputElement
@@ -29,10 +30,12 @@ external interface RegisterDialogProps : Props {
     var onPasswordText: (String) -> Unit
     var onConfirmedPasswordText: (String) -> Unit
     var onProfileImageChanged: (File) -> Unit
+    var confirmedPasswordTextState: RegisterPasswordTextState
 }
 
 val RegisterDialog = FC<RegisterDialogProps> { props ->
     var profileImage by useState<String>()
+    
     Dialog {
         open = props.open
         onClose = props.onClose
@@ -162,6 +165,9 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                                     val target = it.target as HTMLInputElement
                                     props.onConfirmedPasswordText(target.value)
                                 }
+                                //value = props.confirmedPasswordTextError.toString()
+                                error = props.confirmedPasswordTextState.error
+                                helperText = Typography.create { +props.confirmedPasswordTextState.message }
                             }
                         }
                     }

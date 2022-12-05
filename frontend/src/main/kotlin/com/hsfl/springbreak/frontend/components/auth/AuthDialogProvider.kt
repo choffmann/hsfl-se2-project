@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.RegisterPasswordTextState
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import org.kodein.di.instance
@@ -9,12 +10,13 @@ import react.FC
 import react.Props
 import react.useState
 import web.file.File
+import kotlin.reflect.KProperty
 
 
 val AuthDialogProvider = FC<Props> {
-    val controller: AuthDialogViewModel by di.instance()
-    val openLoginDialog = controller.loginDialogOpen.collectAsState()
-    val openRegisterDialog = controller.registerDialogOpen.collectAsState()
+    val viewModel: AuthDialogViewModel by di.instance()
+    val openLoginDialog = viewModel.loginDialogOpen.collectAsState()
+    val openRegisterDialog = viewModel.registerDialogOpen.collectAsState()
 
     var loginEmailText by useState("")
     var loginPasswordText by useState("")
@@ -25,22 +27,23 @@ val AuthDialogProvider = FC<Props> {
     var registerPasswordText by useState("")
     var registerConfirmedPasswordText by useState("")
     var registerProfileImage by useState<File>()
+    val passwordTextState = viewModel.passwordTextConfirmation.collectAsState()
 
 
     LoginDialog {
         open = openLoginDialog
         onClose = { event, reason ->
-            controller.onEvent(AuthDialogEvent.OnCloseLoginDialog(event, reason))
+            viewModel.onEvent(AuthDialogEvent.OnCloseLoginDialog(event, reason))
         }
         onLogin = {
-            controller.onEvent(
+            viewModel.onEvent(
                 AuthDialogEvent.OnLogin(
                     email = loginEmailText,
                     password = loginPasswordText
                 )
             )
         }
-        onRegister = { controller.onEvent(AuthDialogEvent.OpenRegisterDialog) }
+        onRegister = { viewModel.onEvent(AuthDialogEvent.OpenRegisterDialog) }
         onEmailTextChanged = { loginEmailText = it }
         onPasswordTextChanged = { loginPasswordText = it }
     }
@@ -48,10 +51,10 @@ val AuthDialogProvider = FC<Props> {
     RegisterDialog {
         open = openRegisterDialog
         onClose = { event, reason ->
-            controller.onEvent(AuthDialogEvent.OnCloseRegisterDialog(event, reason))
+            viewModel.onEvent(AuthDialogEvent.OnCloseRegisterDialog(event, reason))
         }
         onRegister = {
-            controller.onEvent(
+            viewModel.onEvent(
                 AuthDialogEvent.OnRegister(
                     firstName = registerFirstNameText,
                     lastName = registerLastNameText,
@@ -68,5 +71,6 @@ val AuthDialogProvider = FC<Props> {
         onPasswordText = { registerPasswordText = it }
         onConfirmedPasswordText = { registerConfirmedPasswordText = it }
         onProfileImageChanged = { registerProfileImage = it }
+        confirmedPasswordTextState = passwordTextState
     }
 }
