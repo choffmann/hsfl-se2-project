@@ -23,7 +23,7 @@ class RecipeJpaTest {
     private lateinit var controller: RecipeController
     private var id: Long = 0
     private var testRecipe = RecipeEntity(
-        id = 999, //TODO: Id wird nicht automatisch vergeben
+        id = null, //TODO: Id wird nicht automatisch vergeben
         title = "Schockomuffins",
         shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
         price = 5.00,

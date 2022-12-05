@@ -25,6 +25,7 @@ class RecipeController(val recipeRepository: RecipeRepository) {
    @GetMapping("api/recipes/{id}")
    fun findRecipeById(@PathVariable("id") recipeId: Long): Recipe = recipeRepository.findById(recipeId)
       .orElseThrow().toDto()
+
     */
 
    @GetMapping("api/recipes/{id}")
@@ -36,7 +37,6 @@ class RecipeController(val recipeRepository: RecipeRepository) {
 
    @PostMapping("api/recipes")
    fun createNewRecipe(@RequestBody newRecipe: Recipe): ApiResponse<Recipe> {
-      //RecipeEntity.fromDto(newRecipe).category
       val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(newRecipe)).toDto()
       print("-------- "+savedRecipe+"----- \n")
       return if (savedRecipe != null) {
@@ -55,6 +55,7 @@ class RecipeController(val recipeRepository: RecipeRepository) {
          result.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
          result.price = RecipeEntity.fromDto(recipe).price
          result.duration = RecipeEntity.fromDto(recipe).duration
+         result.difficulty = RecipeEntity.fromDto(recipe).difficulty
          result.category = RecipeEntity.fromDto(recipe).category
          result.creator = RecipeEntity.fromDto(recipe).creator
          return ApiResponse(data = recipeRepository.save(result).toDto(), success = true)

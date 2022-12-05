@@ -7,20 +7,21 @@ import javax.persistence.*
 @Entity(name = "difficulty")
 data class DifficultyEntity(
     @Id @GeneratedValue val id: Long? = null,
-    @Column val name: String,
-    //@OneToMany(cascade = [CascadeType.ALL]) @JoinColumn(name = "recipe_id") var recipe: RecipeEntity?
-){
+    @OneToMany(mappedBy = "difficulty", cascade = [CascadeType.ALL]) val recipes: List<RecipeEntity>,
+    @Column val name: String
+) {
 
     fun toDto(): Difficulty = Difficulty(
         id = this.id!!,
+        recipes = this.recipes.map { it.toDto() },
         name = this.name
     )
 
     companion object {
         fun fromDto(dto: Difficulty): DifficultyEntity = DifficultyEntity(
             id = dto.id,
-            name = dto.name,
-
+            recipes = dto.recipes.map { RecipeEntity.fromDto(it) },
+            name = dto.name
         )
     }
 }

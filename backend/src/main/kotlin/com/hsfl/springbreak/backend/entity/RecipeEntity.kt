@@ -6,65 +6,69 @@ import javax.persistence.*
 
 @Entity(name = "recipe")
 data class RecipeEntity(
-    @Id @GeneratedValue val id: Long?= null,
+    @Id @GeneratedValue val id: Long? = null,
     @Column var title: String,
     @Column var shortDescription: String,
     @Column var price: Double,
     @Column var duration: Double,
-    @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity,
-    @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
-    @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
-    @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
-    //@Column var createTime: LocalDate,
-    //@OneToMany(mappedBy = "ingredient") var ingredients: List<IngredientRecipeEntity>,
-    //@Column var image: String,
-    //@Column var longDescription: String,
-    //@Column var views: Int,
-   // @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
-
+    @Column var likes: Int,
+    @Column var dislikes: Int,
+    // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
+    @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity?,
+    @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "category_id") var category: CategoryEntity?,
+    @ManyToOne var creator: UserEntity,
+    @Column var createTime: LocalDate,
+    @Column var image: String,
+    @Column var longDescription: String,
+    @Column var views: Int
+    // @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?
+    /*
+    @Column var longDescription: String,
+    @Column var views: Int,
+    @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
+     */
 ) {
+
     fun toDto(): Recipe = Recipe(
         id = this.id!!,
         title = this.title,
         shortDescription = this.shortDescription,
         price = this.price,
         duration = this.duration,
-        category = this.category.toDto(),
-        creator = this.creator.toDto(),
-        difficulty = this.difficulty.toDto(),
-        rating = this.rating.toDto(),
-        //ingredients = this.ingredients.map { it.toIngredient() }
-        /*
-        rating = this.rating!!.toDto(),
+        likes = this.likes,
+        dislikes = this.dislikes,
         difficulty = this.difficulty!!.toDto(),
+        category = this.category!!.toDto(),
+        creator = this.creator.toDto(),
         createTime = this.createTime,
-        ingredients = this.ingredients!!.map { it.toIngredient() },
         image = this.image,
         longDescription = this.longDescription,
         views = this.views
+        // ingredients = this.ingredients!!.map { it.toIngredient() }
+        /*
+        rating = this.rating!!.toDto(),
          */
     )
 
     companion object {
         fun fromDto(dto: Recipe): RecipeEntity = RecipeEntity(
-            id = dto.id!!,
+            id = dto.id,
             title = dto.title,
             shortDescription = dto.shortDescription,
             price = dto.price,
             duration = dto.duration,
+            likes = dto.likes,
+            dislikes = dto.dislikes,
+            difficulty = DifficultyEntity.fromDto(dto.difficulty),
             category = CategoryEntity.fromDto(dto.category),
-            creator = UserEntity.fromDto(dto.creator) ,
-            difficulty = DifficultyEntity.fromDto(dto.difficulty),
-            rating = RatingEntity.fromDto(dto.rating),
-            //ingredients = dto.ingredients.map { IngredientRecipeEntity.fromIngredients(it, dto) }
-                /*
-            rating = RatingEntity.fromDto(dto.rating),
-            difficulty = DifficultyEntity.fromDto(dto.difficulty),
+            creator = UserEntity.fromDto(dto.creator),
             createTime = dto.createTime,
-            ingredients = dto.ingredients.map { IngredientRecipeEntity.fromIngredients(it, dto) },
             image = dto.image,
             longDescription = dto.longDescription,
             views = dto.views
+            // ingredients = dto.ingredients.map { IngredientRecipeEntity.fromIngredients(it, dto) }
+            /*
+            rating = RatingEntity.fromDto(dto.rating),
              */
         )
     }

@@ -9,10 +9,7 @@ data class Recipe(
     val price: Double,
     val duration: Double,
     val category: Category,
-    val creator: User,
-    val difficulty: Difficulty,
-    val rating: Rating,
-    //val ingredients: List<Ingredient>
+    val creator: User
     /*
     val rating: Rating,
     val difficulty: Difficulty,
