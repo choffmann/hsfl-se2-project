@@ -22,23 +22,29 @@ class EntityConfiguration {
                         password = "secret", image = "DickPic.png", favoriteRecipe = listOf()
                 ))
                  print("user:" + user)
+
                 val cat = categoryRepository.save(CategoryEntity(
                         name = "Food"
                 ))
                 print("cat:" + cat)
+
+
                 val ingredient = ingredientRepository.save(IngredientEntity(
                         name = "ttttttttt"
                 ))
                 print("ingredient:" + ingredient)
+
+
                 val diff = difficultyRepository.save(DifficultyEntity(
                         name = "Easy"
                 ))
 
                 val recipe = recipeRepository.save(RecipeEntity(
                         title = "Hektor", shortDescription = "Panzer", price = 25.9,
-                        duration = 10.8, category= cat,difficulty=diff, creator= user
+                        duration = 10.8, category= cat, creator= user ,difficulty=diff
                 ))
                 print("recipe:" + recipe)
+
 
                 val rating = ratingRepository.save(RatingEntity(
                         likes= 6, dislike= 7,  recipe= recipe

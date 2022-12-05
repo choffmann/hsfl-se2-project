@@ -11,11 +11,10 @@ data class RecipeEntity(
     @Column var shortDescription: String,
     @Column var price: Double,
     @Column var duration: Double,
-    //@OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
-    @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
+    @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity,
     @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
     @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
-
+    @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
     //@Column var createTime: LocalDate,
     //@OneToMany(mappedBy = "ingredient") var ingredients: List<IngredientRecipeEntity>,
     //@Column var image: String,
@@ -24,7 +23,6 @@ data class RecipeEntity(
    // @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
 
 ) {
-
     fun toDto(): Recipe = Recipe(
         id = this.id!!,
         title = this.title,
@@ -33,7 +31,8 @@ data class RecipeEntity(
         duration = this.duration,
         category = this.category.toDto(),
         creator = this.creator.toDto(),
-        difficulty = this.difficulty.toDto()
+        difficulty = this.difficulty.toDto(),
+        rating = this.rating.toDto(),
         //ingredients = this.ingredients.map { it.toIngredient() }
         /*
         rating = this.rating!!.toDto(),
@@ -56,6 +55,7 @@ data class RecipeEntity(
             category = CategoryEntity.fromDto(dto.category),
             creator = UserEntity.fromDto(dto.creator) ,
             difficulty = DifficultyEntity.fromDto(dto.difficulty),
+            rating = RatingEntity.fromDto(dto.rating),
             //ingredients = dto.ingredients.map { IngredientRecipeEntity.fromIngredients(it, dto) }
                 /*
             rating = RatingEntity.fromDto(dto.rating),

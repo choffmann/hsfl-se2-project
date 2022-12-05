@@ -11,6 +11,7 @@ data class Recipe(
     val category: Category,
     val creator: User,
     val difficulty: Difficulty,
+    val rating: Rating,
     //val ingredients: List<Ingredient>
     /*
     val rating: Rating,

@@ -55,8 +55,8 @@ class RecipeController(val recipeRepository: RecipeRepository) {
          result.shortDescription = RecipeEntity.fromDto(recipe).shortDescription
          result.price = RecipeEntity.fromDto(recipe).price
          result.duration = RecipeEntity.fromDto(recipe).duration
-         //result.category = RecipeEntity.fromDto(recipe).category
-        // result.creator = RecipeEntity.fromDto(recipe).creator
+         result.category = RecipeEntity.fromDto(recipe).category
+         result.creator = RecipeEntity.fromDto(recipe).creator
          return ApiResponse(data = recipeRepository.save(result).toDto(), success = true)
          /*
         it.rating = RecipeEntity.fromDto(recipe).rating
