@@ -1,42 +1,41 @@
 package com.hsfl.springbreak.frontend.components.routes
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeViewModel
 import com.hsfl.springbreak.frontend.components.routes.create.ConfirmAbortDialog
-import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepOne
-import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepTwo
+import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateData
+import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateIngredients
 import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepper
-import com.hsfl.springbreak.frontend.context.StepperContext
+import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.*
-import emotion.react.css
 import mui.material.*
 import mui.system.sx
+import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.router.dom.NavLink
 import react.useState
 
 val CreateRecipe = FC<Props> {
+    val viewModel: CreateRecipeViewModel by di.instance()
+    val currentStep = viewModel.currentStepIndex.collectAsState()
+    val enableNextStepButton = viewModel.enableNextStepButton.collectAsState()
     var openConfirmAbortDialog by useState(false)
-    var currentStep by useState(0)
 
     Box {
         sx {
             margin = 8.px
         }
-        StepperContext.Provider {
-            value = currentStep
-            RecipeCreateStepper {
-                activeStep = currentStep
-            }
+            RecipeCreateStepper()
             Box {
                 sx {
                     marginTop = 16.px
                 }
                 when (currentStep) {
-                    0 -> RecipeCreateStepOne()
-                    1 -> RecipeCreateStepTwo()
+                    0 -> RecipeCreateData()
+                    1 -> RecipeCreateIngredients()
                 }
             }
-        }
         ConfirmAbortDialog {
             open = openConfirmAbortDialog
             onClose = { openConfirmAbortDialog = false }
@@ -55,19 +54,14 @@ val CreateRecipe = FC<Props> {
                 }
             } else {
                 Button {
-                    onClick = {
-                        if (currentStep != 0)
-                            currentStep--
-                    }
+                    onClick = {viewModel.onEvent(CreateRecipeEvent.OnBackStep)}
                     +"Zurück"
                 }
             }
             Button {
                 variant = ButtonVariant.contained
-                onClick = {
-                    if (currentStep in 0..2)
-                        currentStep++
-                }
+                disabled = !enableNextStepButton
+                onClick = {viewModel.onEvent(CreateRecipeEvent.OnNextStep)}
                 +if (currentStep == 3) "Abschließen" else "Weiter"
             }
         }

@@ -1,26 +1,27 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeStepperViewModel
+import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.*
+import org.kodein.di.instance
 import react.FC
 import react.Props
 
-external interface RecipeCreateStepperProps: Props {
-    var activeStep: Int
-}
-
-val RecipeCreateStepper = FC<RecipeCreateStepperProps> { props ->
-    val stepNames = listOf("Rezeptdaten", "Zutaten", "Beschreibung", "Bild (optional)")
-
+val RecipeCreateStepper = FC<Props> {
+    val viewModel: CreateRecipeStepperViewModel by di.instance()
+    val allSteps = viewModel.allSteps.collectAsState()
+    val currentStepIndex = viewModel.currentStepIndex.collectAsState()
 
     Stepper {
-        nonLinear = true
-        activeStep = props.activeStep
+        activeStep = currentStepIndex
         orientation = Orientation.horizontal
         alternativeLabel = true
-        stepNames.map { name ->
+        allSteps.map { step ->
             Step {
-                key = name
-                StepLabel {+name}
+                key = step.name
+                completed = step.completed
+                StepLabel { +step.name }
             }
         }
     }

@@ -14,7 +14,7 @@ import react.useState
 
 data class RecipeIngredient(val name: String, val amount: Int, val unit: String)
 
-val RecipeCreateStepTwo = FC<Props> {
+val RecipeCreateIngredients = FC<Props> {
     var openDialog by useState(false)
     var ingredients: List<RecipeIngredient> by useState(emptyList())
 
