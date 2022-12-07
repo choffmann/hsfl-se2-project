@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.components.routes
 
+import com.hsfl.springbreak.frontend.components.routes.create.ConfirmAbortDialog
 import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepOne
 import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepTwo
 import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepper
@@ -14,6 +15,7 @@ import react.router.dom.NavLink
 import react.useState
 
 val CreateRecipe = FC<Props> {
+    var openConfirmAbortDialog by useState(false)
     var currentStep by useState(0)
 
     Box {
@@ -35,22 +37,21 @@ val CreateRecipe = FC<Props> {
                 }
             }
         }
+        ConfirmAbortDialog {
+            open = openConfirmAbortDialog
+            onClose = { openConfirmAbortDialog = false }
+        }
         Box {
             sx {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceBetween
             }
-            if(currentStep == 0) {
-                NavLink {
-                    to = "/"
-                    // ignore style
-                    css {
-                        textDecoration = None.none
-                        color = Color.currentcolor
+            if (currentStep == 0) {
+                Button {
+                    onClick = {
+                        openConfirmAbortDialog = true
                     }
-                    Button {
-                        +"Abbrechen"
-                    }
+                    +"Abbrechen"
                 }
             } else {
                 Button {
