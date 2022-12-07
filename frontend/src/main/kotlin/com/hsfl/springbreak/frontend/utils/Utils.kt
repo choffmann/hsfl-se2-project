@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mui.material.IconButtonProps
-import mui.material.ListItemButtonProps
+import mui.material.StepButtonProps
 import mui.material.TypographyProps
 import react.useEffect
 import react.useState
@@ -26,10 +26,16 @@ inline var IconButtonProps.component: react.ElementType<*>?
         asDynamic().component = value
     }
 
-inline var IconButtonProps.to: String?
+inline var StepButtonProps.color: String?
     get() = TODO("Prop is write-only!")
     set(value) {
-        asDynamic().to = value
+        asDynamic().color = value
+    }
+
+inline var StepButtonProps.onClick: () -> Unit
+    get() = TODO("Prop is write-only!")
+    set(value) {
+        value()
     }
 
 fun Int.toMuiPx(): Length = (this * 8).px

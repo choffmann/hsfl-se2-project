@@ -25,6 +25,7 @@ val AuthorizedList = FC<Props> {
     val listItems = listOf(
         NavBarItem("Favoriten", Favorite, "/favorite"),
         NavBarItem("Kategorien", Category, "/categories"),
+        NavBarItem("Rezept erstellen", Add, "/create-recipe"),
         NavBarItem("Meine Rezepte", Book, "/my-recipes"),
         NavBarItem("Einstellungen", Settings, "/settings"),
     )

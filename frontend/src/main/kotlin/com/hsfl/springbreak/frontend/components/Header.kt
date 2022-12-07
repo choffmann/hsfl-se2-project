@@ -6,8 +6,6 @@ import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.di.di
-import com.hsfl.springbreak.frontend.utils.component
-import com.hsfl.springbreak.frontend.utils.to
 import com.hsfl.springbreak.frontend.utils.toMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
@@ -22,7 +20,6 @@ import react.FC
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.link
 import react.dom.html.ReactHTML.main
 import react.router.dom.NavLink
 import react.useContext
