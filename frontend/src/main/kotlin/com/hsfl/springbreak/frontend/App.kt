@@ -4,8 +4,7 @@ import browser.document
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.components.Header
-import com.hsfl.springbreak.frontend.components.routes.Home
-import com.hsfl.springbreak.frontend.components.routes.RecipeFormular
+import com.hsfl.springbreak.frontend.components.routes.*
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.context.UiStateContext
@@ -46,16 +45,35 @@ private val App = FC<Props> { props ->
     // Display Header
     BrowserRouter {
         Header {
-            onLogoClicked = { println("click") }
             Routes {
+                // TODO: Private routes
                 Route {
                     index = true
                     element = Home.create()
                 }
                 Route {
-                    index = false
-                    path = "create"
-                    element = RecipeFormular.create()
+                    path = "/create-recipe"
+                    element = CreateRecipe.create()
+                }
+                Route {
+                    path = "/favorite"
+                    element = Favorites.create()
+                }
+                Route {
+                    path = "/categories"
+                    element = RecipeCategories.create()
+                }
+                Route {
+                    path = "/my-recipes"
+                    element = MyRecipes.create()
+                }
+                Route {
+                    path = "/settings"
+                    element = Settings.create()
+                }
+                Route {
+                    path = "/user"
+                    element = MyUser.create()
                 }
                 Route {
                     path = "*"

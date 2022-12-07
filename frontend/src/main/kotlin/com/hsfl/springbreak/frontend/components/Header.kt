@@ -6,9 +6,12 @@ import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
 import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.component
+import com.hsfl.springbreak.frontend.utils.to
 import com.hsfl.springbreak.frontend.utils.toMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
+import emotion.react.css
 import mui.icons.material.*
 import mui.material.*
 import mui.material.Size
@@ -19,13 +22,13 @@ import react.FC
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.link
 import react.dom.html.ReactHTML.main
+import react.router.dom.NavLink
 import react.useContext
 
 external interface HeaderProps : PropsWithChildren {
-    var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
-    //var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
 val Header = FC<HeaderProps> { props ->
@@ -40,14 +43,23 @@ val Header = FC<HeaderProps> { props ->
             sx { zIndex = integer(1201) }
             Toolbar {
                 // Logo
-                IconButton {
-                    size = Size.large
-                    edge = IconButtonEdge.start
-                    color = IconButtonColor.inherit
-                    sx { marginRight = 1.toMuiPx() }
-                    onClick = props.onLogoClicked
-                    SoupKitchen()
+                NavLink {
+                    to = "/"
+                    css {
+                        textDecoration = None.none
+                        color = Color.currentcolor
+                    }
+                    IconButton {
+                        //component = link
+                        //to = "/haha"
+                        size = Size.large
+                        edge = IconButtonEdge.start
+                        color = IconButtonColor.inherit
+                        sx { marginRight = 1.toMuiPx() }
+                        SoupKitchen()
+                    }
                 }
+
                 // Text
                 Typography {
                     variant = TypographyVariant.h6
@@ -78,9 +90,6 @@ val Header = FC<HeaderProps> { props ->
 
         NavDrawer {
             onToggleAuthorized = props.onToggleAuthorized
-            onLoginButtonClicked = {
-                //handleOnLoginButtonClicked()
-            }
         }
         // Main component
         Box {
