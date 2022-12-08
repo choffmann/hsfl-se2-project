@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.client.model
+package com.hsfl.springbreak.frontend.client.data.model
 
 import kotlinx.serialization.Serializable
 
@@ -8,12 +8,26 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val password: String
+    val password: String,
+    val image: String? = null
 ) {
     @Serializable
     data class Login(
         val email: String,
         val password: String
+    )
+
+    @Serializable
+    data class Register(
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val password: String
+    )
+
+    @Serializable
+    data class ProfileImage(
+        val imageUrl: String
     )
 
     @Serializable

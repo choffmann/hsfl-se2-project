@@ -1,11 +1,13 @@
-package com.hsfl.springbreak.frontend.client.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import mui.material.SnackbarCloseReason
 
 object MessageViewModel {
-    private val _openSnackbar = MutableStateFlow(UiEventViewModel.uiState.value is UiEvent.ShowMessage)
+    private val _openSnackbar = MutableStateFlow(UiEventState.uiState.value is UiEvent.ShowMessage)
     val openSnackbar: StateFlow<Boolean> = _openSnackbar
 
     private val _message = MutableStateFlow("")
@@ -25,7 +27,7 @@ object MessageViewModel {
 
     private fun closeSnackbar() {
         _openSnackbar.value = false
-        UiEventViewModel.onEvent(UiEvent.Idle)
+        UiEventState.onEvent(UiEvent.Idle)
     }
 
 }

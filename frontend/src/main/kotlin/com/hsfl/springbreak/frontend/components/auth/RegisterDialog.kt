@@ -1,55 +1,47 @@
 package com.hsfl.springbreak.frontend.components.auth
 
-import com.hsfl.springbreak.frontend.components.LoadingBar
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.RegisterPasswordTextState
+import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
-import mui.icons.material.CloseOutlined
+import dom.html.HTMLInputElement
+import kotlinx.js.get
+import mui.icons.material.Person
 import mui.icons.material.Upload
 import mui.material.*
-import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
+import org.w3c.dom.url.URL
 import react.*
 import react.dom.html.InputType
-import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.form
 import react.dom.html.ReactHTML.input
+import react.dom.html.ReactHTML.label
+import react.dom.onChange
+import web.file.File
 
 external interface RegisterDialogProps : Props {
     var open: Boolean
     var onClose: (event: dynamic, reason: String) -> Unit
     var onRegister: () -> Unit
-    var onLogin: () -> Unit
-    var onEmailTextChanged: (String) -> Unit
-    var onPasswordTextChanged: (String) -> Unit
+    var onFirstNameText: (String) -> Unit
+    var onLastNameNameText: (String) -> Unit
+    var onEmailText: (String) -> Unit
+    var onPasswordText: (String) -> Unit
+    var onConfirmedPasswordText: (String) -> Unit
+    var onProfileImageChanged: (File) -> Unit
+    var confirmedPasswordTextState: RegisterPasswordTextState
 }
 
 val RegisterDialog = FC<RegisterDialogProps> { props ->
+    var profileImage by useState<String>()
+    
     Dialog {
         open = props.open
         onClose = props.onClose
-        fullScreen = true
+        fullScreen = false
 
-        DialogTitle { +"Hello World!" }
-        AppBar {
-            Toolbar {
-                IconButton {
-                    edge = IconButtonEdge.start
-                    color = IconButtonColor.inherit
-                    onClick = { props.onClose(it, "OnAppBarClose") }
-                    CloseOutlined()
-                }
-                Typography {
-                    sx {
-                        marginLeft = 16.px
-                        flex = number(1.0)
-                    }
-                    variant = TypographyVariant.h6
-                    component = div
-                    +"Erstelle dein Account"
-                }
-            }
-            LoadingBar()
-        }
+        DialogTitle { +"Erstelle dein Account" }
         DialogContent {
             Box {
                 component = form
@@ -61,17 +53,82 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 Stack {
                     spacing = responsive(2)
                     direction = responsive(StackDirection.column)
-
-                    Stack {
-                        spacing = responsive(2)
-                        direction = responsive(StackDirection.row)
-                        TextField {
-                            fullWidth = true
-                            label = Typography.create { +"Vorname" }
+                    Box {
+                        sx {
+                            display = Display.flex
+                            justifyContent = JustifyContent.spaceEvenly
+                            alignItems = AlignItems.center
                         }
-                        TextField {
-                            fullWidth = true
-                            label = Typography.create { +"Nachname" }
+                        Badge {
+                            overlap = BadgeOverlap.circular
+                            anchorOrigin = object : BadgeOrigin {
+                                override var horizontal = BadgeOriginHorizontal.right
+                                override var vertical = BadgeOriginVertical.bottom
+                            }
+                            badgeContent = Tooltip.create {
+                                title = Typography.create { +"Profilbild hochladen" }
+                                IconButton {
+                                    sx {
+                                        backgroundColor = Color("white")
+                                        boxShadow = BoxShadow(
+                                            offsetX = 3.px,
+                                            offsetY = 3.px,
+                                            blurRadius = 3.px,
+                                            color = Color("lightgrey")
+                                        )
+                                        hover {
+                                            backgroundColor = Color("white")
+                                        }
+
+                                    }
+                                    component = label
+                                    ReactHTML.input {
+                                        hidden = true
+                                        accept = "image/*"
+                                        type = InputType.file
+                                        onChange = {
+                                            if (it.target.files?.length != 0) {
+                                                it.target.files?.get(0)?.let { file ->
+                                                    profileImage = URL.Companion.createObjectURL(file)
+                                                    props.onProfileImageChanged(file)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Upload()
+                                }
+                            }
+                            Avatar {
+                                sx {
+                                    width = 100.px
+                                    height = 100.px
+                                }
+                                profileImage?.let {
+                                    src = it
+                                } ?: Person {
+                                    sx {
+                                        width = 80.px
+                                        height = 80.px
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    TextField {
+                        fullWidth = true
+                        label = Typography.create { +"Vorname" }
+                        onChange = {
+                            val target = it.target as HTMLInputElement
+                            props.onFirstNameText(target.value)
+                        }
+                    }
+                    TextField {
+                        fullWidth = true
+                        label = Typography.create { +"Nachname" }
+                        onChange = {
+                            val target = it.target as HTMLInputElement
+                            props.onLastNameNameText(target.value)
                         }
                     }
                     Stack {
@@ -81,24 +138,36 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                             fullWidth = true
                             type = InputType.email
                             label = Typography.create { +"Email" }
+                            onChange = {
+                                val target = it.target as HTMLInputElement
+                                props.onEmailText(target.value)
+                            }
                         }
-                        TextField {
-                            fullWidth = true
-                            type = InputType.password
-                            label = Typography.create { +"Password" }
-                        }
+                        Stack {
+                            spacing = responsive(2)
+                            direction = responsive(StackDirection.row)
 
-                        Button {
-                            variant = ButtonVariant.outlined
-                            startIcon = Icon.create { Upload() }
-                            +"Profilbild"
-                            onClick = {
-                                input {
-                                    hidden = true
-                                    accept = "image/*"
-                                    multiple = false
-                                    type = InputType.file
+                            TextField {
+                                fullWidth = true
+                                type = InputType.password
+                                label = Typography.create { +"Passwort" }
+                                onChange = {
+                                    val target = it.target as HTMLInputElement
+                                    props.onPasswordText(target.value)
                                 }
+                            }
+
+                            TextField {
+                                fullWidth = true
+                                type = InputType.password
+                                label = Typography.create { +"Passwort bestätigen" }
+                                onChange = {
+                                    val target = it.target as HTMLInputElement
+                                    props.onConfirmedPasswordText(target.value)
+                                }
+                                //value = props.confirmedPasswordTextError.toString()
+                                error = props.confirmedPasswordTextState.error
+                                helperText = Typography.create { +props.confirmedPasswordTextState.message }
                             }
                         }
                     }
@@ -109,7 +178,7 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
             Button {
                 variant = ButtonVariant.outlined
                 color = ButtonColor.secondary
-                onClick =  {
+                onClick = {
                     props.onClose(it, "onCancelButton")
                 }
                 +"Abbrechen"
@@ -118,10 +187,16 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 variant = ButtonVariant.contained
                 color = ButtonColor.primary
                 onClick = {
-                    props.onLogin()
+                    props.onRegister()
                 }
-                +"Anmelden"
+                +"Registrieren"
             }
+        }
+
+        input {
+            hidden = true
+            accept = "image/*"
+            type = InputType.file
         }
     }
 }

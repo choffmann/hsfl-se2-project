@@ -1,14 +1,19 @@
-package com.hsfl.springbreak.frontend.client.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.kodein.di.instance
 
 object NavViewModel {
 
     private val _loginButtonClicked = MutableStateFlow(false)
-    val loginButtonClicked: StateFlow<Boolean> = _loginButtonClicked
+    val authState: AuthState by di.instance()
 
     fun onEvent(event: NavEvent) {
         when (event) {
@@ -33,8 +38,8 @@ object NavViewModel {
     }
 
     private fun onLogout() {
-        AuthViewModel.onEvent(AuthEvent.IsUnauthorized)
-        UiEventViewModel.onEvent(UiEvent.ShowMessage("You have been successfully logged out"))
+        authState.onEvent(AuthEvent.IsUnauthorized)
+        UiEventState.onEvent(UiEvent.ShowMessage("You have been successfully logged out"))
     }
 }
 

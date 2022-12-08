@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
-import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
 import mui.icons.material.*

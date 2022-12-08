@@ -1,9 +1,11 @@
 package com.hsfl.springbreak.frontend.components
 
-import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
+import com.hsfl.springbreak.frontend.components.auth.AuthDialogProvider
 import com.hsfl.springbreak.frontend.components.drawer.NavDrawer
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
+import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.toMuiPx
 import csstype.*
 import dom.html.HTMLButtonElement
@@ -12,6 +14,7 @@ import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
 import mui.system.sx
+import org.kodein.di.instance
 import react.FC
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
@@ -22,11 +25,12 @@ import react.useContext
 external interface HeaderProps : PropsWithChildren {
     var onLogoClicked: MouseEventHandler<HTMLButtonElement>?
     var onToggleAuthorized: MouseEventHandler<HTMLButtonElement>?
-    var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
+    //var onLoginButtonClicked: MouseEventHandler<HTMLButtonElement>?
 }
 
 val Header = FC<HeaderProps> { props ->
     val isAuthorized = useContext(AuthorizedContext)
+    val authDialogViewModel: AuthDialogViewModel by di.instance()
 
     Box {
         sx { display = Display.flex }
@@ -63,7 +67,7 @@ val Header = FC<HeaderProps> { props ->
                     Button {
                         color = ButtonColor.inherit
                         onClick = {
-                            NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                            authDialogViewModel.onEvent(AuthDialogEvent.OpenLoginDialog)
                         }
                         +"Anmelden"
                     }
@@ -75,7 +79,7 @@ val Header = FC<HeaderProps> { props ->
         NavDrawer {
             onToggleAuthorized = props.onToggleAuthorized
             onLoginButtonClicked = {
-                NavViewModel.onEvent(NavEvent.OnOpenLoginDialog)
+                //handleOnLoginButtonClicked()
             }
         }
         // Main component
@@ -88,6 +92,9 @@ val Header = FC<HeaderProps> { props ->
             Toolbar()
             +props.children
         }
+
+        // Login Dialog
+        AuthDialogProvider {}
     }
 }
 

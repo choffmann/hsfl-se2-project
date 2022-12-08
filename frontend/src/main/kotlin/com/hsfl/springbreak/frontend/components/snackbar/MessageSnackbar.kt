@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components.snackbar
 
-import com.hsfl.springbreak.frontend.client.viewmodel.MessageViewModel
-import com.hsfl.springbreak.frontend.client.viewmodel.SnackbarEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.MessageViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.SnackbarEvent
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.*
 import react.FC

@@ -1,10 +1,12 @@
-package com.hsfl.springbreak.frontend.client.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.state
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.MessageViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.SnackbarEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
-object UiEventViewModel {
+object UiEventState {
     private val _uiState = MutableStateFlow<UiEvent>(UiEvent.Idle)
     val uiState: StateFlow<UiEvent> = _uiState
 

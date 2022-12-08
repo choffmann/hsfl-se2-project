@@ -1,18 +1,22 @@
-package com.hsfl.springbreak.frontend.client.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-object DebugViewModel {
-    val authState: StateFlow<Boolean> = AuthViewModel.authorized
+class DebugViewModel(private val authorizedState: AuthState) {
+    val authState: StateFlow<Boolean> = authorizedState.authorized
 
     private var _showLoading = MutableStateFlow(false)
     val showLoading: StateFlow<Boolean> = _showLoading
 
     init {
         MainScope().launch {
-            UiEventViewModel.uiState.collectLatest {
+            UiEventState.uiState.collectLatest {
                 println("DebugViewModel::collectLatest::${it is UiEvent.ShowLoading}")
                 _showLoading.value = it is UiEvent.ShowLoading
             }
@@ -29,25 +33,25 @@ object DebugViewModel {
     }
 
     private fun throwError(msg: String) {
-        UiEventViewModel.onEvent(UiEvent.ShowError(msg))
+        UiEventState.onEvent(UiEvent.ShowError(msg))
     }
     private fun senMessage(msg: String) {
-        UiEventViewModel.onEvent(UiEvent.ShowMessage(msg))
+        UiEventState.onEvent(UiEvent.ShowMessage(msg))
     }
 
     private fun showLoading() {
         if (showLoading.value) {
-            UiEventViewModel.onEvent(UiEvent.Idle)
+            UiEventState.onEvent(UiEvent.Idle)
         } else {
-            UiEventViewModel.onEvent(UiEvent.ShowLoading)
+            UiEventState.onEvent(UiEvent.ShowLoading)
         }
     }
 
     private fun onSwitchAuthorized() {
         if (authState.value) {
-            AuthViewModel.onEvent(AuthEvent.IsUnauthorized)
+            authorizedState.onEvent(AuthEvent.IsUnauthorized)
         } else {
-            AuthViewModel.onEvent(AuthEvent.IsAuthorized)
+            authorizedState.onEvent(AuthEvent.IsAuthorized)
         }
     }
 }

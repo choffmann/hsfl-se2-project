@@ -1,19 +1,20 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
-import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
-import dom.html.HTMLElement
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
+import com.hsfl.springbreak.frontend.di.di
 import mui.icons.material.Category
 import mui.icons.material.Login
 import mui.material.*
+import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.dom.events.MouseEventHandler
 
 val UnauthorizedList = FC<Props> { props ->
+    val authDialogViewModel: AuthDialogViewModel by di.instance()
     List {
         ListItemButton {
-            onClick = { NavViewModel.onEvent(NavEvent.OnOpenLoginDialog) }
+            onClick = { authDialogViewModel.onEvent(AuthDialogEvent.OpenLoginDialog) }
             ListItemIcon {
                 Login()
             }
