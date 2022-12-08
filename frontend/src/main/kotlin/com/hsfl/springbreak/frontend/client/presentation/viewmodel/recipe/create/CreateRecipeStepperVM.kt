@@ -20,7 +20,6 @@ class CreateRecipeStepperViewModel {
     val allSteps: StateFlow<List<CreateRecipeStep>> = _allSteps
 
     private val _currentStep = MutableStateFlow(allSteps.value[0])
-    val currentStep: StateFlow<CreateRecipeStep> = _currentStep
 
     private val _currentStepIndex = MutableStateFlow(0)
     val currentStepIndex: StateFlow<Int> = _currentStepIndex
@@ -38,6 +37,9 @@ class CreateRecipeStepperViewModel {
     private fun clearStates() {
         _currentStep.value = allSteps.value[0]
         _currentStepIndex.value = 0
+        _allSteps.value.map {
+            it.completed = false
+        }
     }
 
     private fun nextStep() {
