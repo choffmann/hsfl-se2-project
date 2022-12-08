@@ -50,7 +50,7 @@ class ProfileViewModel(
             is ProfileEvent.ProfileImageChanged -> _selectedProfileImage.value = event.file
             is ProfileEvent.OnAbort -> exitEditMode()
             is ProfileEvent.OnEdit -> enterEditMode()
-            is ProfileEvent.OnSave -> saveEditValues()
+            is ProfileEvent.OnSave -> if(validateConfirmedPassword()) saveEditValues()
         }
     }
 
