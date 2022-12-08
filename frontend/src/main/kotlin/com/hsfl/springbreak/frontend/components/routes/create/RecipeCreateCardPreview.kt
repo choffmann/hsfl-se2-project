@@ -11,6 +11,7 @@ import mui.material.Typography
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import org.kodein.di.instance
+import org.w3c.dom.url.URL
 import react.FC
 import react.Props
 
@@ -21,6 +22,8 @@ val RecipeCreateCardPreview = FC<Props> {
     val recipePrice = viewModel.recipePrice.collectAsState()
     val recipeDuration = viewModel.recipeDuration.collectAsState()
     val recipeDifficulty = viewModel.recipeDifficulty.collectAsState()
+    val recipeImage = viewModel.recipeImage.collectAsState()
+    val imageBlob = recipeImage?.let { URL.Companion.createObjectURL(it) }
 
     Typography {
         variant = TypographyVariant.h6
@@ -40,7 +43,7 @@ val RecipeCreateCardPreview = FC<Props> {
             createdDate = "November 13, 2022"
             creator = "My Name"
             creatorImg = ""
-            imageSrc = ""
+            imageSrc = imageBlob ?: ""
             shortDescription = recipeShortDesc.value
             cost = recipePrice.value.toString()
             duration = recipeDuration.value.toString()

@@ -6,9 +6,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import mui.material.IconButtonProps
-import mui.material.StepButtonProps
-import mui.material.TypographyProps
+import mui.material.*
 import react.useEffect
 import react.useState
 
@@ -21,6 +19,12 @@ inline var TypographyProps.color: String
 
 // Add component property to IconButton
 inline var IconButtonProps.component: react.ElementType<*>?
+    get() = TODO("Prop is write-only!")
+    set(value) {
+        asDynamic().component = value
+    }
+
+inline var ButtonProps.component: react.ElementType<*>?
     get() = TODO("Prop is write-only!")
     set(value) {
         asDynamic().component = value

@@ -118,7 +118,7 @@ val IngredientsTableContent = FC<IngredientsTableContentProps> { props ->
             colSpan = 4
             Typography {
                 color = "text.secondary"
-                +"Keine Zutaten, bitte füge eine oder mehrere Zutaten hinzu"
+                +"Keine Zutaten vorhanden, bitte füge eine oder mehrere Zutaten hinzu"
             }
         } else props.ingredients.mapIndexed { index, item ->
             TableRow {

@@ -2,12 +2,14 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.creat
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import web.file.File
 
 class CreateRecipeViewModel(
     private val stepperViewModel: CreateRecipeStepperViewModel,
     private val dataVM: CreateRecipeDataVM,
     private val tableVM: IngredientsTableVM,
-    private val descriptionVM: CreateRecipeDescriptionVM
+    private val descriptionVM: CreateRecipeDescriptionVM,
+    private val imageVM: CreateRecipeImageVM
 ) {
     private val _openAbortDialog = MutableStateFlow(false)
     val openAbortDialog: StateFlow<Boolean> = _openAbortDialog
@@ -23,6 +25,7 @@ class CreateRecipeViewModel(
     val recipeCategory: StateFlow<FormTextFieldState<String>> = dataVM.recipeCategory
     val ingredientsList: StateFlow<List<IngredientsTableRow>> = tableVM.ingredientsList
     val descriptionText: StateFlow<String> = descriptionVM.descriptionText
+    val recipeImage: StateFlow<File?> = imageVM.recipeImage
 
     fun onEvent(event: CreateRecipeEvent) {
         when (event) {
@@ -56,7 +59,7 @@ class CreateRecipeViewModel(
         dataVM.onEvent(CreateRecipeDataEvent.ClearStates)
         tableVM.onEvent(IngredientsTableEvent.ClearStates)
         descriptionVM.onEvent(CreateRecipeDescriptionEvent.ClearStates)
-        descriptionVM.onEvent(CreateRecipeDescriptionEvent.ClearStates)
+        imageVM.onEvent(CreateRecipeImageEvent.ClearStates)
         closeAbortDialog()
     }
 }

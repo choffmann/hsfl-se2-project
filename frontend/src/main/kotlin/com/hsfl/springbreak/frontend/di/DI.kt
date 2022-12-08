@@ -22,12 +22,13 @@ val di = DI {
     bindSingleton { DebugViewModel(instance()) }
     bindSingleton { AuthDialogViewModel(instance()) }
     bindSingleton { CreateRecipeStepperViewModel() }
-    bindSingleton { CreateRecipeViewModel(instance(), instance(), instance(), instance()) }
+    bindSingleton { CreateRecipeViewModel(instance(), instance(), instance(), instance(), instance()) }
     bindSingleton { CreateRecipeDataVM() }
     bindSingleton { IngredientsTableVM() }
     bindSingleton { IngredientsDialogVM(instance()) }
     bindSingleton { CreateRecipeIngredientsVM(instance()) }
     bindSingleton { CreateRecipeDescriptionVM() }
+    bindSingleton { CreateRecipeImageVM() }
     bindSingleton { IngredientEditDialogVM(instance()) }
 
     // States
