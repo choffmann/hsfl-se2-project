@@ -1,7 +1,8 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableRow
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableVM
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.RecipeIngredient
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import com.hsfl.springbreak.frontend.utils.color
@@ -10,6 +11,7 @@ import csstype.Display
 import csstype.JustifyContent
 import csstype.px
 import mui.icons.material.Delete
+import mui.icons.material.Edit
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -40,12 +42,26 @@ val IngredientsTable = FC<Props> {
                 Typography {
                     variant = TypographyVariant.subtitle1
                     color = "inherit"
-                    +"${ingredientsList.size} ausgewählt"
+                    +"${selectedIngredients.size} ausgewählt"
                 }
-                Tooltip {
-                    title = Typography.create { +"Löschen" }
-                    IconButton {
-                        Delete()
+                Box {
+                    if(selectedIngredients.size == 1) Tooltip {
+                        title = Typography.create { +"Bearbeiten" }
+                        IconButton {
+                            onClick = {
+                                viewModel.onEvent(IngredientsTableEvent.OnEditRow)
+                            }
+                            Edit()
+                        }
+                    }
+                    Tooltip {
+                        title = Typography.create { +"Löschen" }
+                        IconButton {
+                            onClick = {
+                                viewModel.onEvent(IngredientsTableEvent.OnDeleteRows)
+                            }
+                            Delete()
+                        }
                     }
                 }
             } else {
@@ -60,10 +76,10 @@ val IngredientsTable = FC<Props> {
                 TableRow {
                     TableCell {
                         padding = TableCellPadding.checkbox
-                        Checkbox {
+                        /*Checkbox {
                             color = CheckboxColor.primary
                             disabled = ingredientsList.isEmpty()
-                        }
+                        }*/
                     }
                     TableCell {
                         padding = TableCellPadding.none
@@ -83,13 +99,17 @@ val IngredientsTable = FC<Props> {
             }
             IngredientsTableContent {
                 ingredients = ingredientsList
+                onIngredientClick = {
+                    viewModel.onEvent(IngredientsTableEvent.OnSelectRow(it))
+                }
             }
         }
     }
 }
 
 external interface IngredientsTableContentProps : Props {
-    var ingredients: List<RecipeIngredient>
+    var ingredients: List<IngredientsTableRow>
+    var onIngredientClick: (Int) -> Unit
 }
 
 val IngredientsTableContent = FC<IngredientsTableContentProps> { props ->
@@ -100,28 +120,31 @@ val IngredientsTableContent = FC<IngredientsTableContentProps> { props ->
                 color = "text.secondary"
                 +"Keine Zutaten, bitte füge eine oder mehrere Zutaten hinzu"
             }
-        } else props.ingredients.map {
+        } else props.ingredients.mapIndexed { index, item ->
             TableRow {
-                key = it.name
                 TableCell {
                     padding = TableCellPadding.checkbox
                     Checkbox {
                         color = CheckboxColor.primary
+                        checked = item.selected
+                        onClick = {
+                            props.onIngredientClick(index)
+                        }
                     }
                 }
                 TableCell {
                     padding = TableCellPadding.none
-                    +it.name
+                    +item.item.name
                 }
                 TableCell {
                     align = TdAlign.right
                     padding = TableCellPadding.normal
-                    +it.amount.toString()
+                    +item.item.amount.toString()
                 }
                 TableCell {
                     align = TdAlign.right
                     padding = TableCellPadding.normal
-                    +it.unit.ifEmpty { "-" }
+                    +item.item.unit.ifEmpty { "-" }
                 }
             }
         }
