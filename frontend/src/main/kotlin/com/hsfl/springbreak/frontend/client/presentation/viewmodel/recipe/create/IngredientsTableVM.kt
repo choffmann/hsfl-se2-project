@@ -1,7 +1,8 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class IngredientsTableVM {
     private val _ingredientsList = MutableStateFlow<MutableList<IngredientsTableRow>>(mutableListOf())
@@ -9,6 +10,12 @@ class IngredientsTableVM {
 
     private val _selectedIngredients = MutableStateFlow<MutableList<IngredientsTableRow>>(mutableListOf())
     val selectedIngredients: StateFlow<List<IngredientsTableRow>> = _selectedIngredients
+
+    private val _openEditDialog = MutableStateFlow(false)
+    val openEditDialog: StateFlow<Boolean> = _openEditDialog
+
+    //private val _ingredientToEdit = MutableSharedFlow<RecipeIngredient>()
+    val ingredientToEdit = MutableSharedFlow<RecipeIngredient>()
 
     // TODO: This is a state which update so the ui will rerender
     private val _randomState = MutableStateFlow(0)
@@ -20,9 +27,44 @@ class IngredientsTableVM {
             is IngredientsTableEvent.OnSelectRow -> onSelectRow(event.index)
             is IngredientsTableEvent.OnNewData -> addIngredient(event.list)
             is IngredientsTableEvent.OnDeleteRows -> removeOnList()
-            is IngredientsTableEvent.OnEditRow -> TODO()
+            is IngredientsTableEvent.OnEditRow -> onEditRow()
+            is IngredientsTableEvent.OnCloseEditDialog -> closeEditDialog()
+            is IngredientsTableEvent.OnSaveEditDialog -> saveEditIngredient(event.item)
         }
         forceUpdate()
+    }
+
+    private fun saveEditIngredient(updatedIngredient: RecipeIngredient) {
+        _ingredientsList.value.map {
+            // Has to be the only selected one
+            if (it.selected) {
+                it.item.name = updatedIngredient.name
+                it.item.amount = updatedIngredient.amount
+                it.item.unit = updatedIngredient.unit
+            }
+        }
+        closeEditDialog()
+    }
+
+    private fun onEditRow() {
+        val item = selectedIngredients.value[0].item
+        println(item.name)
+        _openEditDialog.value = true
+        MainScope().launch {
+            ingredientToEdit.emit(item)
+        }
+    }
+
+    private fun clearSelectedList() {
+        _selectedIngredients.value = mutableListOf()
+        _ingredientsList.value.map {
+            it.selected = false
+        }
+    }
+
+    private fun closeEditDialog() {
+        _openEditDialog.value = false
+        clearSelectedList()
     }
 
     private fun removeOnList() {
@@ -52,9 +94,11 @@ class IngredientsTableVM {
 data class IngredientsTableRow(var selected: Boolean, val item: RecipeIngredient)
 
 sealed class IngredientsTableEvent {
-    object OnSelectAllRows: IngredientsTableEvent()
-    object OnDeleteRows: IngredientsTableEvent()
-    object OnEditRow: IngredientsTableEvent()
-    data class OnSelectRow(val index: Int): IngredientsTableEvent()
+    object OnSelectAllRows : IngredientsTableEvent()
+    object OnDeleteRows : IngredientsTableEvent()
+    object OnEditRow : IngredientsTableEvent()
+    object OnCloseEditDialog : IngredientsTableEvent()
+    data class OnSaveEditDialog(val item: RecipeIngredient) : IngredientsTableEvent()
+    data class OnSelectRow(val index: Int) : IngredientsTableEvent()
     data class OnNewData(val list: List<RecipeIngredient>) : IngredientsTableEvent()
 }

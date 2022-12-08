@@ -84,7 +84,7 @@ val IngredientDialog = FC<Props> {
     }
 }
 
-private external interface IngredientsFormularProps : DialogContentProps {
+external interface IngredientsFormularProps : DialogContentProps {
     var onNewIngredient: () -> Unit
     var name: String
     var onNameChanged: (String) -> Unit
@@ -94,7 +94,7 @@ private external interface IngredientsFormularProps : DialogContentProps {
     var onUnitChanged: (String) -> Unit
 }
 
-private val IngredientsFormular = FC<IngredientsFormularProps> { props ->
+val IngredientsFormular = FC<IngredientsFormularProps> { props ->
     Stack {
         sx {
             paddingTop = 8.px

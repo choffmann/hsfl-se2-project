@@ -15,4 +15,4 @@ sealed class CreateRecipeIngredientsEvent {
     object OnAddIngredient : CreateRecipeIngredientsEvent()
 }
 
-data class RecipeIngredient(val name: String, val amount: Int, val unit: String)
+data class RecipeIngredient(var name: String, var amount: Int, var unit: String)

@@ -62,6 +62,7 @@ class IngredientsDialogVM(
     private fun addMoreIngredients() {
         addCurrentTextAsIngredient()
         resetTextFieldFlows()
+        resetListFlow()
     }
 
     private fun onFinished() {

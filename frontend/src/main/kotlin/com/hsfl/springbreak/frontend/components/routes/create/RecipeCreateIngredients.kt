@@ -13,7 +13,6 @@ import org.kodein.di.instance
 import react.FC
 import react.Props
 import react.create
-import react.useState
 
 val RecipeCreateIngredients = FC<Props> {
     val viewModel: CreateRecipeIngredientsVM by di.instance()
@@ -37,6 +36,7 @@ val RecipeCreateIngredients = FC<Props> {
         }
 
         IngredientDialog()
+        IngredientEditDialog()
         IngredientsTable()
     }
 }

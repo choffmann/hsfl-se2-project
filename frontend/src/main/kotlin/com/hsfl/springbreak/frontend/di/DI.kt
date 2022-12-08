@@ -28,6 +28,7 @@ val di = DI {
     bindSingleton { IngredientsDialogVM(instance()) }
     bindSingleton { CreateRecipeIngredientsVM(instance()) }
     bindSingleton { CreateRecipeDescriptionVM() }
+    bindSingleton { IngredientEditDialogVM(instance()) }
 
     // States
     bindSingleton { AuthState() }
