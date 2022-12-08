@@ -14,6 +14,7 @@ class CreateRecipeStepperViewModel {
             CreateRecipeStep(name = "Zutaten"),
             CreateRecipeStep(name = "Beschreibung"),
             CreateRecipeStep(name = "Bild (optional)"),
+            CreateRecipeStep(name = "Überprüfen"),
         )
     )
     val allSteps: StateFlow<List<CreateRecipeStep>> = _allSteps
@@ -21,7 +22,7 @@ class CreateRecipeStepperViewModel {
     private val _currentStep = MutableStateFlow(allSteps.value[0])
     val currentStep: StateFlow<CreateRecipeStep> = _currentStep
 
-    private val _currentStepIndex = MutableStateFlow(1)
+    private val _currentStepIndex = MutableStateFlow(0)
     val currentStepIndex: StateFlow<Int> = _currentStepIndex
 
     val enableNextStepButton: StateFlow<Boolean> = recipeDataVM.validateInputs
