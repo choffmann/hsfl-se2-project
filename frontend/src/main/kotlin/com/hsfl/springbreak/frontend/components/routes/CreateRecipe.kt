@@ -2,10 +2,7 @@ package com.hsfl.springbreak.frontend.components.routes
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeViewModel
-import com.hsfl.springbreak.frontend.components.routes.create.ConfirmAbortDialog
-import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateData
-import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateIngredients
-import com.hsfl.springbreak.frontend.components.routes.create.RecipeCreateStepper
+import com.hsfl.springbreak.frontend.components.routes.create.*
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.*
@@ -34,6 +31,7 @@ val CreateRecipe = FC<Props> {
                 when (currentStep) {
                     0 -> RecipeCreateData()
                     1 -> RecipeCreateIngredients()
+                    2 -> RecipeCreateDescription()
                 }
             }
         ConfirmAbortDialog {
