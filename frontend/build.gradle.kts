@@ -1,6 +1,10 @@
 plugins {
     kotlin("js") version "1.7.21"
     kotlin("plugin.serialization") version "1.7.21"
+
+    // To suppress build error processDceKotlinJs: invalid property id
+    // https://youtrack.jetbrains.com/issue/KT-51921/KJS-invalid-property-id-on-processDceKotlinJs-when-external-enum-class-has-true-false-default-as-field-values
+    id("io.github.turansky.kfc.legacy-union") version "5.8.0"
 }
 
 repositories {
@@ -33,6 +37,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
 
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-js:1.7.21")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-legacy:18.2.0-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.447")
