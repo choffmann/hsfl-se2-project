@@ -1,22 +1,15 @@
 package com.hsfl.springbreak.frontend.components.auth
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.RegisterPasswordTextState
-import com.hsfl.springbreak.frontend.utils.component
+import com.hsfl.springbreak.frontend.components.avatar.UploadAvatar
 import csstype.*
 import dom.html.HTMLInputElement
-import kotlinx.js.get
-import mui.icons.material.Person
-import mui.icons.material.Upload
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
-import org.w3c.dom.url.URL
 import react.*
 import react.dom.html.InputType
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.form
-import react.dom.html.ReactHTML.input
-import react.dom.html.ReactHTML.label
 import react.dom.onChange
 import web.file.File
 
@@ -34,8 +27,6 @@ external interface RegisterDialogProps : Props {
 }
 
 val RegisterDialog = FC<RegisterDialogProps> { props ->
-    var profileImage by useState<String>()
-    
     Dialog {
         open = props.open
         onClose = props.onClose
@@ -53,66 +44,10 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 Stack {
                     spacing = responsive(2)
                     direction = responsive(StackDirection.column)
-                    Box {
-                        sx {
-                            display = Display.flex
-                            justifyContent = JustifyContent.spaceEvenly
-                            alignItems = AlignItems.center
-                        }
-                        Badge {
-                            overlap = BadgeOverlap.circular
-                            anchorOrigin = object : BadgeOrigin {
-                                override var horizontal = BadgeOriginHorizontal.right
-                                override var vertical = BadgeOriginVertical.bottom
-                            }
-                            badgeContent = Tooltip.create {
-                                title = Typography.create { +"Profilbild hochladen" }
-                                IconButton {
-                                    sx {
-                                        backgroundColor = Color("white")
-                                        boxShadow = BoxShadow(
-                                            offsetX = 3.px,
-                                            offsetY = 3.px,
-                                            blurRadius = 3.px,
-                                            color = Color("lightgrey")
-                                        )
-                                        hover {
-                                            backgroundColor = Color("white")
-                                        }
 
-                                    }
-                                    component = label
-                                    ReactHTML.input {
-                                        hidden = true
-                                        accept = "image/*"
-                                        type = InputType.file
-                                        onChange = {
-                                            if (it.target.files?.length != 0) {
-                                                it.target.files?.get(0)?.let { file ->
-                                                    profileImage = URL.Companion.createObjectURL(file)
-                                                    props.onProfileImageChanged(file)
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Upload()
-                                }
-                            }
-                            Avatar {
-                                sx {
-                                    width = 100.px
-                                    height = 100.px
-                                }
-                                profileImage?.let {
-                                    src = it
-                                } ?: Person {
-                                    sx {
-                                        width = 80.px
-                                        height = 80.px
-                                    }
-                                }
-                            }
-                        }
+                    UploadAvatar {
+                        size = 100.px
+                        onProfileImageChanged = props.onProfileImageChanged
                     }
 
                     TextField {
@@ -191,12 +126,6 @@ val RegisterDialog = FC<RegisterDialogProps> { props ->
                 }
                 +"Registrieren"
             }
-        }
-
-        input {
-            hidden = true
-            accept = "image/*"
-            type = InputType.file
         }
     }
 }

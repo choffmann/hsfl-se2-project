@@ -17,6 +17,14 @@ data class User(
         val password: String
     )
 
+    data class State(
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val password: String,
+        val image: String? = null
+    )
+
     @Serializable
     data class Register(
         val firstName: String,

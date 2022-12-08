@@ -5,7 +5,9 @@ import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepositoryImpl
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
+import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.ProfileViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
@@ -30,7 +32,9 @@ val di = DI {
     bindSingleton { CreateRecipeDescriptionVM() }
     bindSingleton { CreateRecipeImageVM() }
     bindSingleton { IngredientEditDialogVM(instance()) }
+    bindSingleton { ProfileViewModel(instance()) }
 
     // States
     bindSingleton { AuthState() }
+    bindSingleton { UserState() }
 }
