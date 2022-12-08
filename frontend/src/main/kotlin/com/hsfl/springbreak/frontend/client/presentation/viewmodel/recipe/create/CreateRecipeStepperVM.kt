@@ -31,7 +31,13 @@ class CreateRecipeStepperViewModel {
         when (event) {
             is StepperEvent.OnNextStep -> nextStep()
             is StepperEvent.OnBackStep -> backStep()
+            is StepperEvent.ClearStates -> clearStates()
         }
+    }
+
+    private fun clearStates() {
+        _currentStep.value = allSteps.value[0]
+        _currentStepIndex.value = 0
     }
 
     private fun nextStep() {
@@ -44,9 +50,13 @@ class CreateRecipeStepperViewModel {
                 }
             }
 
-            in 1 until allSteps.value.size -> {
+            in 1 until allSteps.value.size - 1 -> {
                 allSteps.value[currentStepIndex.value].completed = true
                 _currentStepIndex.value++
+            }
+
+            allSteps.value.size - 1 -> {
+                println("Abschließen")
             }
         }
     }
@@ -66,4 +76,5 @@ data class CreateRecipeStep(
 sealed class StepperEvent {
     object OnNextStep : StepperEvent()
     object OnBackStep : StepperEvent()
+    object ClearStates : StepperEvent()
 }

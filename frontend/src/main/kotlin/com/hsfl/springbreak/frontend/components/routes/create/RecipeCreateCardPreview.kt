@@ -3,6 +3,7 @@ package com.hsfl.springbreak.frontend.components.routes.create
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeViewModel
 import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
 import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.Display
 import csstype.JustifyContent
 import mui.material.Box
@@ -15,13 +16,19 @@ import react.Props
 
 val RecipeCreateCardPreview = FC<Props> {
     val viewModel: CreateRecipeViewModel by di.instance()
+    val recipeTitle = viewModel.recipeName.collectAsState()
+    val recipeShortDesc = viewModel.recipeShortDesc.collectAsState()
+    val recipePrice = viewModel.recipePrice.collectAsState()
+    val recipeDuration = viewModel.recipeDuration.collectAsState()
+    val recipeDifficulty = viewModel.recipeDifficulty.collectAsState()
+
     Typography {
         variant = TypographyVariant.h6
         +"Übersicht"
     }
     Typography {
         variant = TypographyVariant.subtitle2
-        +"So wird dein Rezept aud der Seite aussehen-"
+        +"So wird dein Rezept auf der Seite aussehen."
     }
     Box {
         sx {
@@ -29,17 +36,15 @@ val RecipeCreateCardPreview = FC<Props> {
             justifyContent = JustifyContent.center
         }
         RecipeCard {
-            title = "Ratatouille ala Remy"
+            title = recipeTitle.value
             createdDate = "November 13, 2022"
-            creator = "Remy Ratte"
-            creatorImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRajFS3H5bfZokcLlPh6gBgLj7CAa5UU1z7sQ&usqp=CAU"
-            imageSrc =
-                "https://stillcracking.com/wp-content/uploads/2016/02/Ratatouille1-550x375.jpg"
-            shortDescription =
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut"
-            cost = "3"
-            duration = "45 min"
-            difficulty = "Mittel"
+            creator = "My Name"
+            creatorImg = ""
+            imageSrc = ""
+            shortDescription = recipeShortDesc.value
+            cost = recipePrice.value.toString()
+            duration = recipeDuration.value.toString()
+            difficulty = recipeDifficulty.value
         }
     }
 }

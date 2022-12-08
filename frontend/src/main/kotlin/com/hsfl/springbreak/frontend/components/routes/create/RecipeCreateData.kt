@@ -18,12 +18,12 @@ import react.*
 
 val RecipeCreateData = FC<Props> {
     val viewModel: CreateRecipeDataVM by di.instance()
-    val nameTextState = viewModel.ingredientName.collectAsState()
-    val shortDescTextState = viewModel.ingredientShortDesc.collectAsState()
-    val durationTextState = viewModel.ingredientDuration.collectAsState()
-    val priceTextState = viewModel.ingredientPrice.collectAsState()
-    val difficultyTextState = viewModel.ingredientDifficulty.collectAsState()
-    val categoryTextState = viewModel.ingredientCategory.collectAsState()
+    val nameTextState = viewModel.recipeName.collectAsState()
+    val shortDescTextState = viewModel.recipeShortDesc.collectAsState()
+    val durationTextState = viewModel.recipeDuration.collectAsState()
+    val priceTextState = viewModel.recipePrice.collectAsState()
+    val difficultyTextState = viewModel.recipeDifficulty.collectAsState()
+    val categoryTextState = viewModel.recipeCategory.collectAsState()
 
     var name by useState(nameTextState.value)
     var shortDesc by useState(shortDescTextState.value)
@@ -45,16 +45,16 @@ val RecipeCreateData = FC<Props> {
         direction = responsive(StackDirection.column)
         spacing = responsive(2)
         FormControl {
-            InputLabel { +"Name" }
+            InputLabel { +"Rezeptname" }
             required = true
             OutlinedInput {
-                label = Typography.create { +"Name" }
+                label = Typography.create { +"Rezeptname" }
                 error = nameTextState.error
                 value = name
                 onChange = {
                     val target = it.target as HTMLInputElement
                     name = target.value
-                    viewModel.onEvent(CreateRecipeDataEvent.IngredientName(target.value))
+                    viewModel.onEvent(CreateRecipeDataEvent.RecipeName(target.value))
                 }
             }
             FormHelperText { +nameTextState.errorMsg }
@@ -75,7 +75,7 @@ val RecipeCreateData = FC<Props> {
                     if (shortDesc.length < 100) {
                         val target = it.target as HTMLTextAreaElement
                         shortDesc = target.value
-                        viewModel.onEvent(CreateRecipeDataEvent.IngredientShortDesc(target.value))
+                        viewModel.onEvent(CreateRecipeDataEvent.RecipeShortDesc(target.value))
                     }
                 }
             }
@@ -95,7 +95,7 @@ val RecipeCreateData = FC<Props> {
                 onChange = {
                     val target = it.target as HTMLInputElement
                     price = target.value.toDouble()
-                    viewModel.onEvent(CreateRecipeDataEvent.IngredientPrice(target.value.toDouble()))
+                    viewModel.onEvent(CreateRecipeDataEvent.RecipePrice(target.value.toDouble()))
                 }
             }
             FormHelperText { +priceTextState.errorMsg }
@@ -108,11 +108,13 @@ val RecipeCreateData = FC<Props> {
                 type = "number"
                 label = Typography.create { +"Dauer" }
                 endAdornment = InputAdornment.create { +"min" }
-                value = duration
+                value = duration.let {
+                    if (it == 0) "" else it
+                }.toString()
                 onChange = {
                     val target = it.target as HTMLInputElement
                     duration = target.value.toInt()
-                    viewModel.onEvent(CreateRecipeDataEvent.IngredientDuration(target.value.toInt()))
+                    viewModel.onEvent(CreateRecipeDataEvent.RecipeDuration(target.value.toInt()))
                 }
             }
             FormHelperText { +durationTextState.errorMsg }
@@ -126,7 +128,7 @@ val RecipeCreateData = FC<Props> {
                 value = difficulty
                 onChange = { event, _ ->
                     difficulty = event.target.value
-                    viewModel.onEvent(CreateRecipeDataEvent.IngredientDifficulty(event.target.value))
+                    viewModel.onEvent(CreateRecipeDataEvent.RecipeDifficulty(event.target.value))
                 }
                 MenuItem {
                     value = "leicht"
@@ -152,7 +154,7 @@ val RecipeCreateData = FC<Props> {
                 value = category
                 onChange = { event, _ ->
                     category = event.target.value
-                    viewModel.onEvent(CreateRecipeDataEvent.IngredientCategory(event.target.value))
+                    viewModel.onEvent(CreateRecipeDataEvent.RecipeCategory(event.target.value))
                 }
                 if (category.isNotEmpty()) {
                     endAdornment = InputAdornment.create {
@@ -162,7 +164,7 @@ val RecipeCreateData = FC<Props> {
                             size = Size.small
                             onClick = {
                                 category = ""
-                                viewModel.onEvent(CreateRecipeDataEvent.IngredientCategory(""))
+                                viewModel.onEvent(CreateRecipeDataEvent.RecipeCategory(""))
                             }
                             CloseOutlined()
                         }

@@ -14,7 +14,6 @@ class IngredientsTableVM {
     private val _openEditDialog = MutableStateFlow(false)
     val openEditDialog: StateFlow<Boolean> = _openEditDialog
 
-    //private val _ingredientToEdit = MutableSharedFlow<RecipeIngredient>()
     val ingredientToEdit = MutableSharedFlow<RecipeIngredient>()
 
     // TODO: This is a state which update so the ui will rerender
@@ -30,6 +29,7 @@ class IngredientsTableVM {
             is IngredientsTableEvent.OnEditRow -> onEditRow()
             is IngredientsTableEvent.OnCloseEditDialog -> closeEditDialog()
             is IngredientsTableEvent.OnSaveEditDialog -> saveEditIngredient(event.item)
+            is IngredientsTableEvent.ClearStates -> clearStates()
         }
         forceUpdate()
     }
@@ -44,6 +44,13 @@ class IngredientsTableVM {
             }
         }
         closeEditDialog()
+    }
+
+    private fun clearStates() {
+        _ingredientsList.value = mutableListOf()
+        _selectedIngredients.value = mutableListOf()
+        _openEditDialog.value = false
+        _randomState.value = 0
     }
 
     private fun onEditRow() {
@@ -101,4 +108,5 @@ sealed class IngredientsTableEvent {
     data class OnSaveEditDialog(val item: RecipeIngredient) : IngredientsTableEvent()
     data class OnSelectRow(val index: Int) : IngredientsTableEvent()
     data class OnNewData(val list: List<RecipeIngredient>) : IngredientsTableEvent()
+    object ClearStates: IngredientsTableEvent()
 }

@@ -11,34 +11,34 @@ import mui.system.sx
 import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.useState
 
 val CreateRecipe = FC<Props> {
     val viewModel: CreateRecipeViewModel by di.instance()
     val currentStep = viewModel.currentStepIndex.collectAsState()
     val enableNextStepButton = viewModel.enableNextStepButton.collectAsState()
-    var openConfirmAbortDialog by useState(false)
+    val openConfirmAbortDialog = viewModel.openAbortDialog.collectAsState()
 
     Box {
         sx {
             margin = 8.px
         }
-            RecipeCreateStepper()
-            Box {
-                sx {
-                    marginTop = 16.px
-                }
-                when (currentStep) {
-                    0 -> RecipeCreateData()
-                    1 -> RecipeCreateIngredients()
-                    2 -> RecipeCreateDescription()
-                    3 -> CreateRecipeImage()
-                    4 -> RecipeCreateCardPreview()
-                }
+        RecipeCreateStepper()
+        Box {
+            sx {
+                marginTop = 16.px
             }
+            when (currentStep) {
+                0 -> RecipeCreateData()
+                1 -> RecipeCreateIngredients()
+                2 -> RecipeCreateDescription()
+                3 -> CreateRecipeImage()
+                4 -> RecipeCreateCardPreview()
+            }
+        }
         ConfirmAbortDialog {
             open = openConfirmAbortDialog
-            onClose = { openConfirmAbortDialog = false }
+            onClose = { viewModel.onEvent(CreateRecipeEvent.OnCloseAbort) }
+            onConfirm = { viewModel.onEvent(CreateRecipeEvent.OnConfirmAbort) }
         }
         Box {
             sx {
@@ -48,21 +48,21 @@ val CreateRecipe = FC<Props> {
             if (currentStep == 0) {
                 Button {
                     onClick = {
-                        openConfirmAbortDialog = true
+                        viewModel.onEvent(CreateRecipeEvent.OnAbort)
                     }
                     +"Abbrechen"
                 }
             } else {
                 Button {
-                    onClick = {viewModel.onEvent(CreateRecipeEvent.OnBackStep)}
+                    onClick = { viewModel.onEvent(CreateRecipeEvent.OnBackStep) }
                     +"Zurück"
                 }
             }
             Button {
                 variant = ButtonVariant.contained
                 disabled = !enableNextStepButton
-                onClick = {viewModel.onEvent(CreateRecipeEvent.OnNextStep)}
-                +if (currentStep == 3) "Abschließen" else "Weiter"
+                onClick = { viewModel.onEvent(CreateRecipeEvent.OnNextStep) }
+                +if (currentStep == 4) "Abschließen" else "Weiter"
             }
         }
     }

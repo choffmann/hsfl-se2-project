@@ -9,15 +9,19 @@ import react.FC
 import react.Props
 import react.router.dom.NavLink
 
-external interface ConfirmAbortDialogProps: Props {
+external interface ConfirmAbortDialogProps : Props {
     var open: Boolean
     var onClose: () -> Unit
+    var onConfirm: () -> Unit
 }
 
-val ConfirmAbortDialog = FC<ConfirmAbortDialogProps> {props ->
+val ConfirmAbortDialog = FC<ConfirmAbortDialogProps> { props ->
     Dialog {
         open = props.open
-        DialogTitle { +"Vorgang abbrechen?"}
+        onClose = { _, _ ->
+            props.onClose()
+        }
+        DialogTitle { +"Vorgang abbrechen?" }
         DialogContent {
             Typography {
                 variant = TypographyVariant.subtitle1
@@ -39,6 +43,9 @@ val ConfirmAbortDialog = FC<ConfirmAbortDialogProps> {props ->
                     color = Color.currentcolor
                 }
                 Button {
+                    onClick = {
+                        props.onConfirm()
+                    }
                     +"Verlassen"
                 }
             }

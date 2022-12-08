@@ -4,77 +4,88 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class CreateRecipeDataVM {
-    private val _ingredientName = MutableStateFlow(FormTextFieldState("", required = true))
-    val ingredientName: StateFlow<FormTextFieldState<String>> = _ingredientName
+    private val _recipeName = MutableStateFlow(FormTextFieldState("", required = true))
+    val recipeName: StateFlow<FormTextFieldState<String>> = _recipeName
 
-    private val _ingredientShortDesc = MutableStateFlow(FormTextFieldState(""))
-    val ingredientShortDesc: StateFlow<FormTextFieldState<String>> = _ingredientShortDesc
+    private val _recipeShortDesc = MutableStateFlow(FormTextFieldState(""))
+    val recipeShortDesc: StateFlow<FormTextFieldState<String>> = _recipeShortDesc
 
-    private val _ingredientPrice = MutableStateFlow(FormTextFieldState(0.0))
-    val ingredientPrice: StateFlow<FormTextFieldState<Double>> = _ingredientPrice
+    private val _recipePrice = MutableStateFlow(FormTextFieldState(0.0))
+    val recipePrice: StateFlow<FormTextFieldState<Double>> = _recipePrice
 
-    private val _ingredientDuration = MutableStateFlow(FormTextFieldState(0))
-    val ingredientDuration: StateFlow<FormTextFieldState<Int>> = _ingredientDuration
+    private val _recipeDuration = MutableStateFlow(FormTextFieldState(0))
+    val recipeDuration: StateFlow<FormTextFieldState<Int>> = _recipeDuration
 
-    private val _ingredientDifficulty = MutableStateFlow(FormTextFieldState("", required = true))
-    val ingredientDifficulty: StateFlow<FormTextFieldState<String>> = _ingredientDifficulty
+    private val _recipeDifficulty = MutableStateFlow(FormTextFieldState("", required = true))
+    val recipeDifficulty: StateFlow<FormTextFieldState<String>> = _recipeDifficulty
 
-    private val _ingredientCategory = MutableStateFlow(FormTextFieldState(""))
-    val ingredientCategory: StateFlow<FormTextFieldState<String>> = _ingredientCategory
+    private val _recipeCategory = MutableStateFlow(FormTextFieldState(""))
+    val recipeCategory: StateFlow<FormTextFieldState<String>> = _recipeCategory
 
     private val _validateInputs = MutableStateFlow(true)
     val validateInputs: StateFlow<Boolean> = _validateInputs
 
     fun onEvent(event: CreateRecipeDataEvent) {
         when (event) {
-            is CreateRecipeDataEvent.IngredientName -> setText(
-                flow = _ingredientName,
+            is CreateRecipeDataEvent.RecipeName -> setText(
+                flow = _recipeName,
                 value = event.value,
                 required = true
             )
 
-            is CreateRecipeDataEvent.IngredientShortDesc -> setText(
-                flow = _ingredientShortDesc,
+            is CreateRecipeDataEvent.RecipeShortDesc -> setText(
+                flow = _recipeShortDesc,
                 value = event.value,
                 required = false
             )
 
-            is CreateRecipeDataEvent.IngredientPrice -> setText(
-                flow = _ingredientPrice,
+            is CreateRecipeDataEvent.RecipePrice -> setText(
+                flow = _recipePrice,
                 value = event.value,
                 required = false
             )
 
-            is CreateRecipeDataEvent.IngredientDuration -> setText(
-                flow = _ingredientDuration,
+            is CreateRecipeDataEvent.RecipeDuration -> setText(
+                flow = _recipeDuration,
                 value = event.value,
                 required = false
             )
 
-            is CreateRecipeDataEvent.IngredientDifficulty -> setText(
-                flow = _ingredientDifficulty,
+            is CreateRecipeDataEvent.RecipeDifficulty -> setText(
+                flow = _recipeDifficulty,
                 value = event.value,
                 required = false
             )
 
-            is CreateRecipeDataEvent.IngredientCategory -> setText(
-                flow = _ingredientCategory,
+            is CreateRecipeDataEvent.RecipeCategory -> setText(
+                flow = _recipeCategory,
                 value = event.value,
                 required = false
             )
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
+            is CreateRecipeDataEvent.ClearStates -> clearStates()
         }
     }
 
+    private fun clearStates() {
+        _recipeName.value = FormTextFieldState("", required = true)
+        _recipeDifficulty.value = FormTextFieldState("", required = true)
+        _recipeCategory.value = FormTextFieldState("")
+        _recipePrice.value = FormTextFieldState(0.0)
+        _recipeDuration.value = FormTextFieldState(0)
+        _recipeShortDesc.value = FormTextFieldState("")
+        _validateInputs.value = true
+    }
+
     private fun validateInput() {
-        if (ingredientName.value.value.isEmpty() && ingredientDifficulty.value.value.isEmpty()) {
-            setTextError(_ingredientName, "Rezeptname muss angegeben werden")
-            setTextError(_ingredientDifficulty, "Schwierigkeitsgrad muss angegeben werden")
-        } else if (ingredientName.value.value.isEmpty()) {
-            setTextError(_ingredientName, "Rezeptname muss angegeben werden")
-        } else if (ingredientDifficulty.value.value.isEmpty()) {
-            setTextError(_ingredientDifficulty, "Schwierigkeitsgrad muss angegeben werden")
+        if (recipeName.value.value.isEmpty() && recipeDifficulty.value.value.isEmpty()) {
+            setTextError(_recipeName, "Rezeptname muss angegeben werden")
+            setTextError(_recipeDifficulty, "Schwierigkeitsgrad muss angegeben werden")
+        } else if (recipeName.value.value.isEmpty()) {
+            setTextError(_recipeName, "Rezeptname muss angegeben werden")
+        } else if (recipeDifficulty.value.value.isEmpty()) {
+            setTextError(_recipeDifficulty, "Schwierigkeitsgrad muss angegeben werden")
         } else {
             _validateInputs.value = true
         }
@@ -103,11 +114,12 @@ data class FormTextFieldState<T>(
 )
 
 sealed class CreateRecipeDataEvent {
-    data class IngredientName(val value: String) : CreateRecipeDataEvent()
-    data class IngredientShortDesc(val value: String) : CreateRecipeDataEvent()
-    data class IngredientPrice(val value: Double) : CreateRecipeDataEvent()
-    data class IngredientDuration(val value: Int) : CreateRecipeDataEvent()
-    data class IngredientDifficulty(val value: String) : CreateRecipeDataEvent()
-    data class IngredientCategory(val value: String) : CreateRecipeDataEvent()
+    data class RecipeName(val value: String) : CreateRecipeDataEvent()
+    data class RecipeShortDesc(val value: String) : CreateRecipeDataEvent()
+    data class RecipePrice(val value: Double) : CreateRecipeDataEvent()
+    data class RecipeDuration(val value: Int) : CreateRecipeDataEvent()
+    data class RecipeDifficulty(val value: String) : CreateRecipeDataEvent()
+    data class RecipeCategory(val value: String) : CreateRecipeDataEvent()
     object OnNext : CreateRecipeDataEvent()
+    object ClearStates: CreateRecipeDataEvent()
 }
