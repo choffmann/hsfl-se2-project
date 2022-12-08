@@ -15,7 +15,6 @@ import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import org.kodein.di.instance
-import org.w3c.dom.url.URL
 import react.*
 import react.dom.html.InputType
 import react.dom.onChange
@@ -31,9 +30,6 @@ val MyUser = FC<Props> {
     val confirmedPasswordState = viewModel.confirmedPasswordState.collectAsState()
     val profileImageState = viewModel.profileImage.collectAsState()
 
-
-
-
     Typography {
         variant = TypographyVariant.h6
         +"Mein Profil"
@@ -45,8 +41,8 @@ val MyUser = FC<Props> {
         lastName = lastNameState
         email = emailState
         password = passwordState
-        profileImage = ""
         confirmedPassword = confirmedPasswordState
+        profileImage = profileImageState
         onEditButton = { viewModel.onEvent(ProfileEvent.OnEdit) }
         onSaveButton = { viewModel.onEvent(ProfileEvent.OnSave) }
         onAbort = { viewModel.onEvent(ProfileEvent.OnAbort) }
@@ -101,6 +97,7 @@ val ShowMyUser = FC<ShowMyUserProps> { props ->
         if (props.editMode) UploadAvatar {
             size = 150.px
             onProfileImageChanged = { props.onProfileImageChanged(it) }
+            currentProfileImage = props.profileImage
         } else Avatar {
             sx {
                 width = 150.px
@@ -173,7 +170,7 @@ val ShowMyUser = FC<ShowMyUserProps> { props ->
                     value = props.confirmedPassword
                     onChange = {
                         val target = it.target as HTMLInputElement
-                        props.onPasswordChanged(target.value)
+                        props.onConfirmedPasswordChanged(target.value)
                     }
                 }
             }

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AuthState {
-    private val _authorized = MutableStateFlow(false)
+    private val _authorized = MutableStateFlow(true)
     val authorized: StateFlow<Boolean> = _authorized
 
     fun onEvent(event: AuthEvent) {

@@ -17,6 +17,7 @@ import web.file.File
 
 external interface UploadAvatarProps: Props {
     var size: Length
+    var currentProfileImage: String
     var onProfileImageChanged: (File) -> Unit
 }
 
@@ -72,7 +73,7 @@ val UploadAvatar = FC<UploadAvatarProps> { props ->
                     width = props.size
                     height = props.size
                 }
-                src = profileImage
+                src = profileImage ?: props.currentProfileImage
             }
         }
     }
