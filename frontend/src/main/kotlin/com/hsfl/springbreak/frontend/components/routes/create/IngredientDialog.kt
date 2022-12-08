@@ -43,6 +43,7 @@ val IngredientDialog = FC<Props> {
                 ingredientList = ingredients
             }
             IngredientsFormular {
+                showMoreButton = true
                 name = nameState
                 unit = unitState
                 amount = amountState
@@ -92,6 +93,7 @@ external interface IngredientsFormularProps : DialogContentProps {
     var onAmountChanged: (Int) -> Unit
     var unit: String
     var onUnitChanged: (String) -> Unit
+    var showMoreButton: Boolean
 }
 
 val IngredientsFormular = FC<IngredientsFormularProps> { props ->
@@ -140,13 +142,15 @@ val IngredientsFormular = FC<IngredientsFormularProps> { props ->
                 }
             }
         }
-        Button {
-            variant = ButtonVariant.outlined
-            startIcon = Icon.create { Add() }
-            onClick = {
-                props.onNewIngredient()
+        if(props.showMoreButton) {
+            Button {
+                variant = ButtonVariant.outlined
+                startIcon = Icon.create { Add() }
+                onClick = {
+                    props.onNewIngredient()
+                }
+                +"Eine weitere Zutat hinzufügen"
             }
-            +"Eine weitere Zutat hinzufügen"
         }
     }
 }
