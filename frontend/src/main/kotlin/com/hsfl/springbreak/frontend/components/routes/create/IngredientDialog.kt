@@ -1,5 +1,10 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogVM
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.RecipeIngredient
+import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.px
 import dom.html.HTMLInputElement
 import mui.icons.material.Add
@@ -7,44 +12,29 @@ import mui.icons.material.ExpandMore
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
+import org.kodein.di.instance
 import react.*
 
-external interface IngredientDialogProps : Props {
-    var open: Boolean
-    var onClose: () -> Unit
-    var onFinished: (List<RecipeIngredient>) -> Unit
-}
+val IngredientDialog = FC<Props> {
+    val viewModel: IngredientsDialogVM by di.instance()
+    val openDialog = viewModel.openDialog.collectAsState()
+    val ingredients = viewModel.ingredientsList.collectAsState()
+    val ingredientName = viewModel.ingredientName.collectAsState()
+    val ingredientAmount = viewModel.ingredientAmount.collectAsState()
+    val ingredientUnit = viewModel.ingredientUnit.collectAsState()
 
-val IngredientDialog = FC<IngredientDialogProps> { props ->
-    var ingredients: List<RecipeIngredient> by useState(emptyList())
-    var ingredientName by useState("")
-    var ingredientAmount by useState(0)
-    var ingredientUnit by useState("")
+    var nameState by useState(ingredientName)
+    var amountState by useState(ingredientAmount)
+    var unitState by useState(ingredientUnit)
 
-    val addIngredient: () -> Unit = {
-        val ingredient = RecipeIngredient(
-            name = ingredientName,
-            amount = ingredientAmount,
-            unit = ingredientUnit
-        )
-        // To force react to render child
-        val ingredientsList: MutableList<RecipeIngredient> = ingredients.toMutableList()
-        ingredientsList.add(ingredient)
-        ingredients = ingredientsList.toList()
-    }
-
-    val clearTextFieldStates: () -> Unit = {
-        ingredientName = ""
-        ingredientAmount = 0
-        ingredientUnit = ""
-    }
-
-    val clearIngredientsList: () -> Unit = {
-        ingredients = emptyList()
+    val resetInternalStates: () -> Unit = {
+        nameState = ""
+        amountState = 0
+        unitState = ""
     }
 
     Dialog {
-        open = props.open
+        open = openDialog
         fullWidth = true
         maxWidth = "lg"
         DialogTitle { +"Zutat hinzufügen" }
@@ -53,34 +43,40 @@ val IngredientDialog = FC<IngredientDialogProps> { props ->
                 ingredientList = ingredients
             }
             IngredientsFormular {
-                name = ingredientName
-                unit = ingredientUnit
-                amount = ingredientAmount
-                onNameChanged = { ingredientName = it }
-                onAmountChanged = { ingredientAmount = it }
-                onUnitChanged = { ingredientUnit = it }
+                name = nameState
+                unit = unitState
+                amount = amountState
+                onNameChanged = {
+                    nameState = it
+                    viewModel.onEvent(IngredientsDialogEvent.IngredientNameChanged(it))
+                }
+                onAmountChanged = {
+                    amountState = it
+                    viewModel.onEvent(IngredientsDialogEvent.IngredientAmountChanged(it))
+                }
+                onUnitChanged = {
+                    unitState = it
+                    viewModel.onEvent(IngredientsDialogEvent.IngredientUnitChanged(it))
+                }
                 onNewIngredient = {
-                    clearTextFieldStates()
-                    addIngredient()
+                    resetInternalStates()
+                    viewModel.onEvent(IngredientsDialogEvent.OnAddMoreIngredient)
                 }
             }
         }
         DialogActions {
             Button {
                 onClick = {
-                    clearIngredientsList()
-                    clearTextFieldStates()
-                    props.onClose()
+                    resetInternalStates()
+                    viewModel.onEvent(IngredientsDialogEvent.OnAbort)
                 }
                 +"Abbrechen"
             }
             Button {
                 variant = ButtonVariant.contained
                 onClick = {
-                    addIngredient()
-                    props.onFinished(ingredients)
-                    clearIngredientsList()
-                    clearTextFieldStates()
+                    resetInternalStates()
+                    viewModel.onEvent(IngredientsDialogEvent.OnFinished)
                 }
                 +"Fertig"
             }
@@ -99,8 +95,6 @@ private external interface IngredientsFormularProps : DialogContentProps {
 }
 
 private val IngredientsFormular = FC<IngredientsFormularProps> { props ->
-
-
     Stack {
         sx {
             paddingTop = 8.px

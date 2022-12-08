@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
+import com.hsfl.springbreak.frontend.di.di
 import csstype.Display
 import csstype.FlexDirection
 import csstype.JustifyContent
@@ -7,22 +9,14 @@ import csstype.px
 import mui.icons.material.Add
 import mui.material.*
 import mui.system.sx
+import org.kodein.di.instance
 import react.FC
 import react.Props
 import react.create
 import react.useState
 
-data class RecipeIngredient(val name: String, val amount: Int, val unit: String)
-
 val RecipeCreateIngredients = FC<Props> {
-    var openDialog by useState(false)
-    var ingredients: List<RecipeIngredient> by useState(emptyList())
-
-    val addIngredientsFromDialog: (List<RecipeIngredient>) -> Unit = {
-        val ingredientsList: MutableList<RecipeIngredient> = ingredients.toMutableList()
-        ingredientsList.addAll(it)
-        ingredients = ingredientsList.toList()
-    }
+    val viewModel: CreateRecipeIngredientsVM by di.instance()
 
     Box {
         sx {
@@ -32,27 +26,17 @@ val RecipeCreateIngredients = FC<Props> {
             justifyContent = JustifyContent.center
         }
 
-        IngredientDialog {
-            open = openDialog
-            onClose = {
-                openDialog = false
-            }
-            onFinished = {
-                addIngredientsFromDialog(it)
-                openDialog = false
-            }
-        }
-
-        IngredientsTable {
-            ingredientsList = ingredients
-        }
-
         Button {
             sx { marginTop = 8.px }
             variant = ButtonVariant.outlined
             startIcon = Icon.create { Add() }
-            onClick = { openDialog = true }
+            onClick = {
+                viewModel.onEvent(CreateRecipeIngredientsEvent.OnAddIngredient)
+            }
             +"Zutat hinzufügen"
         }
+
+        IngredientDialog()
+        IngredientsTable()
     }
 }

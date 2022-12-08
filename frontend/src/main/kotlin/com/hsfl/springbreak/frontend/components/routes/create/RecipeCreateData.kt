@@ -10,6 +10,7 @@ import dom.html.HTMLTextAreaElement
 import mui.icons.material.CloseOutlined
 import mui.icons.material.Euro
 import mui.material.*
+import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import org.kodein.di.instance
@@ -31,6 +32,12 @@ val RecipeCreateData = FC<Props> {
     var difficulty by useState(difficultyTextState.value)
     var category by useState(categoryTextState.value)
 
+    Toolbar {
+        Typography {
+            variant = TypographyVariant.h6
+            +"Rezeptdaten"
+        }
+    }
     Stack {
         sx {
             padding = 16.px
