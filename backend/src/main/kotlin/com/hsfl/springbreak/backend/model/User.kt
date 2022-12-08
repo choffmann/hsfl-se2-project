@@ -12,5 +12,19 @@ data class User(
         val email: String,
         val password: String
     )
+
+    data class Register(
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val password: String,
+        val image: String?
+    )
+
+    data class ChangeProfile(
+        val firstName: String?,
+        val lastName: String?,
+        val image: String?
+    )
 }
 

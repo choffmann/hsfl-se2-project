@@ -4,6 +4,7 @@ import com.hsfl.springbreak.backend.entity.RecipeEntity
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.RecipeRepository
+import com.hsfl.springbreak.backend.service.RecipeJpaService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -19,21 +20,38 @@ import org.springframework.web.server.ResponseStatusException
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-class RecipeController(val recipeRepository: RecipeRepository) {
+class RecipeController(val recipeRepository: RecipeRepository, val recipeService: RecipeJpaService) {
+
+
+   @GetMapping("recipes/{id}")
+   fun findRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> =
+      recipeService.getRecipeById(recipeId)
+
+   @GetMapping("recipes/{name}")
+   fun findByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
+      recipeService.getRecipeByName(recipeName)
+
+   @PostMapping("recipes")
+   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe, @PathVariable userId: Long) =
+      recipeService.createNewRecipe(newRecipe, userId)
+
+   @PutMapping("recipes")
+   fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe, @PathVariable recipeId: Long) =
+      recipeService.updateRecipe(changes, recipeId)
+
+   @DeleteMapping("recipes/{id}")
+   fun deleteRecipe(@PathVariable("id") recipeId: Long) =
+      recipeService.deleteRecipeById(recipeId)
+
 
    /*
-   @GetMapping("api/recipes/{id}")
-   fun findRecipeById(@PathVariable("id") recipeId: Long): Recipe = recipeRepository.findById(recipeId)
-      .orElseThrow().toDto()
-
-    */
-
    @GetMapping("api/recipes/{id}")
    fun findRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> {
       recipeRepository.findByIdOrNull(recipeId)?.let { recipe ->
          return ApiResponse(data = recipe.toDto(), success = true)
       } ?: return ApiResponse(error = "No Recipe with the ID: $recipeId", success = false)
    }
+
 
    @PostMapping("api/recipes")
    fun createNewRecipe(@RequestBody newRecipe: Recipe): ApiResponse<Recipe> {
@@ -81,7 +99,10 @@ class RecipeController(val recipeRepository: RecipeRepository) {
          throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID \"$recipeId\" doesn't exist")
       }
 
-   /*
+    */
+
+
+/*
 recipeRepository.findById(recipeId).map {
       it.title = RecipeEntity.fromDto(recipe).title
       it.shortDescription = RecipeEntity.fromDto(recipe).shortDescription

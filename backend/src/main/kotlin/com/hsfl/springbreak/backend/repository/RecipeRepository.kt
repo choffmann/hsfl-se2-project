@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
 
 interface RecipeRepository: JpaRepository<RecipeEntity, Long> {
-    //fun findRecipeById(Id: Long): RecipeEntity?
+    fun findRecipeByTitle(name: String): RecipeEntity?
 }

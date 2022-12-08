@@ -12,13 +12,39 @@ data class Recipe(
     val category: Category,
     val creator: User,
     val createTime: LocalDate,
-    val image: String,
-    val longDescription: String,
-    val views: Int
+    val image: String?,
+    val longDescription: String?,
+    val views: Int,
+    val ingredients: List<IngredientRecipe>
     /*
     val rating: Rating,
     val ingredients: List<Ingredient>,
      */
 ) {
+
+    data class CreateRecipe(
+        val title: String,
+        val shortDescription: String?,
+        val price: Double?,
+        val duration: Double?,
+        val difficulty: Difficulty,
+        val category: Category,
+        val creator: User,
+        val createTime: LocalDate,
+        val image: String?,
+        val longDescription: String?,
+        val ingredients: List<IngredientRecipe.WithoutRecipe>
+        // val ingredients: List<IngredientRecipe>
+    )
+
+    data class ChangeRecipe(
+        val title: String?,val shortDescription: String?,
+        val price: Double?,
+        val duration: Double?,
+        val difficulty: Difficulty?,
+        val category: Category?,
+        val image: String?,
+        val longDescription: String?
+    )
 
 }

@@ -55,6 +55,16 @@ data class IngredientRecipeEntity(
             unit = "",
             amount = 0
         )
+
+        /*
+        fun fromIngredients(ingredient: Ingredient, recipe: Recipe.CreateRecipe): IngredientRecipeEntity = IngredientRecipeEntity(
+            id = IngredientRecipeKey(recipeId = recipe.id, ingredientId = ingredient.id),
+            recipe = RecipeEntity.fromDto(recipe),
+            ingredient = IngredientEntity.fromDto(ingredient),
+            unit = "",
+            amount = 0
+        )
+         */
     }
 }
 

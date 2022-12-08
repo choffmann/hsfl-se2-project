@@ -12,7 +12,13 @@ data class IngredientRecipe(
     val ingredient: Ingredient,
     val unit: String,
     val amount: Int
-)
+) {
+    data class WithoutRecipe (
+        val ingredient: Ingredient,
+        val unit: String,
+        val amount: Int
+        )
+}
 
 /*TODO
 1. List von

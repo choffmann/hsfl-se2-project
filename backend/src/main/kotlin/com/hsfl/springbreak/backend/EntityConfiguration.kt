@@ -1,6 +1,8 @@
 package com.hsfl.springbreak.backend
 
 import com.hsfl.springbreak.backend.entity.*
+import com.hsfl.springbreak.backend.model.IngredientRecipe
+import com.hsfl.springbreak.backend.model.IngredientRecipeId
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
@@ -16,41 +18,60 @@ class EntityConfiguration {
                             ratingRepository: RatingRepository,
                             recipeRepository: RecipeRepository, userRepository: UserRepository,
                             categoryRepository: CategoryRepository,
-                            difficultyRepository: DifficultyRepository) =
+                            difficultyRepository: DifficultyRepository,
+                            ingredientRecipeRepository: IngredientRecipeRepository) =
             ApplicationRunner {
                 val user = userRepository.save(UserEntity(
                         firstName = "Hektor", lastName = "Panzer", email = "panzer@",
-                        password = "secret", image = "DickPic.png", favoriteRecipe = listOf()
+                        password = "secret", image = "DickPic.png"
                 ))
                  print("user:" + user)
+
+                val diff = difficultyRepository.save(DifficultyEntity(
+                    name = "Easy"
+                ))
+                print("difficulty:" + diff)
 
                 val cat = categoryRepository.save(CategoryEntity(
                         name = "Food"
                 ))
-                print("cat:" + cat)
+                print("category:" + cat)
 
 
-                val ingredient = ingredientRepository.save(IngredientEntity(
-                        name = "ttttttttt"
+                val ingredient1 = ingredientRepository.save(IngredientEntity(
+                        name = "Milch"
                 ))
-                print("ingredient:" + ingredient)
+                print("first ingredient:" + ingredient1)
 
-
-                val diff = difficultyRepository.save(DifficultyEntity(
-                        name = "Easy",
+                val ingredient2 = ingredientRepository.save(IngredientEntity(
+                    name = "Müsli"
                 ))
+                print("second ingredient:" + ingredient2)
+
 
                 val recipe = recipeRepository.save(RecipeEntity(
                         title = "Hektor", shortDescription = "Panzer", price = 25.9,
                         duration = 10.8, difficulty=diff,category= cat, creator= user ,
-                        createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100
+                        createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100,
+                        ingredients = listOf()
                 ))
                 print("recipe:" + recipe)
+
+                val ingredientRecipeDto = IngredientRecipe(
+                    id = IngredientRecipeId( recipeId = recipe.id!!, ingredientId = ingredient1.id!!),
+                    recipe = recipe.toDto(),
+                    ingredient = ingredient1.toDto(),
+                    unit = "Liter",
+                    amount = 1
+                )
+                val ingredientRecipe = ingredientRecipeRepository.save(IngredientRecipeEntity.fromDto(ingredientRecipeDto))
+                print("Ingredient-Recipe:" + ingredientRecipe)
 
                 val rating = ratingRepository.save(RatingEntity(
                         likes= 6, dislike= 7,  recipe= recipe
                 ))
                 print("rating:" + rating)
+
 
             }
 

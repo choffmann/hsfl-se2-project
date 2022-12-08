@@ -1,18 +1,11 @@
 package com.hsfl.springbreak.backend.jpa
 
 import com.hsfl.springbreak.backend.controller.RecipeController
-import com.hsfl.springbreak.backend.controller.RecipeService
 import com.hsfl.springbreak.backend.entity.*
-import com.hsfl.springbreak.backend.model.Rating
-import com.hsfl.springbreak.backend.repository.RecipeRepository
-import com.hsfl.springbreak.backend.repository.UserRepository
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.util.Assert
-import java.time.LocalDate
 import javax.transaction.Transactional
 
 @Transactional
