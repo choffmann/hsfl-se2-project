@@ -32,6 +32,7 @@ val CreateRecipe = FC<Props> {
                     0 -> RecipeCreateData()
                     1 -> RecipeCreateIngredients()
                     2 -> RecipeCreateDescription()
+                    3 -> CreateRecipeImage()
                 }
             }
         ConfirmAbortDialog {
