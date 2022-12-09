@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class DifficultyController(val difficultyRepository: DifficultyRepository) {
 
+    /**
+     * Returns a list of all difficulties.
+     */
     @GetMapping("difficulties")
     fun retrieveDifficulties(): ApiResponse<List<Difficulty>> {
-        val difficulties = difficultyRepository.findAll().map { it.toDto() }
-        return ApiResponse(data = difficulties, success = true)
+        return ApiResponse(data = difficultyRepository.findAll().map { it.toDto() }, success = true)
     }
 }

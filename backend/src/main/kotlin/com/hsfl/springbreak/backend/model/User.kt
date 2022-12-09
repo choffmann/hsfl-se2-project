@@ -6,7 +6,7 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val image: String? = null
+    val image: String?
 ) {
     data class Login(
         val email: String,

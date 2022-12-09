@@ -14,19 +14,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import javax.transaction.Transactional
 
-
+/**
+ * Call recipe-related functions from service.
+ */
 @CrossOrigin("http://localhost:3000")
 @Transactional
 @RestController
 class RecipeController(val recipeRepository: RecipeRepository, val recipeService: RecipeJpaService) {
 
-
    @GetMapping("recipes/{id}")
-   fun findRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> =
+   fun getRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> =
       recipeService.getRecipeById(recipeId)
 
    @GetMapping("recipes/findByName/{name}")
-   fun findByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
+   fun getRecipeByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
       recipeService.getRecipeByName(recipeName)
 
    @PostMapping("recipes")
@@ -40,6 +41,13 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
    @DeleteMapping("recipes/{id}")
    fun deleteRecipe(@PathVariable("id") recipeId: Long) =
       recipeService.deleteRecipeById(recipeId)
+
+   //@PostMapping("favorites/{rId}/{uId}")
+   //fun setFavoriteById()
+
+   @GetMapping("favorites/{id}")
+   fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
+      recipeService.getFavoritesById(id)
 
 
    /*

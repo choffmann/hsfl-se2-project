@@ -24,14 +24,14 @@ data class IngredientRecipeKey(
 data class IngredientRecipeEntity(
     @EmbeddedId val id: IngredientRecipeKey?,
     @ManyToOne(cascade = [CascadeType.ALL]) @MapsId("recipeId") @JoinColumn(name = "recipe_id") val recipe: RecipeEntity?,
-    @ManyToOne(cascade = [CascadeType.ALL]) @MapsId("ingredientId") @JoinColumn(name = "ingredient_id") val ingredient: IngredientEntity?,
+    @ManyToOne @MapsId("ingredientId") @JoinColumn(name = "ingredient_id") val ingredient: IngredientEntity?,
     @Column val unit: String,
     @Column val amount: Int
 ) {
     fun toDto(): IngredientRecipe = IngredientRecipe(
         id = IngredientRecipeId(recipeId = this.recipe?.id!!, ingredientId = this.ingredient?.id!!),
-        recipe = this.recipe.toDto(), // TODO
-        ingredient = this.ingredient.toDto(),
+        // recipe = this.recipe, // TODO
+        // ingredient = this.ingredient,
         unit = this.unit,
         amount = this.amount
     )
@@ -40,6 +40,7 @@ data class IngredientRecipeEntity(
     fun toRecipe(): Recipe = this.recipe!!.toDto()
 
     companion object {
+        /*
         fun fromDto(dto: IngredientRecipe): IngredientRecipeEntity = IngredientRecipeEntity(
             id = IngredientRecipeKey(recipeId = dto.recipe.id, ingredientId = dto.ingredient.id),
             recipe = RecipeEntity.fromDto(dto.recipe),
@@ -47,6 +48,8 @@ data class IngredientRecipeEntity(
             unit = dto.unit,
             amount = dto.amount
         )
+
+         */
 
         fun fromIngredients(ingredient: Ingredient, recipe: Recipe): IngredientRecipeEntity = IngredientRecipeEntity(
             id = IngredientRecipeKey(recipeId = recipe.id, ingredientId = ingredient.id),

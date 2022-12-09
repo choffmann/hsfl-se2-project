@@ -29,5 +29,5 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
         userService.changeProfile(userChanges, userId)
 
     @GetMapping("user/test")
-    fun test(): ApiResponse<User> = ApiResponse(data = User(0, "C", "H", "e", "d"))
+    fun test(): ApiResponse<User> = ApiResponse(data = User(0, "C", "H", "e", "d", image = ""))
 }

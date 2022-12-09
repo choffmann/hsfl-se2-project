@@ -13,7 +13,6 @@ import javax.transaction.Transactional
 @Component
 @Transactional
 interface IngredientRecipeRepository: CrudRepository<IngredientRecipeEntity, Long> {
-    //fun deleteAllByRecipeId(recipeId: Long): Unit
     @Modifying
     @Query("DELETE from IngredientRecipeEntity ir where ir.id.recipeId = :recipeID")
     fun deleteByRecipeId(@Param("recipeID") recipeID: Long): Unit

@@ -26,7 +26,8 @@ data class UserEntity(
         firstName = this.firstName,
         lastName = this.lastName,
         email = this.email,
-        password = this.password
+        password = this.password,
+        image = this.image
     )
 
     companion object {

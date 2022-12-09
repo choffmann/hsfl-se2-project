@@ -8,8 +8,6 @@ data class IngredientRecipeId(
 
 data class IngredientRecipe(
     val id: IngredientRecipeId,
-    val recipe: Recipe,
-    val ingredient: Ingredient,
     val unit: String,
     val amount: Int
 ) {
