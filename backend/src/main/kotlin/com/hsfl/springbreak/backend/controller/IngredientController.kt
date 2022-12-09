@@ -28,7 +28,7 @@ class IngredientController(val ingredientRecipeRepository: IngredientRecipeRepos
             ApiResponse(error = "No ingredients available", success = false)
         }
     }
-
+    /*
     @PostMapping("api/ingredientRecipe")
     fun createNewIngredientRecipe(@RequestBody newIngredientRecipe: IngredientRecipe): ApiResponse<IngredientRecipe> {
         val savedIngredientRecipe = ingredientRecipeRepository.save(IngredientRecipeEntity.fromDto(newIngredientRecipe)).toDto()
@@ -39,4 +39,6 @@ class IngredientController(val ingredientRecipeRepository: IngredientRecipeRepos
             ApiResponse(error = "Error by saving", success = false)
         }
     }
+
+     */
 }
