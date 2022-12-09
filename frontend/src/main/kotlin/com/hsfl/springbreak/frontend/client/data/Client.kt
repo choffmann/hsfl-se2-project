@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.client.data
 
+import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.model.User
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -20,6 +21,7 @@ interface ApiClient {
     suspend fun login(user: User.Login): User.Response
     suspend fun register(user: User.Register): User.Response
     suspend fun updateProfileImage(profileImage: File?): User.Response
+    suspend fun getAllIngredients(): Ingredient.GetAllResponse
 }
 
 class Client : ApiClient {
@@ -34,15 +36,19 @@ class Client : ApiClient {
         }
     }
 
+    companion object {
+        const val BASE_URL = "http://localhost:8080/api"
+    }
+
     override suspend fun login(user: User.Login): User.Response {
-        return client.post(urlString = "http://localhost:8080/login") {
+        return client.post(urlString = "$BASE_URL/login") {
             contentType(ContentType.Application.Json)
             setBody(user)
         }.body()
     }
 
     override suspend fun register(user: User.Register): User.Response {
-        return client.post(urlString = "http://localhost:8080/register") {
+        return client.post(urlString = "$BASE_URL/register") {
             contentType(ContentType.Application.Json)
             setBody(user)
         }.body()
@@ -54,7 +60,7 @@ class Client : ApiClient {
         profileImage?.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        val response = window.fetch(input = "http://localhost:8080/upload-profile-image", init = RequestInit(
+        val response = window.fetch(input = "$BASE_URL/upload-profile-image", init = RequestInit(
             method = "POST",
             body = formData
         ))
@@ -63,5 +69,9 @@ class Client : ApiClient {
             .await()
         println(response)
         return User.Response()
+    }
+
+    override suspend fun getAllIngredients(): Ingredient.GetAllResponse {
+        return client.get(urlString = "$BASE_URL/ingredients").body()
     }
 }

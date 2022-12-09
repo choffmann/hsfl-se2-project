@@ -22,7 +22,7 @@ val IngredientEditDialog = FC<Props> {
         DialogTitle {+"${viewModel.dialogTitle} bearbeiten"}
         DialogContent {
             IngredientsFormular {
-                showMoreButton = false
+                isEditing = false
                 name = ingredientName
                 amount = ingredientAmount
                 unit = ingredientUnit

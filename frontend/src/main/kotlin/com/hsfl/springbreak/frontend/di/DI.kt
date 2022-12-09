@@ -1,6 +1,8 @@
 package com.hsfl.springbreak.frontend.di
 
 import com.hsfl.springbreak.frontend.client.data.Client
+import com.hsfl.springbreak.frontend.client.data.repository.IngredientRepository
+import com.hsfl.springbreak.frontend.client.data.repository.IngredientRepositoryImpl
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepositoryImpl
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
@@ -19,6 +21,7 @@ val di = DI {
 
     // Repositories
     bindSingleton<UserRepository> { UserRepositoryImpl(instance()) }
+    bindSingleton<IngredientRepository> { IngredientRepositoryImpl(instance()) }
 
     // ViewModels
     bindSingleton { DebugViewModel(instance()) }
@@ -27,7 +30,7 @@ val di = DI {
     bindSingleton { CreateRecipeViewModel(instance(), instance(), instance(), instance(), instance()) }
     bindSingleton { CreateRecipeDataVM() }
     bindSingleton { IngredientsTableVM() }
-    bindSingleton { IngredientsDialogVM(instance()) }
+    bindSingleton { IngredientsDialogVM(instance(), instance()) }
     bindSingleton { CreateRecipeIngredientsVM(instance()) }
     bindSingleton { CreateRecipeDescriptionVM() }
     bindSingleton { CreateRecipeImageVM() }

@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.data.model.Ingredient
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientAutocompleteState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogVM
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.RecipeIngredient
@@ -7,6 +9,8 @@ import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.px
 import dom.html.HTMLInputElement
+import kotlinx.js.ReadonlyArray
+import mui.base.FilterOptionsState
 import mui.icons.material.Add
 import mui.icons.material.ExpandMore
 import mui.material.*
@@ -22,6 +26,7 @@ val IngredientDialog = FC<Props> {
     val ingredientName = viewModel.ingredientName.collectAsState()
     val ingredientAmount = viewModel.ingredientAmount.collectAsState()
     val ingredientUnit = viewModel.ingredientUnit.collectAsState()
+    val autoComplete = viewModel.autoCompleteState.collectAsState()
 
     var nameState by useState(ingredientName)
     var amountState by useState(ingredientAmount)
@@ -43,13 +48,14 @@ val IngredientDialog = FC<Props> {
                 ingredientList = ingredients
             }
             IngredientsFormular {
-                showMoreButton = true
+                isEditing = false
                 name = nameState
                 unit = unitState
                 amount = amountState
                 onNameChanged = {
                     nameState = it
                     viewModel.onEvent(IngredientsDialogEvent.IngredientNameChanged(it))
+                    println(it)
                 }
                 onAmountChanged = {
                     amountState = it
@@ -62,6 +68,10 @@ val IngredientDialog = FC<Props> {
                 onNewIngredient = {
                     resetInternalStates()
                     viewModel.onEvent(IngredientsDialogEvent.OnAddMoreIngredient)
+                }
+                autoCompleteState = autoComplete
+                onAutocompleteClick = {
+                    viewModel.onEvent(IngredientsDialogEvent.OnIngredientAutoComplete)
                 }
             }
         }
@@ -93,7 +103,9 @@ external interface IngredientsFormularProps : DialogContentProps {
     var onAmountChanged: (Int) -> Unit
     var unit: String
     var onUnitChanged: (String) -> Unit
-    var showMoreButton: Boolean
+    var isEditing: Boolean
+    var autoCompleteState: IngredientAutocompleteState
+    var onAutocompleteClick: () -> Unit
 }
 
 val IngredientsFormular = FC<IngredientsFormularProps> { props ->
@@ -103,16 +115,29 @@ val IngredientsFormular = FC<IngredientsFormularProps> { props ->
         }
         direction = responsive(StackDirection.column)
         spacing = responsive(2)
-        FormControl {
-            InputLabel { +"Zutat" }
-            required = true
-            OutlinedInput {
-                fullWidth = true
-                value = props.name
-                label = Typography.create { +"Zutat" }
-                onChange = {
-                    val target = it.target as HTMLInputElement
-                    props.onNameChanged(target.value)
+        if (props.isEditing) {
+            FormControl {
+                InputLabel { +"Zutat" }
+                required = true
+                OutlinedInput {
+                    fullWidth = true
+                    value = props.name
+                    label = Typography.create { +"Zutat" }
+                    onChange = {
+                        val target = it.target as HTMLInputElement
+                        props.onNameChanged(target.value)
+                    }
+                }
+            }
+        } else {
+            AutoCompleteIngredient {
+                ingredients = props.autoCompleteState.allIngredients
+                isLoading = props.autoCompleteState.loading
+                onInputChanged = {
+                    props.onNameChanged(it)
+                }
+                onClick = {
+                    props.onAutocompleteClick()
                 }
             }
         }
@@ -142,7 +167,7 @@ val IngredientsFormular = FC<IngredientsFormularProps> { props ->
                 }
             }
         }
-        if(props.showMoreButton) {
+        if (!props.isEditing) {
             Button {
                 variant = ButtonVariant.outlined
                 startIcon = Icon.create { Add() }
@@ -205,5 +230,52 @@ private val IngredientAccordion = FC<DialogContentNotEmptyProps> { props ->
                 }
             }
         }
+    }
+}
+
+
+external interface AutoCompleteIngredientProps : Props {
+    var ingredients: Array<Ingredient.Label>
+    var isLoading: Boolean
+    var onInputChanged: (String) -> Unit
+    var onClick: () -> Unit
+}
+
+val AutoCompleteIngredient = FC<AutoCompleteIngredientProps> { props ->
+    @Suppress("UPPER_BOUND_VIOLATED")
+    Autocomplete<AutocompleteProps<Ingredient.Label>> {
+        disablePortal = true
+        freeSolo = true
+        selectOnFocus = true
+        clearOnBlur = true
+        handleHomeEndKeys = true
+        options = props.ingredients
+        loading = props.isLoading
+        loadingText = ReactNode("Lade Daten...")
+        renderInput = { params ->
+            TextField.create {
+                +params
+                label = ReactNode("Zutat")
+                onClick = {
+                    println("AutoCompleteIngredient::click")
+                    props.onClick()
+                }
+            }
+        }
+        onInputChange = { _, value, _ ->
+            props.onInputChanged(value)
+        }
+
+        // Own filter option to show "{ZUTAT} hinzufügen" in list
+        filterOptions =
+            { labels: ReadonlyArray<Ingredient.Label>, filterOptionsState: FilterOptionsState<Ingredient.Label> ->
+                val filtered =
+                    labels.filter { it.label.startsWith(filterOptionsState.inputValue, 0, true) }.toMutableList()
+                val isExisting = filtered.find { it.equals(filterOptionsState.inputValue) }?.let { true } ?: false
+                if (filterOptionsState.inputValue != "" && !isExisting) {
+                    filtered.add(Ingredient.Label(id = -1, label = filterOptionsState.inputValue))
+                }
+                filtered.toTypedArray()
+            }
     }
 }
