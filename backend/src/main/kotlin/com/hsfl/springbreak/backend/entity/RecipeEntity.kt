@@ -69,14 +69,15 @@ data class RecipeEntity(
              */
         )
 
-        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity): RecipeEntity = RecipeEntity(
+        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity, category: CategoryEntity, difficulty: DifficultyEntity): RecipeEntity =
+            RecipeEntity(
             title = newRecipe.title,
             shortDescription = newRecipe.shortDescription,
             price = newRecipe.price,
             duration = newRecipe.duration,
-            difficulty = DifficultyEntity.fromDto(newRecipe.difficulty),
-            category = CategoryEntity.fromDto(newRecipe.category),
-            creator = UserEntity.fromDto(newRecipe.creator),
+            difficulty = difficulty,
+            category = category,
+            creator = user,
             createTime = newRecipe.createTime,
             image = newRecipe.image,
             longDescription = newRecipe.longDescription,

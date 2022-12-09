@@ -31,9 +31,9 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
    fun findByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
       recipeService.getRecipeByName(recipeName)
 
-   @PostMapping("recipes")
-   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe, @PathVariable userId: Long) =
-      recipeService.createNewRecipe(newRecipe, userId)
+   @PostMapping("recipes/{userId}")
+   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe, @PathVariable("userId") userId: Long) =
+      recipeService.createNewRecipe(newRecipe)
 
    @PutMapping("recipes")
    fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe, @PathVariable recipeId: Long) =

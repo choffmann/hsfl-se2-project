@@ -49,6 +49,7 @@ class EntityConfiguration {
                 print("second ingredient:" + ingredient2)
 
 
+                /*
                 val recipe = recipeRepository.save(RecipeEntity(
                         title = "Hektor", shortDescription = "Panzer", price = 25.9,
                         duration = 10.8, difficulty=diff,category= cat, creator= user ,
@@ -72,6 +73,7 @@ class EntityConfiguration {
                 ))
                 print("rating:" + rating)
 
+                 */
 
             }
 

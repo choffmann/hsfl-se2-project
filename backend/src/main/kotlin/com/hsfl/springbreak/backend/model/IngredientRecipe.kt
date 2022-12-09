@@ -14,10 +14,11 @@ data class IngredientRecipe(
     val amount: Int
 ) {
     data class WithoutRecipe (
-        val ingredient: Ingredient,
+        val ingredientName: String,
         val unit: String,
         val amount: Int
         )
+
 }
 
 /*TODO
