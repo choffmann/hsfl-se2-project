@@ -1,9 +1,6 @@
 package com.hsfl.springbreak.backend.entity
 
-import com.hsfl.springbreak.backend.model.Category
-import com.hsfl.springbreak.backend.model.Ingredient
 import com.hsfl.springbreak.backend.model.Recipe
-import com.hsfl.springbreak.backend.repository.UserRepository
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -81,18 +78,19 @@ data class RecipeEntity(
             createTime = newRecipe.createTime,
             image = newRecipe.image,
             longDescription = newRecipe.longDescription,
-            ingredients = listOf(),
+            ingredients = null,
             views = 0
         )
 
+        /*
         fun fromDto(changedRecipe: Recipe.ChangeRecipe, defaultRecipe: RecipeEntity): RecipeEntity = RecipeEntity(
             id = defaultRecipe.id,
             title = changedRecipe.title ?: defaultRecipe.title,
             shortDescription = changedRecipe.shortDescription ?: defaultRecipe.shortDescription,
             price = changedRecipe.price ?: defaultRecipe.price,
             duration = changedRecipe.duration ?: defaultRecipe.duration,
-            difficulty = changedRecipe.difficulty?.let { DifficultyEntity.fromDto(it) } ?: defaultRecipe.difficulty,
-            category = changedRecipe.category?.let { CategoryEntity.fromDto(it) } ?: defaultRecipe.category,
+            difficulty = changedRecipe.difficultyId,
+            category = changedRecipe.categoryId?.let { CategoryEntity.fromDto(it) } ?: defaultRecipe.category,
             creator = defaultRecipe.creator,
             createTime = defaultRecipe.createTime,
             image = changedRecipe.image ?: defaultRecipe.image,
@@ -100,6 +98,8 @@ data class RecipeEntity(
             views = defaultRecipe.views,
             ingredients = defaultRecipe.ingredients
         )
+
+         */
 
     }
 }

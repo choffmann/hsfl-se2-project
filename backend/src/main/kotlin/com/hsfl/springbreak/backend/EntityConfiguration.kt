@@ -21,32 +21,29 @@ class EntityConfiguration {
                             difficultyRepository: DifficultyRepository,
                             ingredientRecipeRepository: IngredientRecipeRepository) =
             ApplicationRunner {
-                val user = userRepository.save(UserEntity(
-                        firstName = "Hektor", lastName = "Panzer", email = "panzer@",
-                        password = "secret", image = "DickPic.png"
+                /* Create Dummy-User */
+                userRepository.save(UserEntity(
+                    firstName = "Hektor", lastName = "Panzer", email = "panzer@",
+                    password = "secret", image = "DickPic.png"
                 ))
-                 print("user:" + user)
 
-                val diff = difficultyRepository.save(DifficultyEntity(
-                    name = "Easy"
-                ))
-                print("difficulty:" + diff)
+                /* Prepopulate Difficulties*/
+                difficultyRepository.save(DifficultyEntity(name = "Leicht"))
+                difficultyRepository.save(DifficultyEntity(name = "Mittel"))
+                difficultyRepository.save(DifficultyEntity(name = "Schwer"))
 
-                val cat = categoryRepository.save(CategoryEntity(
-                        name = "Food"
-                ))
-                print("category:" + cat)
+                /* Prepopulate Categories */
+                categoryRepository.save(CategoryEntity(name = "Gebäck"))
+                categoryRepository.save(CategoryEntity(name = "Nudeln"))
+                categoryRepository.save(CategoryEntity(name = "Vegetarisch"))
+                categoryRepository.save(CategoryEntity(name = "Vegan"))
 
+                /* Prepopulate Ingredients */
+                ingredientRepository.save(IngredientEntity(name = "Milch"))
+                ingredientRepository.save(IngredientEntity(name = "Hafer"))
+                ingredientRepository.save(IngredientEntity(name = "Popel"))
+                ingredientRepository.save(IngredientEntity(name = "Banane"))
 
-                val ingredient1 = ingredientRepository.save(IngredientEntity(
-                        name = "Milch"
-                ))
-                print("first ingredient:" + ingredient1)
-
-                val ingredient2 = ingredientRepository.save(IngredientEntity(
-                    name = "Müsli"
-                ))
-                print("second ingredient:" + ingredient2)
 
 
                 /*

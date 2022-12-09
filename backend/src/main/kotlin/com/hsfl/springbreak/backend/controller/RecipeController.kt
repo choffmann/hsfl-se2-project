@@ -31,13 +31,13 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
    fun findByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
       recipeService.getRecipeByName(recipeName)
 
-   @PostMapping("recipes/{userId}")
-   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe, @PathVariable("userId") userId: Long) =
-      recipeService.createNewRecipe(newRecipe)
+   @PostMapping("recipes")
+   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe) =
+      recipeService.createRecipe(newRecipe)
 
    @PutMapping("recipes")
-   fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe, @PathVariable recipeId: Long) =
-      recipeService.updateRecipe(changes, recipeId)
+   fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe) =
+      recipeService.updateRecipe(changes)
 
    @DeleteMapping("recipes/{id}")
    fun deleteRecipe(@PathVariable("id") recipeId: Long) =
