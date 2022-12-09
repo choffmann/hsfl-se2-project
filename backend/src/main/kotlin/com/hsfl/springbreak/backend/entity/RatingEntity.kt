@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity(name = "rating")
 data class RatingEntity(
    // @Id @Column(name = "recipe_id") val id: Long? = null,
-        @Id @GeneratedValue val id: Long? = null,
+        @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
         @Column var likes: Int,
         @Column var dislike: Int,
         @OneToOne @JoinColumn(name = "recipe_id") val recipe: RecipeEntity,

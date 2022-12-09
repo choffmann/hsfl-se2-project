@@ -6,7 +6,6 @@ import com.hsfl.springbreak.backend.entity.IngredientRecipeKey
 import com.hsfl.springbreak.backend.entity.RecipeEntity
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
-import com.hsfl.springbreak.backend.model.IngredientRecipeId
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.http.HttpStatus
@@ -18,7 +17,7 @@ import javax.transaction.Transactional
 class RecipeJpaService(private val recipeRepository: RecipeRepository,
                        val userRepository: UserRepository,
                        val ingredientRecipeRepository: IngredientRecipeRepository,
-                       val ingredientRepo: IngredientRepository,
+                       val ingredientRepository: IngredientRepository,
                        val categoryRepository: CategoryRepository,
                        val difficultyRepository: DifficultyRepository) {
 
@@ -132,9 +131,31 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
          */
     }
 
-    fun deleteRecipeById(recipeId: Long) {
-        return if (recipeRepository.existsById(recipeId)) {
-            recipeRepository.deleteById(recipeId)
-        } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID \"$recipeId\" doesn't exist")
+    /**
+     * Delete a recipe from the database by its id.
+     * @param id The id of the recipe to be deleted.
+     */
+    fun deleteRecipeById(id: Long) {
+        return if (recipeRepository.existsById(id)) {
+            recipeRepository.deleteById(id)
+        } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID \"$id\" doesn't exist")
+    }
+
+    /**
+     * Saves a list of ingredients to database if necessary.
+     * @param ingredients Referenced ingredients to be saved to database.
+     * @param recipe The referenced recipe.
+     */
+    private fun saveIngredients(ingredients: List<IngredientRecipe.WithoutRecipe>, recipe: RecipeEntity): List<IngredientRecipeEntity> {
+        return ingredients.map { ingredient ->
+            val ingredientProxy = ingredientRepository.findByName(ingredient.ingredientName)
+                ?: ingredientRepository.save(IngredientEntity(name = ingredient.ingredientName))
+
+            IngredientRecipeEntity(
+                id = IngredientRecipeKey(recipeId = recipe.id, ingredientId = ingredientProxy.id),
+                recipe = recipe, ingredient = ingredientProxy, unit = ingredient.unit,
+                amount = ingredient.amount
+            )
+        }
     }
 }

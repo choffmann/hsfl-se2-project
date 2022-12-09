@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity(name = "users")
 data class UserEntity(
-    @Id @GeneratedValue val id: Long? = null,
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
     @Column val firstName: String,
     @Column val lastName: String,
     @Column val email: String,

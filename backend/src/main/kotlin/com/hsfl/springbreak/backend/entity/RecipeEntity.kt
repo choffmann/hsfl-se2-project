@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity(name = "recipe")
 data class RecipeEntity(
-    @Id @GeneratedValue val id: Long? = null,
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
     @Column var title: String,
     @Column var shortDescription: String?,
     @Column var price: Double?,
@@ -34,12 +34,12 @@ data class RecipeEntity(
         duration = this.duration!!,
         difficulty = this.difficulty.toDto(),
         category = this.category.toDto(),
-        creator = this.creator.toDto(),
+        creator = this.creator.toDto(), // TODO
         createTime = this.createTime,
         image = this.image,
         longDescription = this.longDescription,
         views = this.views,
-        ingredients = this.ingredients!!.map { it.toDto() }
+        ingredients = this.ingredients!!.map { it.toDto() } // TODO
         /*
         rating = this.rating!!.toDto(),
          */

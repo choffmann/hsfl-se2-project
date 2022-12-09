@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity(name = "category")
 data class CategoryEntity(
-    @Id @GeneratedValue val id: Long? = null,
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
     //@OneToMany(mappedBy = "category", cascade = [CascadeType.ALL]) val recipes: List<RecipeEntity>,
     @Column val name: String
 ) {
