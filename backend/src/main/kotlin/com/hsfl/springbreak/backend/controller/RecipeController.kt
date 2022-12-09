@@ -16,6 +16,7 @@ import javax.transaction.Transactional
 
 
 @CrossOrigin("http://localhost:3000")
+@Transactional
 @RestController
 class RecipeController(val recipeRepository: RecipeRepository, val recipeService: RecipeJpaService) {
 
@@ -24,7 +25,7 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
    fun findRecipeById(@PathVariable("id") recipeId: Long): ApiResponse<Recipe> =
       recipeService.getRecipeById(recipeId)
 
-   @GetMapping("recipes/{name}")
+   @GetMapping("recipes/findByName/{name}")
    fun findByName(@PathVariable("name") recipeName: String): ApiResponse<Recipe> =
       recipeService.getRecipeByName(recipeName)
 

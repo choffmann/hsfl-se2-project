@@ -8,12 +8,14 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
+import org.springframework.data.mapping.AccessOptions
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import javax.transaction.Transactional
 
 @Service
+@Transactional
 class RecipeJpaService(private val recipeRepository: RecipeRepository,
                        val userRepository: UserRepository,
                        val ingredientRecipeRepository: IngredientRecipeRepository,
@@ -77,7 +79,8 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
             ?: return ApiResponse("Recipe not found", success = false)
 
         // delete existing recipeIngredientEntities
-        recipeProxy.ingredients?.let { ingredientRecipeRepository.deleteAll(it) }
+        ingredientRecipeRepository.deleteByRecipeId(recipeProxy.id!!)
+        //recipeProxy.ingredients?.let { ingredientRecipeRepository.deleteAll(it) }
 
         // ingredientRecipeRepository.deleteByRecipe(recipeProxy)
         /*
