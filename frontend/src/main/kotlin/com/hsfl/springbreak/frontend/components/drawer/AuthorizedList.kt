@@ -1,73 +1,85 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
-import com.hsfl.springbreak.frontend.client.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.state.UserState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
+import emotion.react.css
+import csstype.Color
+import csstype.None.none
 import mui.icons.material.*
 import mui.material.*
 import mui.material.List
 import mui.system.sx
+import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.router.dom.NavLink
+
+data class NavBarItem(
+    val name: String,
+    val icon: SvgIconComponent,
+    val linkTo: String
+)
 
 val AuthorizedList = FC<Props> {
+    val listItems = listOf(
+        NavBarItem("Favoriten", Favorite, "/favorite"),
+        NavBarItem("Kategorien", Category, "/categories"),
+        NavBarItem("Rezept erstellen", Add, "/create-recipe"),
+        NavBarItem("Meine Rezepte", Book, "/my-recipes"),
+        NavBarItem("Einstellungen", Settings, "/settings"),
+    )
+    val userState: UserState by di.instance()
+    val user = userState.userState.collectAsState()
     List {
-        ListItemButton {
-            ListItemAvatar {
-                Avatar { +"RH" }
+        NavLink {
+            to = "/user"
+            // ignore style
+            css {
+                textDecoration = none
+                color = Color.currentcolor
             }
-            ListItemText {
-                Typography {
-                    sx { fontWeight = FontWeight.bold }
-                    +"Ryan Hughes"
+            ListItemButton {
+                ListItemAvatar {
+                    Avatar {
+                        //src = user.image
+                        user.image?.let {
+                            src = it
+                        } ?: +"${user.firstName[0]}${user.lastName[0]}"
+                    }
                 }
-                Typography {
-                    color = "text.secondary"
-                    +"ryan.hughes@mail-address.com"
+                ListItemText {
+                    Typography {
+                        sx { fontWeight = FontWeight.bold }
+                        +"${user.firstName} ${user.lastName}"
+                    }
+                    Typography {
+                        color = "text.secondary"
+                        +user.email
+                    }
                 }
             }
         }
-        Divider()
-        ListItemButton {
-            ListItemIcon {
-                Favorite()
-            }
-            ListItemText {
-                Typography { +"Favoriten" }
-            }
-        }
-        ListItemButton {
-            ListItemIcon {
-                Category()
-            }
-            ListItemText {
-                Typography { +"Kategorien" }
-            }
-        }
-        ListItemButton {
-            ListItemIcon {
-                Book()
-            }
-            ListItemText {
-                Typography { +"Meine Rezepte" }
-            }
-        }
-        ListItemButton {
-            ListItemIcon {
-                Add()
-            }
-            ListItemText {
-                Typography { +"Rezept erstellen" }
-            }
-        }
-        //Divider()
-        ListItemButton {
-            ListItemIcon {
-                Settings()
-            }
-            ListItemText {
-                Typography { +"Einstellungen" }
+        listItems.forEach { item ->
+            NavLink {
+                to = item.linkTo
+                // ignore style
+                css {
+                    textDecoration = none
+                    color = Color.currentcolor
+                }
+                ListItemButton {
+                    ListItemIcon {
+                        item.icon()
+                    }
+                    ListItemText {
+                        Typography { +item.name }
+                    }
+                }
             }
         }
         ListItemButton {
