@@ -30,8 +30,8 @@ data class IngredientRecipeEntity(
 ) {
     fun toDto(): IngredientRecipe = IngredientRecipe(
         id = IngredientRecipeId(recipeId = this.recipe?.id!!, ingredientId = this.ingredient?.id!!),
-        recipe = this.recipe.toDto(), // TODO
-        ingredient = this.ingredient.toDto(),
+        // recipe = this.recipe, // TODO
+        // ingredient = this.ingredient,
         unit = this.unit,
         amount = this.amount
     )

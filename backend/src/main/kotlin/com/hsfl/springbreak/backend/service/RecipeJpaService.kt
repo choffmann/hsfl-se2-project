@@ -8,7 +8,6 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
-import org.springframework.data.mapping.AccessOptions
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -24,22 +23,28 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
                        val difficultyRepository: DifficultyRepository) {
 
 
-    fun getRecipeById(recipeId: Long): ApiResponse<Recipe> {
-        val searchedRecipe = recipeRepository.findById(recipeId).orElse(null)
-        return if (searchedRecipe != null) {
-            ApiResponse(data = searchedRecipe.toDto(), success = true)
-        } else {
+    /**
+     * Return a recipe by its id
+     * @param id The id of the recipe to be returned
+     */
+    fun getRecipeById(id: Long): ApiResponse<Recipe> {
+        val recipe = recipeRepository.findById(id).orElse(null)
+        return if (recipe != null)
+            ApiResponse(data = recipe.toDto(), success = true)
+        else
             ApiResponse(error = "No such recipe", success = false)
-        }
     }
 
-    fun getRecipeByName(recipeName: String): ApiResponse<Recipe> {
-        val searchedRecipe = recipeRepository.findRecipeByTitle(recipeName)
-        return if (searchedRecipe != null) {
-            ApiResponse(data = searchedRecipe.toDto(), success = true)
-        } else{
+    /**
+     * Return a recipe by its name
+     * @param name The id of the recipe to be returned
+     */
+    fun getRecipeByName(name: String): ApiResponse<Recipe> {
+        val recipe = recipeRepository.findRecipeByTitle(name)
+        return if (recipe != null)
+            ApiResponse(data = recipe.toDto(), success = true)
+        else
             ApiResponse(error = "No such recipe name", success = false)
-        }
     }
 
     /**
@@ -69,8 +74,8 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
     }
 
     /**
+     * TODO: Method description
      * @param changes The recipe to be updated.
-     * TODO: Add method description
      */
 
     fun updateRecipe(changes: Recipe.ChangeRecipe): ApiResponse<Recipe> {
@@ -80,16 +85,7 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
 
         // delete existing recipeIngredientEntities
         ingredientRecipeRepository.deleteByRecipeId(recipeProxy.id!!)
-        //recipeProxy.ingredients?.let { ingredientRecipeRepository.deleteAll(it) }
 
-        // ingredientRecipeRepository.deleteByRecipe(recipeProxy)
-        /*
-        for (test: IngredientRecipeEntity in recipeProxy.ingredients!!) {
-            ingredientRecipeRepository.dele
-        }
-
-
-         */
         // update recipe values
         recipeProxy.title = changes.title
         recipeProxy.shortDescription = changes.shortDescription
@@ -105,33 +101,6 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
         recipeRepository.save(recipeProxy)
 
         return ApiResponse(success = true)
-        /*
-        val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(changes, recipeProxy))
-
-        if (changes.ingredients != null) {
-            val ingredients = changes.ingredients.map { ingredient ->
-                ingredientRepo.findByName(ingredient.ingredientName)
-                    ?: ingredientRepo.save(IngredientEntity(name = ingredient.ingredientName))
-                IngredientRecipeEntity(
-                    id = IngredientRecipeKey(recipeId = recipeProxy.id, ingredientId = foundIngredient.id),
-                    recipe = recipeProxy, ingredient = foundIngredient,
-                    unit = it.ingredientName, amount = it.amount
-                )
-                ingredientRepo.findByName(it.ingredientName)?.let { foundIngredient ->
-                    IngredientRecipeEntity(
-                        id = IngredientRecipeKey(recipeId = recipeProxy.id, ingredientId = foundIngredient.id),
-                        recipe = recipeProxy, ingredient = foundIngredient,
-                        unit = it.ingredientName, amount = it.amount
-                    )
-                }
-            }
-            recipeProxy.ingredients = ingredients
-        }
-
-
-        return ApiResponse(data = savedRecipe.toDto(), success = true)
-
-         */
     }
 
     /**
@@ -160,5 +129,10 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
                 amount = ingredient.amount
             )
         }
+    }
+
+
+    fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
+        return ApiResponse()
     }
 }

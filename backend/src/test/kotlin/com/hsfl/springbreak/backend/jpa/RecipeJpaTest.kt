@@ -48,14 +48,14 @@ class RecipeJpaTest {
     @Test
     @Description("Test correct RecipeController.findRecipeById(id) with existing id")
     fun testCorrectGetRecipe(){
-        val apiResponse = controller.findRecipeById(id)
+        val apiResponse = controller.getRecipeById(id)
         assertEquals(true, apiResponse.success)
     }
 
     @Test
     @Description("Test faulty RecipeController.findRecipeById(id) with non-existing id")
     fun testFaultyGetRecipe() {
-        val apiResponse = controller.findRecipeById(id + 1)
+        val apiResponse = controller.getRecipeById(id + 1)
         assertEquals(false, apiResponse.success)
     }
     @Test
@@ -80,7 +80,7 @@ class RecipeJpaTest {
     @Description("Test correct RecipeController.deleteRecipe(id) with existing id")
     fun testCorrectDeleteRecipe() {
         controller.deleteRecipe(id)
-        val apiResponse = controller.findRecipeById(id)
+        val apiResponse = controller.getRecipeById(id)
         assertEquals(false, apiResponse.success)
     }
 
