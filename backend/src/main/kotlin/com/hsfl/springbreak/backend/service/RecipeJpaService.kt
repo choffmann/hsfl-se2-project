@@ -70,7 +70,7 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
         // save proxy to database
         recipeRepository.save(recipeProxy)
 
-        return ApiResponse(success = true)
+        return ApiResponse(data = recipeRepository.save(recipeProxy).toDto(), success = true)
     }
 
     /**
@@ -134,5 +134,9 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
 
     fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
         return ApiResponse()
+    }
+
+    fun addFavoriteById(rId: Long, uId: Long): Any {
+        TODO("Not yet implemented")
     }
 }

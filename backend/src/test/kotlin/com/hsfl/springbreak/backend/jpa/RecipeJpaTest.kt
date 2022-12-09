@@ -1,10 +1,9 @@
 package com.hsfl.springbreak.backend.jpa
 
 import com.hsfl.springbreak.backend.controller.RecipeController
-import com.hsfl.springbreak.backend.entity.*
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +19,8 @@ class RecipeJpaTest {
 
     @Autowired
     private lateinit var controller: RecipeController
-    private var id: Long = 0
+    private var userId: Long = 1
+    private var recipeId: Long = 0
     private var testRecipe = Recipe.CreateRecipe(
         title = "Schockomuffins",
         shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
@@ -32,32 +32,42 @@ class RecipeJpaTest {
         difficultyId = 2,
         image = "null",
         longDescription = "null",
-        ingredients = listOf(IngredientRecipe.WithoutRecipe(
-            ingredientName = "Milch",
-            unit = "liter",
-            amount = 400))
+        ingredients = listOf(
+            IngredientRecipe.WithoutRecipe(
+                ingredientName = "Milch",
+                unit = "liter",
+                amount = 400
+            )
+        )
     )
 
     @BeforeEach
     @Description("Add testRecipe to database")
-    fun postRecipe(){
-        val apiResponse = controller.createNewRecipe(testRecipe.toDto())
-        id = apiResponse.data!!.id
+    fun postRecipe() {
+        recipeId = controller.createNewRecipe(testRecipe).data?.id ?: 0
+    }
+
+    @Test
+    @Description("Test adding recipe as favorite")
+    fun testAddFavorite() {
+        controller.setFavoriteById(recipeId, userId)
     }
 
     @Test
     @Description("Test correct RecipeController.findRecipeById(id) with existing id")
-    fun testCorrectGetRecipe(){
-        val apiResponse = controller.getRecipeById(id)
+    fun testCorrectGetRecipe() {
+        val apiResponse = controller.getRecipeById(recipeId)
         assertEquals(true, apiResponse.success)
     }
 
     @Test
     @Description("Test faulty RecipeController.findRecipeById(id) with non-existing id")
     fun testFaultyGetRecipe() {
-        val apiResponse = controller.getRecipeById(id + 1)
+        val apiResponse = controller.getRecipeById(recipeId + 1)
         assertEquals(false, apiResponse.success)
     }
+
+    /*
     @Test
     @Description("")
     fun testCorrectPutRecipe() {
@@ -76,11 +86,13 @@ class RecipeJpaTest {
         assertEquals(false, apiResponse.success)
     }
 
+     */
+
     @Test
     @Description("Test correct RecipeController.deleteRecipe(id) with existing id")
     fun testCorrectDeleteRecipe() {
-        controller.deleteRecipe(id)
-        val apiResponse = controller.getRecipeById(id)
+        controller.deleteRecipe(recipeId)
+        val apiResponse = controller.getRecipeById(recipeId)
         assertEquals(false, apiResponse.success)
     }
 
@@ -88,7 +100,7 @@ class RecipeJpaTest {
     @Description("Test faulty RecipeController.deleteRecipe(id) with non-existing id")
     fun testFaultyDeleteRecipe() {
         org.junit.jupiter.api.assertThrows<ResponseStatusException> {
-            controller.deleteRecipe(id + 1)
+            controller.deleteRecipe(recipeId + 1)
         }
     }
 }

@@ -11,11 +11,11 @@ data class IngredientRecipe(
     val unit: String,
     val amount: Int
 ) {
-    data class WithoutRecipe (
+    data class WithoutRecipe(
         val ingredientName: String,
         val unit: String,
         val amount: Int
-        )
+    )
 
 }
 

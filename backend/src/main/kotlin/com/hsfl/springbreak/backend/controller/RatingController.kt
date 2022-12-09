@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*
                 ApiResponse(error = "Error by saving", success = false)
             }
         }
+
         @PutMapping("api/ratingLike/{id}")
         fun addLike(@PathVariable("id") ratingId: Long): ApiResponse<Rating> {
             return if (ratingRepository.existsById(ratingId)) {
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*
 
             } else return ApiResponse(error = "No Recipe with the ID: ${ratingId} ", success = false)
         }
+
        @PutMapping("api/ratingdisLike/{id}")
        fun addDisLike(@PathVariable("id") ratingId: Long): ApiResponse<Rating> {
         return if (ratingRepository.existsById(ratingId)) {

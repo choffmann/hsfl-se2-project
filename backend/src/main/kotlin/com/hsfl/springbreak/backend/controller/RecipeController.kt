@@ -31,7 +31,7 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
       recipeService.getRecipeByName(recipeName)
 
    @PostMapping("recipes")
-   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe) =
+   fun createNewRecipe(@RequestBody newRecipe: Recipe.CreateRecipe): ApiResponse<Recipe> =
       recipeService.createRecipe(newRecipe)
 
    @PutMapping("recipes")
@@ -42,8 +42,9 @@ class RecipeController(val recipeRepository: RecipeRepository, val recipeService
    fun deleteRecipe(@PathVariable("id") recipeId: Long) =
       recipeService.deleteRecipeById(recipeId)
 
-   //@PostMapping("favorites/{rId}/{uId}")
-   //fun setFavoriteById()
+   @PostMapping("favorites/{rId}/{uId}")
+   fun setFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long) =
+      recipeService.addFavoriteById(rId, uId)
 
    @GetMapping("favorites/{id}")
    fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
