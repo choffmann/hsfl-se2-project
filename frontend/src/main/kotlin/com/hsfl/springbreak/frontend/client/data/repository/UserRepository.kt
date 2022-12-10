@@ -11,7 +11,7 @@ import web.file.File
 interface UserRepository {
     suspend fun login(user: User.Login): Flow<DataResponse<User>>
     suspend fun register(user: User.Register): Flow<DataResponse<User>>
-    suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.ProfileImage>>
+    suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.Image>>
 }
 
 class UserRepositoryImpl(private val client: Client) : UserRepository {
@@ -29,13 +29,10 @@ class UserRepositoryImpl(private val client: Client) : UserRepository {
         }
     }
 
-    override suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.ProfileImage>> = flow {
+    override suspend fun uploadProfileImage(profileImage: File): Flow<DataResponse<User.Image>> = flow {
         repositoryHelper {
-            val response: User.Response = client.updateProfileImage(profileImage)
-            response.data?.let {
-                APIResponse.fromResponse(data = User.ProfileImage(it.image!!), success = true, error = null)
-                // TODO: Fix type
-            } ?: APIResponse.fromResponse(error = "Error on fetching profile image", success = false, data = null)
+            val response: User.ImageResponse = client.updateProfileImage(profileImage)
+            APIResponse.fromResponse(data = User.Image(response.imageUrl ?: ""), success = response.success, error = response.error)
         }
     }
 }

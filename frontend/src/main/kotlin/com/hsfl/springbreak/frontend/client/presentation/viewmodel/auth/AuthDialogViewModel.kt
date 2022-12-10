@@ -115,7 +115,7 @@ class AuthDialogViewModel(
 
     private fun uploadProfileImage(profileImage: File) = scope.launch {
         userRepository.uploadProfileImage(profileImage).collect { response ->
-            response.handleDataResponse<User.ProfileImage>(
+            response.handleDataResponse<User.Image>(
                 onSuccess = { println(it) },
                 onUnauthorized = {}
             )

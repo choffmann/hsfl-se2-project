@@ -20,6 +20,8 @@ val di = DI {
     bindSingleton<UserRepository> { UserRepositoryImpl(instance()) }
     bindSingleton<IngredientRepository> { IngredientRepositoryImpl(instance()) }
     bindSingleton<DifficultyRepository> { DifficultyRepositoryImpl(instance()) }
+    bindSingleton<RecipeRepository> { RecipeRepositoryImpl(instance()) }
+    bindSingleton<CategoryRepository> { CategoryRepositoryImpl(instance()) }
 
     // ViewModels
     bindSingleton { DebugViewModel(instance()) }

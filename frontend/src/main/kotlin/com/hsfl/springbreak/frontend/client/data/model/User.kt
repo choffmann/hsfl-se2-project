@@ -34,7 +34,7 @@ data class User(
     )
 
     @Serializable
-    data class ProfileImage(
+    data class Image(
         val imageUrl: String
     )
 
@@ -42,6 +42,13 @@ data class User(
     data class Response(
         val error: String? = null,
         val data: User? = null,
+        val success: Boolean = false
+    )
+
+    @Serializable
+    data class ImageResponse(
+        val error: String? = null,
+        val imageUrl: String? = null,
         val success: Boolean = false
     )
 }
