@@ -72,8 +72,7 @@ class AuthDialogViewModel(
                     val authState: AuthState by di.instance()
                     authState.onEvent(AuthEvent.IsAuthorized)
                     UiEventState.onEvent(UiEvent.ShowMessage(it.toString()))
-                },
-                onUnauthorized = { println("LoginViewModel::Unauthorized") }
+                }
             )
         }
     }
@@ -107,17 +106,15 @@ class AuthDialogViewModel(
                     // TODO: Save user as state
                     UiEventState.onEvent(UiEvent.ShowMessage(user.toString()))
                     profileImage?.let { uploadProfileImage(it) }
-                },
-                onUnauthorized = { println(it) }
+                }
             )
         }
     }
 
     private fun uploadProfileImage(profileImage: File) = scope.launch {
         userRepository.uploadProfileImage(profileImage).collect { response ->
-            response.handleDataResponse<User.ProfileImage>(
-                onSuccess = { println(it) },
-                onUnauthorized = {}
+            response.handleDataResponse<User.Image>(
+                onSuccess = { println(it) }
             )
         }
     }

@@ -1,10 +1,18 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.data.model.Ingredient
+import com.hsfl.springbreak.frontend.client.data.repository.IngredientRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class IngredientsDialogVM(
-    private val ingredientsTableVM: IngredientsTableVM
+    private val ingredientsTableVM: IngredientsTableVM,
+    private val ingredientRepository: IngredientRepository,
+    private val scope: CoroutineScope = MainScope()
 ) {
     private val _ingredientsList = MutableStateFlow<MutableList<RecipeIngredient>>(mutableListOf())
     val ingredientsList: StateFlow<List<RecipeIngredient>> = _ingredientsList
@@ -21,6 +29,9 @@ class IngredientsDialogVM(
     private val _ingredientUnit = MutableStateFlow("")
     val ingredientUnit: StateFlow<String> = _ingredientUnit
 
+    private val _autoCompleteState = MutableStateFlow(IngredientAutocompleteState())
+    val autoCompleteState: StateFlow<IngredientAutocompleteState> = _autoCompleteState
+
     fun onEvent(event: IngredientsDialogEvent) {
         when (event) {
             is IngredientsDialogEvent.OnOpen -> openDialog()
@@ -30,6 +41,20 @@ class IngredientsDialogVM(
             is IngredientsDialogEvent.IngredientAmountChanged -> _ingredientAmount.value = event.value
             is IngredientsDialogEvent.IngredientNameChanged -> _ingredientName.value = event.value
             is IngredientsDialogEvent.IngredientUnitChanged -> _ingredientUnit.value = event.value
+            is IngredientsDialogEvent.OnIngredientAutoComplete -> if (_autoCompleteState.value.allIngredients.isEmpty()) fetchIngredientsList()
+        }
+    }
+
+    private fun fetchIngredientsList() = scope.launch {
+        ingredientRepository.getAllIngredients().collectLatest { response ->
+            response.handleDataResponse<List<Ingredient.Label>>(
+                onLoading = { _autoCompleteState.value.loading = true },
+                onSuccess = { list ->
+                    _autoCompleteState.value.loading = false
+                    _autoCompleteState.value.allIngredients =
+                        list.toTypedArray()
+                }
+            )
         }
     }
 
@@ -83,7 +108,13 @@ sealed class IngredientsDialogEvent {
     object OnFinished : IngredientsDialogEvent()
     object OnAbort : IngredientsDialogEvent()
     object OnOpen : IngredientsDialogEvent()
+    object OnIngredientAutoComplete : IngredientsDialogEvent()
     data class IngredientNameChanged(val value: String) : IngredientsDialogEvent()
     data class IngredientAmountChanged(val value: Int) : IngredientsDialogEvent()
     data class IngredientUnitChanged(val value: String) : IngredientsDialogEvent()
 }
+
+data class IngredientAutocompleteState(
+    var loading: Boolean = true,
+    var allIngredients: Array<Ingredient.Label> = emptyArray()
+)

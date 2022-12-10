@@ -41,7 +41,6 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-legacy:18.2.0-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.447")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-router-dom:6.3.0-pre.447")
                 implementation( "org.jetbrains.kotlin-wrappers:kotlin-redux:4.1.2-pre.447")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-redux:7.2.6-pre.447")

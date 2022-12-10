@@ -55,6 +55,8 @@ class CreateRecipeStepperViewModel {
             }
 
             allSteps.value.size - 1 -> {
+                val recipeViewModel: CreateRecipeViewModel by di.instance()
+                recipeViewModel.onEvent(CreateRecipeEvent.OnFinished)
                 println("Abschließen")
             }
         }
