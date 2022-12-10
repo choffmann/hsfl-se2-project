@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.client.data
 
+import com.hsfl.springbreak.frontend.client.data.model.Difficulty
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.model.User
 import io.ktor.client.*
@@ -22,6 +23,7 @@ interface ApiClient {
     suspend fun register(user: User.Register): User.Response
     suspend fun updateProfileImage(profileImage: File?): User.Response
     suspend fun getAllIngredients(): Ingredient.GetAllResponse
+    suspend fun getAllDifficulties(): Difficulty.GetAllResponse
 }
 
 class Client : ApiClient {
@@ -73,5 +75,9 @@ class Client : ApiClient {
 
     override suspend fun getAllIngredients(): Ingredient.GetAllResponse {
         return client.get(urlString = "$BASE_URL/ingredients").body()
+    }
+
+    override suspend fun getAllDifficulties(): Difficulty.GetAllResponse {
+        return client.get(urlString = "$BASE_URL/difficulties").body()
     }
 }
