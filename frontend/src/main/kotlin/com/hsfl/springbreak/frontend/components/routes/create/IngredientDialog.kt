@@ -241,8 +241,7 @@ external interface AutoCompleteIngredientProps : Props {
 }
 
 val AutoCompleteIngredient = FC<AutoCompleteIngredientProps> { props ->
-    @Suppress("UPPER_BOUND_VIOLATED")
-    Autocomplete<AutocompleteProps<Ingredient.Label>> {
+    @Suppress("UPPER_BOUND_VIOLATED") Autocomplete<AutocompleteProps<Ingredient.Label>> {
         disablePortal = true
         freeSolo = true
         selectOnFocus = true
