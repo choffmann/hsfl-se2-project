@@ -1,9 +1,23 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.data.model.Category
+import com.hsfl.springbreak.frontend.client.data.model.Difficulty
+import com.hsfl.springbreak.frontend.client.data.repository.CategoryRepository
+import com.hsfl.springbreak.frontend.client.data.repository.DifficultyRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class CreateRecipeDataVM {
+class CreateRecipeDataVM(
+    private val difficultyRepository: DifficultyRepository,
+    private val categoryRepository: CategoryRepository,
+    private val scope: CoroutineScope = MainScope()
+) {
     private val _recipeName = MutableStateFlow(FormTextFieldState("", required = true))
     val recipeName: StateFlow<FormTextFieldState<String>> = _recipeName
 
@@ -24,6 +38,17 @@ class CreateRecipeDataVM {
 
     private val _validateInputs = MutableStateFlow(true)
     val validateInputs: StateFlow<Boolean> = _validateInputs
+
+    private val _categoryList = MutableStateFlow<MutableList<Category>>(mutableListOf())
+    val categoryList: StateFlow<List<Category>> = _categoryList
+
+    private val _difficultyList = MutableStateFlow<MutableList<Difficulty>>(mutableListOf())
+    val difficultyList: StateFlow<List<Difficulty>> = _difficultyList
+
+    init {
+        fetchDifficulties()
+        //fetchCategories()
+    }
 
     fun onEvent(event: CreateRecipeDataEvent) {
         when (event) {
@@ -65,6 +90,25 @@ class CreateRecipeDataVM {
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
             is CreateRecipeDataEvent.ClearStates -> clearStates()
+        }
+    }
+
+    private fun fetchDifficulties() = scope.launch {
+        difficultyRepository.getAllDifficulties().collectLatest { response ->
+            response.handleDataResponse<List<Difficulty>>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
+                    _difficultyList.value.addAll(it)
+                }
+            )
+        }
+    }
+
+    private fun fetchCategories() = scope.launch {
+        categoryRepository.getAllCategories().collectLatest { response ->
+            response.handleDataResponse<List<Category>>(
+                onSuccess = { _categoryList.value.addAll(it) }
+            )
         }
     }
 
@@ -121,5 +165,5 @@ sealed class CreateRecipeDataEvent {
     data class RecipeDifficulty(val value: String) : CreateRecipeDataEvent()
     data class RecipeCategory(val value: String) : CreateRecipeDataEvent()
     object OnNext : CreateRecipeDataEvent()
-    object ClearStates: CreateRecipeDataEvent()
+    object ClearStates : CreateRecipeDataEvent()
 }

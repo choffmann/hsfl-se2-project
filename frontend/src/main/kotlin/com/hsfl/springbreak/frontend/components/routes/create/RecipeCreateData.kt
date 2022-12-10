@@ -24,6 +24,7 @@ val RecipeCreateData = FC<Props> {
     val priceTextState = viewModel.recipePrice.collectAsState()
     val difficultyTextState = viewModel.recipeDifficulty.collectAsState()
     val categoryTextState = viewModel.recipeCategory.collectAsState()
+    val difficultyList = viewModel.difficultyList.collectAsState()
 
     var name by useState(nameTextState.value)
     var shortDesc by useState(shortDescTextState.value)
@@ -130,7 +131,13 @@ val RecipeCreateData = FC<Props> {
                     difficulty = event.target.value
                     viewModel.onEvent(CreateRecipeDataEvent.RecipeDifficulty(event.target.value))
                 }
-                MenuItem {
+                difficultyList.map {
+                    MenuItem {
+                        value = it.id
+                        +it.name
+                    }
+                }
+                /*MenuItem {
                     value = "leicht"
                     +"Leicht"
                 }
@@ -141,7 +148,7 @@ val RecipeCreateData = FC<Props> {
                 MenuItem {
                     value = "schwer"
                     +"Schwer"
-                }
+                }*/
             }
             FormHelperText { +difficultyTextState.errorMsg }
         }

@@ -55,7 +55,6 @@ val IngredientDialog = FC<Props> {
                 onNameChanged = {
                     nameState = it
                     viewModel.onEvent(IngredientsDialogEvent.IngredientNameChanged(it))
-                    println(it)
                 }
                 onAmountChanged = {
                     amountState = it

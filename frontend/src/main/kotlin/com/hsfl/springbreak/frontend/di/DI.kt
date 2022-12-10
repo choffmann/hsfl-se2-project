@@ -28,7 +28,7 @@ val di = DI {
     bindSingleton { AuthDialogViewModel(instance()) }
     bindSingleton { CreateRecipeStepperViewModel() }
     bindSingleton { CreateRecipeViewModel(instance(), instance(), instance(), instance(), instance()) }
-    bindSingleton { CreateRecipeDataVM() }
+    bindSingleton { CreateRecipeDataVM(instance(), instance()) }
     bindSingleton { IngredientsTableVM() }
     bindSingleton { IngredientsDialogVM(instance(), instance()) }
     bindSingleton { CreateRecipeIngredientsVM(instance()) }

@@ -52,9 +52,8 @@ class IngredientsDialogVM(
                 onSuccess = { list ->
                     _autoCompleteState.value.loading = false
                     _autoCompleteState.value.allIngredients =
-                        list.map { Ingredient.Label(it.id!!, it.name) }.toTypedArray()
-                },
-                onUnauthorized = {}
+                        list.map { Ingredient.Label(it.id, it.name) }.toTypedArray()
+                }
             )
         }
     }

@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 interface CategoryRepository {
-    suspend fun getAllIngredients(): Flow<DataResponse<List<Category>>>
+    suspend fun getAllCategories(): Flow<DataResponse<List<Category>>>
 }
 
 class CategoryRepositoryImpl(private val client: Client) : CategoryRepository {
-    override suspend fun getAllIngredients(): Flow<DataResponse<List<Category>>> = flow {
+    override suspend fun getAllCategories(): Flow<DataResponse<List<Category>>> = flow {
         repositoryHelper {
             val response: Category.GetAllResponse = client.getAllCategories()
             APIResponse.fromResponse(response.error, response.data, response.success)
