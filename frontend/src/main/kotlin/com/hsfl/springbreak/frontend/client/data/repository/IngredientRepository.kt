@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 interface IngredientRepository {
-    suspend fun getAllIngredients(): Flow<DataResponse<List<Ingredient>>>
+    suspend fun getAllIngredients(): Flow<DataResponse<List<Ingredient.Label>>>
 }
 
 class IngredientRepositoryImpl(private val client: Client): IngredientRepository {
-    override suspend fun getAllIngredients(): Flow<DataResponse<List<Ingredient>>> = flow {
+    override suspend fun getAllIngredients(): Flow<DataResponse<List<Ingredient.Label>>> = flow {
         repositoryHelper {
             val response: Ingredient.GetAllResponse = client.getAllIngredients()
             APIResponse.fromResponse(response.error, response.data, response.success)

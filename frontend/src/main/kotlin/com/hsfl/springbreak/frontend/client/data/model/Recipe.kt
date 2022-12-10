@@ -28,7 +28,7 @@ data class Recipe(
         val categoryId: Long,
         val creatorId: Long,
         val longDescription: String,
-        val ingredient: List<Ingredient>
+        val ingredient: List<Ingredient.Create>
     )
 
     @Serializable

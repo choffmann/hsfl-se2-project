@@ -54,38 +54,35 @@ class CreateRecipeDataVM(
         when (event) {
             is CreateRecipeDataEvent.RecipeName -> setText(
                 flow = _recipeName,
-                value = event.value,
-                required = true
+                value = event.value
             )
 
             is CreateRecipeDataEvent.RecipeShortDesc -> setText(
                 flow = _recipeShortDesc,
-                value = event.value,
-                required = false
+                value = event.value
             )
 
             is CreateRecipeDataEvent.RecipePrice -> setText(
                 flow = _recipePrice,
-                value = event.value,
-                required = false
+                value = event.value
             )
 
             is CreateRecipeDataEvent.RecipeDuration -> setText(
                 flow = _recipeDuration,
-                value = event.value,
-                required = false
+                value = event.value
             )
 
-            is CreateRecipeDataEvent.RecipeDifficulty -> setText(
-                flow = _recipeDifficulty,
-                value = event.value,
-                required = false
-            )
+            is CreateRecipeDataEvent.RecipeDifficulty -> {
+                println(event.value)
+                setText(
+                    flow = _recipeDifficulty,
+                    value = event.value
+                )
+            }
 
             is CreateRecipeDataEvent.RecipeCategory -> setText(
                 flow = _recipeCategory,
-                value = event.value,
-                required = false
+                value = event.value
             )
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
@@ -119,6 +116,8 @@ class CreateRecipeDataVM(
         _recipePrice.value = FormTextFieldState(0.0)
         _recipeDuration.value = FormTextFieldState(0)
         _recipeShortDesc.value = FormTextFieldState("")
+        _difficultyList.value = mutableListOf()
+        _categoryList.value = mutableListOf()
         _validateInputs.value = true
     }
 
@@ -144,9 +143,9 @@ class CreateRecipeDataVM(
         _validateInputs.value = true
     }
 
-    private fun <T> setText(flow: MutableStateFlow<FormTextFieldState<T>>, value: T, required: Boolean) {
+    private fun <T> setText(flow: MutableStateFlow<FormTextFieldState<T>>, value: T) {
         flow.value = flow.value.copy(value = value, error = false, errorMsg = "")
-        if (required) resetError()
+        if (flow.value.required) resetError()
     }
 }
 

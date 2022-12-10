@@ -137,18 +137,6 @@ val RecipeCreateData = FC<Props> {
                         +it.name
                     }
                 }
-                /*MenuItem {
-                    value = "leicht"
-                    +"Leicht"
-                }
-                MenuItem {
-                    value = "mittel"
-                    +"Mittel"
-                }
-                MenuItem {
-                    value = "schwer"
-                    +"Schwer"
-                }*/
             }
             FormHelperText { +difficultyTextState.errorMsg }
         }

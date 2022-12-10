@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeViewModel
-import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
+import com.hsfl.springbreak.frontend.components.recipe.RecipeCardItem
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.Display
@@ -22,6 +22,7 @@ val RecipeCreateCardPreview = FC<Props> {
     val recipePrice = viewModel.recipePrice.collectAsState()
     val recipeDuration = viewModel.recipeDuration.collectAsState()
     val recipeDifficulty = viewModel.recipeDifficulty.collectAsState()
+    val difficultyList = viewModel.recipeDifficultyList.collectAsState()
     val recipeImage = viewModel.recipeImage.collectAsState()
     val imageBlob = recipeImage?.let { URL.Companion.createObjectURL(it) }
 
@@ -38,7 +39,7 @@ val RecipeCreateCardPreview = FC<Props> {
             display = Display.flex
             justifyContent = JustifyContent.center
         }
-        RecipeCard {
+        RecipeCardItem {
             title = recipeTitle.value
             createdDate = "November 13, 2022"
             creator = "My Name"
@@ -47,7 +48,7 @@ val RecipeCreateCardPreview = FC<Props> {
             shortDescription = recipeShortDesc.value
             cost = recipePrice.value.toString()
             duration = recipeDuration.value.toString()
-            difficulty = recipeDifficulty.value
+            difficulty = recipeDifficulty.value.toString() /* difficultyList.find { it.id.toInt() == recipeDifficulty.value.toInt() }?.name */
         }
     }
 }

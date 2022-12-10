@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 class UserState {
     private val _userState = MutableStateFlow(
-        User.State(
+        User(
+            id = 1,
             firstName = "Jeeve",
             lastName = "Philodendron",
             email = "jeeve.philodendron@platns.com",
@@ -14,10 +15,15 @@ class UserState {
             image = "https://plantaddiction.de/media/image/37/be/5a/philodendron-congo-apple_400x400.jpg"
         )
     )
-    val userState: StateFlow<User.State> = _userState
+    val userState: StateFlow<User> = _userState
 
     fun onEvent(event: UserStateEvent) = when (event) {
-        is UserStateEvent.UpdateUser -> _userState.value = event.value
+        is UserStateEvent.UpdateUser -> _userState.value = userState.value.copy(
+            firstName = event.value.firstName ?: userState.value.firstName,
+            lastName = event.value.lastName ?: userState.value.lastName,
+            email = event.value.email ?: userState.value.email,
+            password = event.value.password ?: userState.value.password
+        )
     }
 }
 

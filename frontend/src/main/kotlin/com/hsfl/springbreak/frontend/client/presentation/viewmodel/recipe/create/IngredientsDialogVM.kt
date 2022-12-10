@@ -47,12 +47,12 @@ class IngredientsDialogVM(
 
     private fun fetchIngredientsList() = scope.launch {
         ingredientRepository.getAllIngredients().collectLatest { response ->
-            response.handleDataResponse<List<Ingredient>>(
+            response.handleDataResponse<List<Ingredient.Label>>(
                 onLoading = { _autoCompleteState.value.loading = true },
                 onSuccess = { list ->
                     _autoCompleteState.value.loading = false
                     _autoCompleteState.value.allIngredients =
-                        list.map { Ingredient.Label(it.id, it.name) }.toTypedArray()
+                        list.toTypedArray()
                 }
             )
         }

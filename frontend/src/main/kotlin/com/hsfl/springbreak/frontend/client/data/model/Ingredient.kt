@@ -1,21 +1,33 @@
 package com.hsfl.springbreak.frontend.client.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Ingredient(
     val id: Long,
-    val name: String
+    val name: String,
+    val amount: Int,
+    val unit: String
 ) {
+
+    @Serializable
+    data class Create(
+        @SerialName("ingredientName") val name: String,
+        val amount: Int,
+        val unit: String
+    )
+
     @Serializable
     data class GetAllResponse(
         val error: String? = null,
-        val data: List<Ingredient> = emptyList(),
+        val data: List<Label> = emptyList(),
         val success: Boolean = false
     )
 
+    @Serializable
     data class Label(
         val id: Long,
-        val label: String
+        @SerialName("name") val label: String
     )
 }
