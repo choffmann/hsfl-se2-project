@@ -22,7 +22,6 @@ val RecipeCreateCardPreview = FC<Props> {
     val recipePrice = viewModel.recipePrice.collectAsState()
     val recipeDuration = viewModel.recipeDuration.collectAsState()
     val recipeDifficulty = viewModel.recipeDifficulty.collectAsState()
-    val difficultyList = viewModel.recipeDifficultyList.collectAsState()
     val recipeImage = viewModel.recipeImage.collectAsState()
     val imageBlob = recipeImage?.let { URL.Companion.createObjectURL(it) }
 
@@ -48,7 +47,7 @@ val RecipeCreateCardPreview = FC<Props> {
             shortDescription = recipeShortDesc.value
             cost = recipePrice.value.toString()
             duration = recipeDuration.value.toString()
-            difficulty = recipeDifficulty.value.toString() /* difficultyList.find { it.id.toInt() == recipeDifficulty.value.toInt() }?.name */
+            difficulty = recipeDifficulty.name /* difficultyList.find { it.id.toInt() == recipeDifficulty.value.toInt() }?.name */
         }
     }
 }

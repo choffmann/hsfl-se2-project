@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Difficulty(
-    val id: Long,
+    val id: Int,
     val name: String
 ) {
     @Serializable

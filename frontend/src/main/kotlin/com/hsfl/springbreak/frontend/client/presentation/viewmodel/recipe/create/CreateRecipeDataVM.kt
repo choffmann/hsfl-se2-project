@@ -45,6 +45,9 @@ class CreateRecipeDataVM(
     private val _difficultyList = MutableStateFlow<MutableList<Difficulty>>(mutableListOf())
     val difficultyList: StateFlow<List<Difficulty>> = _difficultyList
 
+    private val _selectedDifficulty = MutableStateFlow(Difficulty(-1, ""))
+    val selectedDifficulty: StateFlow<Difficulty> = _selectedDifficulty
+
     init {
         fetchDifficulties()
         //fetchCategories()
@@ -53,36 +56,31 @@ class CreateRecipeDataVM(
     fun onEvent(event: CreateRecipeDataEvent) {
         when (event) {
             is CreateRecipeDataEvent.RecipeName -> setText(
-                flow = _recipeName,
-                value = event.value
+                flow = _recipeName, value = event.value
             )
 
             is CreateRecipeDataEvent.RecipeShortDesc -> setText(
-                flow = _recipeShortDesc,
-                value = event.value
+                flow = _recipeShortDesc, value = event.value
             )
 
             is CreateRecipeDataEvent.RecipePrice -> setText(
-                flow = _recipePrice,
-                value = event.value
+                flow = _recipePrice, value = event.value
             )
 
             is CreateRecipeDataEvent.RecipeDuration -> setText(
-                flow = _recipeDuration,
-                value = event.value
+                flow = _recipeDuration, value = event.value
             )
 
             is CreateRecipeDataEvent.RecipeDifficulty -> {
-                println(event.value)
                 setText(
-                    flow = _recipeDifficulty,
-                    value = event.value
+                    flow = _recipeDifficulty, value = event.value
                 )
+                // Komischer Fehler, welcher umgehen werden kann, wenn der String erst mit toString() aufgerufen wird
+                _selectedDifficulty.value = difficultyList.value.find { it.id == event.value.toString().toInt() }!!
             }
 
             is CreateRecipeDataEvent.RecipeCategory -> setText(
-                flow = _recipeCategory,
-                value = event.value
+                flow = _recipeCategory, value = event.value
             )
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
@@ -92,20 +90,16 @@ class CreateRecipeDataVM(
 
     private fun fetchDifficulties() = scope.launch {
         difficultyRepository.getAllDifficulties().collectLatest { response ->
-            response.handleDataResponse<List<Difficulty>>(
-                onSuccess = {
-                    UiEventState.onEvent(UiEvent.Idle)
-                    _difficultyList.value.addAll(it)
-                }
-            )
+            response.handleDataResponse<List<Difficulty>>(onSuccess = {
+                UiEventState.onEvent(UiEvent.Idle)
+                _difficultyList.value.addAll(it)
+            })
         }
     }
 
     private fun fetchCategories() = scope.launch {
         categoryRepository.getAllCategories().collectLatest { response ->
-            response.handleDataResponse<List<Category>>(
-                onSuccess = { _categoryList.value.addAll(it) }
-            )
+            response.handleDataResponse<List<Category>>(onSuccess = { _categoryList.value.addAll(it) })
         }
     }
 
@@ -150,10 +144,7 @@ class CreateRecipeDataVM(
 }
 
 data class FormTextFieldState<T>(
-    val value: T,
-    val required: Boolean = false,
-    val error: Boolean = false,
-    val errorMsg: String = ""
+    val value: T, val required: Boolean = false, val error: Boolean = false, val errorMsg: String = ""
 )
 
 sealed class CreateRecipeDataEvent {

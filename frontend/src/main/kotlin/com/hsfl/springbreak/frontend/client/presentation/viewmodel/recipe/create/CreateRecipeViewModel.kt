@@ -22,7 +22,7 @@ class CreateRecipeViewModel(
     private val descriptionVM: CreateRecipeDescriptionVM,
     private val imageVM: CreateRecipeImageVM,
     private val recipeRepository: RecipeRepository,
-    val scope: CoroutineScope = MainScope()
+    private val scope: CoroutineScope = MainScope()
 ) {
     private val _openAbortDialog = MutableStateFlow(false)
     val openAbortDialog: StateFlow<Boolean> = _openAbortDialog
@@ -34,12 +34,10 @@ class CreateRecipeViewModel(
     val recipeShortDesc: StateFlow<FormTextFieldState<String>> = dataVM.recipeShortDesc
     val recipePrice: StateFlow<FormTextFieldState<Double>> = dataVM.recipePrice
     val recipeDuration: StateFlow<FormTextFieldState<Int>> = dataVM.recipeDuration
-    val recipeDifficulty: StateFlow<FormTextFieldState<String>> = dataVM.recipeDifficulty
-    val recipeDifficultyList: StateFlow<List<Difficulty>> = dataVM.difficultyList
-    val recipeCategory: StateFlow<FormTextFieldState<String>> = dataVM.recipeCategory
-    val ingredientsList: StateFlow<List<IngredientsTableRow>> = tableVM.ingredientsList
-    val descriptionText: StateFlow<String> = descriptionVM.descriptionText
+    val recipeDifficulty: StateFlow<Difficulty> = dataVM.selectedDifficulty
     val recipeImage: StateFlow<File?> = imageVM.recipeImage
+    private val ingredientsList: StateFlow<List<IngredientsTableRow>> = tableVM.ingredientsList
+    private val descriptionText: StateFlow<String> = descriptionVM.descriptionText
 
     fun onEvent(event: CreateRecipeEvent) {
         when (event) {
@@ -52,31 +50,32 @@ class CreateRecipeViewModel(
         }
     }
 
-    private fun createRecipe() = scope.launch {
-        println(recipeDifficulty.value.value)
-        val userState: UserState by di.instance()
-        val recipe = Recipe.Create(
-            title = recipeName.value.value,
-            shortDescription = recipeShortDesc.value.value,
-            price = recipePrice.value.value,
-            duration = recipeDuration.value.value.toDouble(),
-            difficultyId = 2 /*recipeDifficulty.value.value.toLong()*/,
-            categoryId = 2 /*recipeCategory.value.value.toLong()*/,
-            creatorId = userState.userState.value.id,
-            longDescription = descriptionText.value,
-            ingredient = ingredientsList.value.map {
-                Ingredient.Create(
-                    name = it.item.name,
-                    unit = it.item.unit,
-                    amount = it.item.amount
+    private fun createRecipe() {
+        scope.launch {
+            val userState: UserState by di.instance()
+            val recipe = Recipe.Create(
+                title = recipeName.value.value,
+                shortDescription = recipeShortDesc.value.value,
+                price = recipePrice.value.value,
+                duration = recipeDuration.value.value.toDouble(),
+                difficultyId = recipeDifficulty.value.id,
+                categoryId = 2 /*recipeCategory.value.value.toLong()*/,
+                creatorId = userState.userState.value.id,
+                longDescription = descriptionText.value,
+                ingredient = ingredientsList.value.map {
+                    Ingredient.Create(
+                        name = it.item.name,
+                        unit = it.item.unit,
+                        amount = it.item.amount
+                    )
+                }
+            )
+
+            recipeRepository.createRecipe(recipe).collectLatest { response ->
+                response.handleDataResponse<Recipe>(
+                    onSuccess = { println(it) }
                 )
             }
-        )
-
-        recipeRepository.createRecipe(recipe).collectLatest { response ->
-            response.handleDataResponse<Recipe>(
-                onSuccess = { println(it) }
-            )
         }
     }
 

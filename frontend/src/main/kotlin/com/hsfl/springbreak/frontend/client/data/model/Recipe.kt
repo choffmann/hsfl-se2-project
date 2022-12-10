@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Recipe(
-    val id: Long,
+    val id: Int,
     val title: String,
     val shortDescription: String,
     val price: Double,
@@ -24,9 +24,9 @@ data class Recipe(
         val shortDescription: String,
         val price: Double,
         val duration: Double,
-        val difficultyId: Long,
-        val categoryId: Long,
-        val creatorId: Long,
+        val difficultyId: Int,
+        val categoryId: Int,
+        val creatorId: Int,
         val longDescription: String,
         val ingredient: List<Ingredient.Create>
     )

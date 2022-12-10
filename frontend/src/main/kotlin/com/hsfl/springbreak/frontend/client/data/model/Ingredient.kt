@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Ingredient(
-    val id: Long,
+    val id: Int,
     val name: String,
     val amount: Int,
     val unit: String
