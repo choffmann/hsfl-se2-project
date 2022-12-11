@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
     @RestController
     class RatingController (val ratingRepository: RatingRepository) {
 
-        @PostMapping("api/rating")
+        @PostMapping("rating")
         fun createNewRating(@RequestBody newRating: Rating): ApiResponse<Rating> {
             val savedRating = ratingRepository.save(RatingEntity.fromDto(newRating)).toDto()
             print("-------- "+savedRating +"----- \n")
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*
             }
         }
 
-        @PutMapping("api/ratingLike/{id}")
+        @PutMapping("rating/like/{id}")
         fun addLike(@PathVariable("id") ratingId: Long): ApiResponse<Rating> {
             return if (ratingRepository.existsById(ratingId)) {
                 val result =  ratingRepository.findById(ratingId).get()
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*
             } else return ApiResponse(error = "No Recipe with the ID: ${ratingId} ", success = false)
         }
 
-       @PutMapping("api/ratingdisLike/{id}")
+       @PutMapping("rating/dislike/{id}")
        fun addDisLike(@PathVariable("id") ratingId: Long): ApiResponse<Rating> {
         return if (ratingRepository.existsById(ratingId)) {
             val result =  ratingRepository.findById(ratingId).get()

@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
+/* TODO: Sollte nicht mehr benötigt werden
 
         @CrossOrigin("http://localhost:3000")
         @RestController
        class FavoriteController(val  favoriteRepository: FavoriteRepository) {
 
-            @PostMapping("api/Favorite")
+            @PostMapping("favorite")
             fun createFavorite(@RequestBody newFavorite: Favorite): ApiResponse<Favorite> {
                 val savedFavorite = favoriteRepository.save(FavoriteEntity.fromDto(newFavorite)).toDto()
                 print("-------- " + savedFavorite + "----- \n")
@@ -28,3 +29,5 @@ import org.springframework.web.bind.annotation.RestController
                 }
             }
         }
+*/
+

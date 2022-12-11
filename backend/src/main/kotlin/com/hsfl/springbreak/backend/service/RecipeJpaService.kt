@@ -30,6 +30,7 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
     fun getRecipeById(id: Long): ApiResponse<Recipe> {
         val recipe = recipeRepository.findById(id).orElse(null)
         return if (recipe != null)
+
             ApiResponse(data = recipe.toDto(), success = true)
         else
             ApiResponse(error = "No such recipe", success = false)
