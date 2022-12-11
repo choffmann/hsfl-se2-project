@@ -24,7 +24,7 @@ class EntityConfiguration {
                 /* Create Dummy-User */
                 userRepository.save(UserEntity(
                     firstName = "Hektor", lastName = "Panzer", email = "panzer@",
-                    password = "secret", image = "DickPic.png"
+                    password = "secret"
                 ))
 
                 /* Prepopulate Difficulties*/

@@ -12,7 +12,7 @@ data class UserEntity(
     @Column val lastName: String,
     @Column val email: String,
     @Column val password: String,
-    @Column val image: String? = null
+    @Column @Lob var image: Blob? = null
     /*
     @ManyToMany @JoinTable(
         name = "user_favorite",
@@ -45,10 +45,10 @@ data class UserEntity(
         fun fromDto(dto: User.ChangeProfile, defaultUser: UserEntity): UserEntity = UserEntity(
             id = defaultUser.id!!,
             email = defaultUser.email,
-            password = defaultUser.password,
+            password = dto.password ?: defaultUser.password,
             firstName = dto.firstName ?: defaultUser.firstName,
             lastName = dto.lastName ?: defaultUser.lastName,
-            image = dto.image ?: defaultUser.image
+            // image = dto.image ?: defaultUser.image
         )
 
         fun fromDto(dto: User.Register): UserEntity = UserEntity(

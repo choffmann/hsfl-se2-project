@@ -5,6 +5,8 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.stereotype.Service
+import java.sql.Blob
+import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
 @Service

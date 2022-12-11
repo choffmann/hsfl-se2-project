@@ -8,7 +8,7 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val image: String?
+    val image: Blob?
 ) {
     data class Login(
         val email: String,
@@ -19,14 +19,14 @@ data class User(
         val firstName: String,
         val lastName: String,
         val email: String,
-        val password: String,
-        val image: String?
+        val password: String
     )
 
     data class ChangeProfile(
+        val id: Long,
         val firstName: String?,
         val lastName: String?,
-        val image: String?
+        val password: String?
     )
 }
 
