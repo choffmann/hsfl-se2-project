@@ -67,7 +67,7 @@ data class RecipeEntity(
              */
         )
 
-        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity, category: CategoryEntity, difficulty: DifficultyEntity): RecipeEntity =
+        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity, category: CategoryEntity, difficulty: DifficultyEntity, date: LocalDate): RecipeEntity =
             RecipeEntity(
             title = newRecipe.title,
             shortDescription = newRecipe.shortDescription,
@@ -76,7 +76,7 @@ data class RecipeEntity(
             difficulty = difficulty,
             category = category,
             creator = user,
-            createTime = newRecipe.createTime,
+            createTime = date,
             image = newRecipe.image,
             longDescription = newRecipe.longDescription,
             ingredients = null,

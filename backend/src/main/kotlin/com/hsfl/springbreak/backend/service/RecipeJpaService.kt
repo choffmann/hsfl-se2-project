@@ -11,6 +11,7 @@ import com.hsfl.springbreak.backend.repository.*
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 import javax.transaction.Transactional
 
 @Service
@@ -57,9 +58,10 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
         val user = userRepository.findById(recipe.creatorId).get()
         val category = categoryRepository.findById(recipe.categoryId).get()
         val difficulty = difficultyRepository.findById(recipe.difficultyId).get()
+        val createTime = LocalDate.now()
 
         // save new recipe to database
-        val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(recipe, user, category, difficulty))
+        val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(recipe, user, category, difficulty, createTime))
 
         // check given ingredients for existence in database or create new
         val ingredients = saveIngredients(recipe.ingredients, savedRecipe)

@@ -30,7 +30,7 @@ data class Recipe(
         val difficultyId: Long,
         val categoryId: Long,
         val creatorId: Long,
-        val createTime: LocalDate,
+        val createTime: LocalDate?,
         val image: String?,
         val longDescription: String?,
         val ingredients: List<IngredientRecipe.WithoutRecipe>
