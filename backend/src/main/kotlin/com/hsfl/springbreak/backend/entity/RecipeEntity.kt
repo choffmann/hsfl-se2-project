@@ -35,12 +35,12 @@ data class RecipeEntity(
         duration = this.duration!!,
         difficulty = this.difficulty.toDto(),
         category = this.category.toDto(),
-        creator = this.creator.toDto(), // TODO
+        creator = this.creator.toDto(),
         createTime = this.createTime,
         image = this.image,
         longDescription = this.longDescription,
         views = this.views,
-        ingredients = this.ingredients!!.map { it.toDto() } // TODO
+        ingredients = this.ingredients!!.map { it.toDto() } // TODO: Hier nur die ID zurückgeben
         /*
         rating = this.rating!!.toDto(),
          */

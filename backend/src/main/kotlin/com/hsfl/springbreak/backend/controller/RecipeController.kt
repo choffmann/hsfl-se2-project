@@ -31,7 +31,7 @@ class RecipeController(val recipeService: RecipeJpaService) {
         recipeService.updateRecipe(changes)
 
     @DeleteMapping("recipes/{id}")
-    fun deleteRecipe(@PathVariable("id") id: Long) =
+    fun deleteRecipe(@PathVariable("id") id: Long): ApiResponse<Recipe> =
         recipeService.deleteRecipeById(id)
 
     @PostMapping("recipe/favorite/{rId}/{uId}")
