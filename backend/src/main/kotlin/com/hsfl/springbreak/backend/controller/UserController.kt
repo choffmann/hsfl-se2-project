@@ -27,4 +27,6 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
     fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<User> =
         userService.updateProfileImage(file.bytes, id)
 
+
+
 }

@@ -11,6 +11,7 @@ import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
 import java.sql.Blob
 import java.time.LocalDate
+import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
 @Service
@@ -53,7 +54,7 @@ class RecipeJpaService(
      * Takes an CreateRecipe-Entity and fetches relevant data to save a new Recipe entity as well as corresponding ingredients to database.
      * @param recipe The recipe to be created.
      */
-    fun createRecipe(recipe: Recipe.CreateRecipe): ApiResponse<Recipe> {
+    fun createRecipe(recipe: Recipe.CreateRecipe): ApiResponse<Recipe.Response> {
         // fetch information from database
         val user = userRepository.findById(recipe.creatorId).get()
         val category = categoryRepository.findById(recipe.categoryId).get()
@@ -70,7 +71,7 @@ class RecipeJpaService(
         val recipeProxy = recipeRepository.findById(savedRecipe.id!!).get()
         recipeProxy.ingredients = ingredients
 
-        return ApiResponse(data = recipeRepository.save(recipeProxy).toDto(), success = true)
+        return ApiResponse(data = recipeRepository.save(recipeProxy).toResponse(), success = true)
     }
 
     /**
@@ -144,5 +145,19 @@ class RecipeJpaService(
 
     fun addFavoriteById(rId: Long, uId: Long): Any {
         TODO("Not yet implemented")
+    }
+
+    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe> {
+        // fetch recipe from database
+        val recipeProxy = recipeRepository.findById(id).get()
+
+        // convert file to blob
+        val blob: Blob = SerialBlob(file)
+
+        // save image to user
+        recipeProxy.image = blob
+        recipeRepository.save(recipeProxy)
+
+        return ApiResponse(data = recipeProxy.toDto(), success = true)
     }
 }

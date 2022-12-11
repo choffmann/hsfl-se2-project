@@ -24,7 +24,7 @@ class RecipeController(val recipeService: RecipeJpaService) {
         recipeService.getRecipeByName(name)
 
     @PostMapping("recipes")
-    fun createRecipe(@RequestBody recipe: Recipe.CreateRecipe): ApiResponse<Recipe> =
+    fun createRecipe(@RequestBody recipe: Recipe.CreateRecipe): ApiResponse<Recipe.Response> =
         recipeService.createRecipe(recipe)
 
     @PutMapping("recipes")

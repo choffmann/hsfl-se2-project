@@ -17,6 +17,12 @@ data class IngredientRecipe(
         val amount: Int
     )
 
+    data class Response(
+        val recipeId: Long,
+        val unit: String,
+        val amount: Int
+    )
+
 }
 
 /*TODO

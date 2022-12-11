@@ -36,6 +36,12 @@ data class IngredientRecipeEntity(
         amount = this.amount
     )
 
+    fun toResponse(): IngredientRecipe.Response = IngredientRecipe.Response(
+        recipeId = this.ingredient?.id!!,
+        unit = this.unit,
+        amount = this.amount
+    )
+
     fun toIngredient(): Ingredient = this.ingredient!!.toDto()
     fun toRecipe(): Recipe = this.recipe!!.toDto()
 

@@ -13,7 +13,7 @@ data class Recipe(
     val category: Category,
     val creator: User,
     val createTime: LocalDate,
-    val image: String?,
+    val image: Blob?,
     val longDescription: String?,
     val views: Int,
     val ingredients: List<IngredientRecipe>
@@ -48,6 +48,22 @@ data class Recipe(
         val image: String?,
         val longDescription: String?,
         val ingredients: List<IngredientRecipe.WithoutRecipe>
+    )
+
+    data class Response(
+        val id: Long,
+        val title: String,
+        val shortDescription: String,
+        val price: Double,
+        val duration: Double,
+        val difficulty: Difficulty,
+        val category: Category,
+        val creator: User,
+        val createTime: LocalDate,
+        val image: Blob?,
+        val longDescription: String?,
+        val views: Int,
+        val ingredients: List<IngredientRecipe.Response>
     )
 
 }

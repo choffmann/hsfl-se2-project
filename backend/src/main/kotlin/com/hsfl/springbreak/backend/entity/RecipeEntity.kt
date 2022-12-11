@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
+import java.sql.Blob
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -16,7 +17,7 @@ data class RecipeEntity(
     @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
     @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
     @Column var createTime: LocalDate,
-    @Column var image: String?,
+    @Column @Lob var image: Blob? = null,
     @Column var longDescription: String?,
     @Column var views: Int = 0,
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
@@ -44,6 +45,22 @@ data class RecipeEntity(
         /*
         rating = this.rating!!.toDto(),
          */
+    )
+
+    fun toResponse(): Recipe.Response = Recipe.Response(
+        id = this.id!!,
+        title = this.title,
+        shortDescription = this.shortDescription!!,
+        price = this.price!!,
+        duration = this.duration!!,
+        difficulty = this.difficulty.toDto(),
+        category = this.category.toDto(),
+        creator = this.creator.toDto(),
+        createTime = this.createTime,
+        image = this.image,
+        longDescription = this.longDescription,
+        views = this.views,
+        ingredients = this.ingredients!!.map { it.toResponse() }
     )
 
     companion object {
