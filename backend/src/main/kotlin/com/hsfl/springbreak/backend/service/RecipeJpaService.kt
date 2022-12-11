@@ -9,6 +9,7 @@ import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
+import java.sql.Blob
 import java.time.LocalDate
 import javax.transaction.Transactional
 
@@ -31,7 +32,6 @@ class RecipeJpaService(
     fun getRecipeById(id: Long): ApiResponse<Recipe> {
         val recipe = recipeRepository.findById(id).orElse(null)
         return if (recipe != null)
-
             ApiResponse(data = recipe.toDto(), success = true)
         else
             ApiResponse(error = "No such recipe", success = false)
@@ -93,7 +93,6 @@ class RecipeJpaService(
         recipeProxy.duration = changes.duration
         recipeProxy.difficulty = difficultyRepository.findById(changes.difficultyId).get()
         recipeProxy.category = categoryRepository.findById(changes.categoryId).get()
-        recipeProxy.image = changes.image
         recipeProxy.longDescription = changes.longDescription
         recipeProxy.ingredients = saveIngredients(changes.ingredients, recipeProxy)
 

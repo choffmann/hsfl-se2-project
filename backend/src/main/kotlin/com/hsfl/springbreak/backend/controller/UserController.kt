@@ -23,8 +23,8 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
     fun updateUser(@RequestBody userChanges: User.ChangeProfile): ApiResponse<User> =
         userService.changeProfile(userChanges)
 
-    @PostMapping("user/image")
-    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam userId: Long): ApiResponse<User> =
-        userService.updateProfileImage(file.bytes, userId)
+    @PostMapping("user/image/{id}")
+    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<User> =
+        userService.updateProfileImage(file.bytes, id)
 
 }

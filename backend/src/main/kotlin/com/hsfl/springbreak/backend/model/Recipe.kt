@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.backend.model
 
+import java.sql.Blob
 import java.time.LocalDate
 
 data class Recipe(
@@ -31,7 +32,7 @@ data class Recipe(
         val categoryId: Long,
         val creatorId: Long,
         val createTime: LocalDate?,
-        val image: String?,
+        val image: Blob?,
         val longDescription: String?,
         val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
