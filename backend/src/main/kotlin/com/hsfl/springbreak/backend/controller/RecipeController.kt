@@ -39,9 +39,7 @@ class RecipeController(val recipeService: RecipeJpaService) {
     fun deleteRecipe(@PathVariable("id") id: Long): ApiResponse<Recipe> =
         recipeService.deleteRecipeById(id)
 
-    @PostMapping("recipe/favorite/{rId}/{uId}")
-    fun setFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long) =
-        recipeService.addFavoriteById(rId, uId)
+
 
     @GetMapping("recipe/favorite/{id}")
     fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =

@@ -21,7 +21,7 @@ data class RecipeEntity(
     @Column var longDescription: String?,
     @Column var views: Int = 0,
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
-
+    @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
     /*
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?
     @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
@@ -55,7 +55,7 @@ data class RecipeEntity(
         duration = this.duration!!,
         difficulty = this.difficulty.toDto(),
         category = this.category.toDto(),
-        creator = this.creator.toDto(),
+        creatorId = this.creator.id!!,
         createTime = this.createTime,
         image = this.image,
         longDescription = this.longDescription,
@@ -94,7 +94,6 @@ data class RecipeEntity(
             category = category,
             creator = user,
             createTime = date,
-            image = newRecipe.image,
             longDescription = newRecipe.longDescription,
             ingredients = null,
             views = 0

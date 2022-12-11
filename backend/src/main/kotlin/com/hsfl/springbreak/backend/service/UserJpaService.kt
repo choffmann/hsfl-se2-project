@@ -11,11 +11,14 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserJpaService(val userRepository: UserRepository) {
+class UserJpaService(val userRepository: UserRepository, val recipeRepository: RecipeRepository) {
 
-    fun registerUser(newUser: User.Register): ApiResponse<User> {
-        val savedEntity = userRepository.save(UserEntity.fromDto(newUser)).toDto()
-        return ApiResponse(data = savedEntity, success = true)
+    /**
+     * Creates a new User.
+     * @param user The user to be created from type User.Register(firstName, lastName, email, password).
+     */
+    fun registerUser(user: User.Register): ApiResponse<User> {
+        return ApiResponse(data = userRepository.save(UserEntity.fromDto(user)).toDto(), success = true)
     }
 
     fun loginUser(loginUser: User.Login): ApiResponse<User> {
@@ -54,6 +57,44 @@ class UserJpaService(val userRepository: UserRepository) {
         userRepository.save(userProxy)
 
         return ApiResponse(data = userProxy.toDto(), success = true)
+    }
+
+    /**
+     * Add a new entity to the User-Favorite relation.
+     * @param rId The referenced recipe's id.
+     * @param uId The referenced user's id.
+     */
+    fun setFavoriteById(rId: Long, uId: Long): ApiResponse<User> {
+        return if (recipeRepository.existsById(rId) && userRepository.existsById(uId)) {
+            val userProxy = userRepository.findById(uId).get()
+            userProxy.favorites.add(recipeRepository.findById(rId).get())
+            userRepository.save(userProxy)
+            ApiResponse(success = true)
+        } else {
+            ApiResponse(success = false)
+        }
+    }
+
+    /**
+     * Returns a List of a users favorite recipes.
+     * @param id The id of the user whose favorites shall be returned.
+     */
+    fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
+        return if (userRepository.existsById(id)) {
+            val userProxy = userRepository.findById(id).get()
+            ApiResponse(data = userProxy.favorites.map { it.toDto() }, success = true)
+        } else {
+            ApiResponse(success = false)
+        }
+    }
+
+    /**
+     *
+     * @param rId The referenced recipe's id.
+     * @param uId The referenced user's id.
+     */
+    fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
+        return ApiResponse()
     }
 
 }

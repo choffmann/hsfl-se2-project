@@ -32,7 +32,6 @@ data class Recipe(
         val categoryId: Long,
         val creatorId: Long,
         val createTime: LocalDate?,
-        val image: Blob?,
         val longDescription: String?,
         val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
@@ -45,7 +44,6 @@ data class Recipe(
         val duration: Double?,
         val difficultyId: Long,
         val categoryId: Long,
-        val image: String?,
         val longDescription: String?,
         val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
@@ -58,7 +56,7 @@ data class Recipe(
         val duration: Double,
         val difficulty: Difficulty,
         val category: Category,
-        val creator: User,
+        val creatorId: Long,
         val createTime: LocalDate,
         val image: Blob?,
         val longDescription: String?,

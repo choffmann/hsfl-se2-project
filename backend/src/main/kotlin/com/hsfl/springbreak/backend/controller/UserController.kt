@@ -27,6 +27,17 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
     fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<User> =
         userService.updateProfileImage(file.bytes, id)
 
+    @PostMapping("user/favorite/{rId}/{uId}")
+    fun setFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long) =
+        userService.setFavoriteById(rId, uId)
+
+    @GetMapping("user/favorite/{id}")
+    fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
+        userService.getFavoritesById(id)
+
+    @DeleteMapping("user/favorite/{id}")
+    fun deleteFavoriteById(@PathVariable("id") id: Long): ApiResponse<Recipe> =
+        userService.deleteFavoriteById(id)
 
 
 }

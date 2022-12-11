@@ -8,7 +8,9 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val image: Blob?
+    val image: Blob?,
+    val favorites: MutableList<Recipe>
+    // val rating: List<Recipe>
 ) {
     data class Login(
         val email: String,
