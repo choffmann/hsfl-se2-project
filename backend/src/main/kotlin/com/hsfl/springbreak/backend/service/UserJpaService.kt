@@ -42,8 +42,15 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      * @param user The updated user from type ChangeProfile.
      */
     fun changeProfile(user: User.ChangeProfile): ApiResponse<User> {
-        val userProxy = userRepository.findById(user.id).get()
-        return ApiResponse(data = userRepository.save(UserEntity.fromDto(user, userProxy)).toDto(), success = true)
+        return if (userRepository.existsById(user.id)) {
+            ApiResponse(
+                data = userRepository.save(UserEntity.fromDto(user, userRepository.findById(user.id).get())).toDto(),
+                success = true
+            )
+        } else {
+            ApiResponse(success = false)
+        }
+
     }
 
     /**
@@ -52,17 +59,21 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      * @param userId The user to whom the image shall be related.
      */
     fun updateProfileImage(file: ByteArray, userId: Long): ApiResponse<User> {
-        // fetch user from database
-        val userProxy = userRepository.findById(userId).get()
+        return if (userRepository.existsById(userId)) {
+            // fetch user from database
+            val userProxy = userRepository.findById(userId).get()
 
-        // convert file to blob
-        val blob: Blob = SerialBlob(file)
+            // convert file to blob
+            val blob: Blob = SerialBlob(file)
 
-        // save image to user
-        userProxy.image = blob
-        userRepository.save(userProxy)
+            // save image to user
+            userProxy.image = blob
+            userRepository.save(userProxy)
 
-        return ApiResponse(data = userProxy.toDto(), success = true)
+            ApiResponse(data = userProxy.toDto(), success = true)
+        } else {
+            ApiResponse(success = false)
+        }
     }
 
     /**
@@ -95,12 +106,20 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
     }
 
     /**
-     *
+     * Deletes a user's favorite recipe based on its id.
      * @param rId The referenced recipe's id.
      * @param uId The referenced user's id.
      */
     fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
-        return ApiResponse()
+        if (userRepository.existsById(uId)) {
+            for (favorite: RecipeEntity in userRepository.findById(uId).get().favorites) {
+                if (favorite.id == rId) {
+                    recipeRepository.deleteById(rId)
+                    return ApiResponse(success = true)
+                }
+            }
+        }
+        return ApiResponse(success = false)
     }
 
 }

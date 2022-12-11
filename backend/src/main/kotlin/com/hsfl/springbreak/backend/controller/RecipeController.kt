@@ -39,7 +39,4 @@ class RecipeController(val recipeService: RecipeJpaService) {
     fun deleteRecipe(@PathVariable("id") id: Long): ApiResponse<Recipe> =
         recipeService.deleteRecipeById(id)
 
-
-
-
 }

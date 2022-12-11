@@ -25,17 +25,16 @@ class RecipeJpaService(
     val difficultyRepository: DifficultyRepository
 ) {
 
-
     /**
-     * Return a recipe by its id
-     * @param id The id of the recipe to be returned
+     * Return a recipe by its id.
+     * @param id The id of the recipe to be returned.
      */
     fun getRecipeById(id: Long): ApiResponse<Recipe> {
-        val recipe = recipeRepository.findById(id).orElse(null)
-        return if (recipe != null)
-            ApiResponse(data = recipe.toDto(), success = true)
-        else
+        return if (recipeRepository.existsById(id)) {
+            ApiResponse(data = recipeRepository.findById(id).get().toDto(), success = true)
+        } else {
             ApiResponse(error = "No such recipe", success = false)
+        }
     }
 
     /**
@@ -75,27 +74,27 @@ class RecipeJpaService(
     }
 
     /**
-     * TODO: Method description
-     * @param changes The recipe to be updated.
+     * Overwrites all given recipe values from a given recipe.
+     * @param recipe The recipe to be updated from type Recipe.ChangeRecipe.
      */
 
-    fun updateRecipe(changes: Recipe.ChangeRecipe): ApiResponse<Recipe> {
+    fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe> {
         // fetch recipe proxy
-        val recipeProxy = recipeRepository.findById(changes.recipeId).orElse(null)
+        val recipeProxy = recipeRepository.findById(recipe.recipeId).orElse(null)
             ?: return ApiResponse("Recipe not found", success = false)
 
         // delete existing recipeIngredientEntities
         ingredientRecipeRepository.deleteByRecipeId(recipeProxy.id!!)
 
         // update recipe values
-        recipeProxy.title = changes.title
-        recipeProxy.shortDescription = changes.shortDescription
-        recipeProxy.price = changes.price
-        recipeProxy.duration = changes.duration
-        recipeProxy.difficulty = difficultyRepository.findById(changes.difficultyId).get()
-        recipeProxy.category = categoryRepository.findById(changes.categoryId).get()
-        recipeProxy.longDescription = changes.longDescription
-        recipeProxy.ingredients = saveIngredients(changes.ingredients, recipeProxy)
+        recipeProxy.title = recipe.title
+        recipeProxy.shortDescription = recipe.shortDescription
+        recipeProxy.price = recipe.price
+        recipeProxy.duration = recipe.duration
+        recipeProxy.difficulty = difficultyRepository.findById(recipe.difficultyId).get()
+        recipeProxy.category = categoryRepository.findById(recipe.categoryId).get()
+        recipeProxy.longDescription = recipe.longDescription
+        recipeProxy.ingredients = saveIngredients(recipe.ingredients, recipeProxy)
 
         // save changes to database
         recipeRepository.save(recipeProxy)
@@ -138,20 +137,27 @@ class RecipeJpaService(
         }
     }
 
-
-
-
+    /**
+     * Updates a recipes image and returns the recipe.
+     * @param file The file to be saved as new image.
+     * @param id The image of the corresponding recipe.
+     */
     fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe> {
-        // fetch recipe from database
-        val recipeProxy = recipeRepository.findById(id).get()
+        return if (recipeRepository.existsById(id)) {
+            // fetch recipe from database
+            val recipeProxy = recipeRepository.findById(id).get()
 
-        // convert file to blob
-        val blob: Blob = SerialBlob(file)
+            // convert file to blob
+            val blob: Blob = SerialBlob(file)
 
-        // save image to user
-        recipeProxy.image = blob
-        recipeRepository.save(recipeProxy)
+            // save image to user
+            recipeProxy.image = blob
+            recipeRepository.save(recipeProxy)
 
-        return ApiResponse(data = recipeProxy.toDto(), success = true)
+            ApiResponse(data = recipeProxy.toDto(), success = true)
+        } else {
+            ApiResponse(success = false)
+        }
+
     }
 }

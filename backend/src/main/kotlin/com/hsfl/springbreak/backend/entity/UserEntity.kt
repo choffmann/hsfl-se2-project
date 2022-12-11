@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity(name = "users")
 data class UserEntity(
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,
     @Column val firstName: String,
     @Column val lastName: String,
     @Column val email: String,
@@ -18,7 +18,6 @@ data class UserEntity(
         joinColumns = [JoinColumn(name = "users_id")],
         inverseJoinColumns = [JoinColumn(name = "recipe_id")]
     ) val favorites: MutableList<RecipeEntity> = mutableListOf<RecipeEntity>()
-
 
 ) {
 

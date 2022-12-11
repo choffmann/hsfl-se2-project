@@ -36,9 +36,9 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
     fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
         userService.getFavoritesById(id)
 
-    @DeleteMapping("user/favorite/{id}")
-    fun deleteFavoriteById(@PathVariable("id") id: Long): ApiResponse<Recipe> =
-        userService.deleteFavoriteById(id)
+    @DeleteMapping("user/favorite/{rId}/{uId}")
+    fun deleteFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long): ApiResponse<Recipe> =
+        userService.deleteFavoriteById(rId, uId)
 
 
 }
