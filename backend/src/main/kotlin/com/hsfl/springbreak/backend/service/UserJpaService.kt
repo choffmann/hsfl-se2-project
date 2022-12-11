@@ -26,15 +26,32 @@ class UserJpaService(val userRepository: UserRepository) {
         } ?: return ApiResponse(error = "User doesn't exists", success = false)
     }
 
-    fun changeProfile(changes: User.ChangeProfile, userId: Long): ApiResponse<User> {
-        val currentUser = userRepository.findById(userId).orElse(null)
-        return if (currentUser != null) {
-            val savedUser = userRepository.save(UserEntity.fromDto(changes, currentUser)).toDto()
-            ApiResponse(data = savedUser, success = true)
-        } else {
-            ApiResponse(error = "Wrong ID", success = false)
-        }
+    /**
+     * Update user-properties: firstname, lastname, password.
+     * @param user The updated user from type ChangeProfile.
+     */
+    fun changeProfile(user: User.ChangeProfile): ApiResponse<User> {
+        val userProxy = userRepository.findById(user.id).get()
+        return ApiResponse(data = userRepository.save(UserEntity.fromDto(user, userProxy)).toDto(), success = true)
+    }
 
+    /**
+     * Read a given file and save it to database as blob-type.
+     * @param file The image to be read and set as new profile picture.
+     * @param userId The user to whom the image shall be related.
+     */
+    fun updateProfileImage(file: ByteArray, userId: Long): ApiResponse<User> {
+        // fetch user from database
+        val userProxy = userRepository.findById(userId).get()
+
+        // convert file to blob
+        val blob: Blob = SerialBlob(file)
+
+        // save image to user
+        userProxy.image = blob
+        userRepository.save(userProxy)
+
+        return ApiResponse(data = userProxy.toDto(), success = true)
     }
 
 }

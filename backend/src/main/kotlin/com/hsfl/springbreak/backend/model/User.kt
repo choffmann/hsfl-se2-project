@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.backend.model
 
+import java.sql.Blob
+
 data class User(
     val id: Long,
     val firstName: String,
