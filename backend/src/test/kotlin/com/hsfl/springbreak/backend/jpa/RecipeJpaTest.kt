@@ -44,7 +44,7 @@ class RecipeJpaTest {
     @BeforeEach
     @Description("Add testRecipe to database")
     fun postRecipe() {
-        recipeId = controller.createNewRecipe(testRecipe).data?.id ?: 0
+        recipeId = controller.createRecipe(testRecipe).data?.id ?: 0
     }
 
     @Test

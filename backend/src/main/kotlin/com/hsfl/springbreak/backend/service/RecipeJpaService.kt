@@ -70,9 +70,6 @@ class RecipeJpaService(private val recipeRepository: RecipeRepository,
         val recipeProxy = recipeRepository.findById(savedRecipe.id!!).get()
         recipeProxy.ingredients = ingredients
 
-        // save proxy to database
-        recipeRepository.save(recipeProxy)
-
         return ApiResponse(data = recipeRepository.save(recipeProxy).toDto(), success = true)
     }
 
