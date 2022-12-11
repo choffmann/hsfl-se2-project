@@ -139,13 +139,7 @@ class RecipeJpaService(
     }
 
 
-    fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
-        return ApiResponse()
-    }
 
-    fun addFavoriteById(rId: Long, uId: Long): Any {
-        TODO("Not yet implemented")
-    }
 
     fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe> {
         // fetch recipe from database

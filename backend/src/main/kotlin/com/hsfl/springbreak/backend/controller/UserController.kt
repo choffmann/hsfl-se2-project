@@ -2,6 +2,7 @@ package com.hsfl.springbreak.backend.controller
 
 import com.hsfl.springbreak.backend.repository.UserRepository
 import com.hsfl.springbreak.backend.model.ApiResponse
+import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.service.UserJpaService
 import org.springframework.web.bind.annotation.*

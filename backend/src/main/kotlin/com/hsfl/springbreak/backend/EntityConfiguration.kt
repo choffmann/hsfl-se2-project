@@ -1,78 +1,91 @@
 package com.hsfl.springbreak.backend
 
-import com.hsfl.springbreak.backend.entity.*
-import com.hsfl.springbreak.backend.model.IngredientRecipe
-import com.hsfl.springbreak.backend.model.IngredientRecipeId
+import com.hsfl.springbreak.backend.entity.CategoryEntity
+import com.hsfl.springbreak.backend.entity.DifficultyEntity
+import com.hsfl.springbreak.backend.entity.IngredientEntity
+import com.hsfl.springbreak.backend.entity.UserEntity
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.time.LocalDate
 
 @Configuration
 class EntityConfiguration {
 
     @Bean
-    fun databaseInitializer(favoriteRepository: FavoriteRepository,
-                            ingredientRepository: IngredientRepository,
-                            ratingRepository: RatingRepository,
-                            recipeRepository: RecipeRepository, userRepository: UserRepository,
-                            categoryRepository: CategoryRepository,
-                            difficultyRepository: DifficultyRepository,
-                            ingredientRecipeRepository: IngredientRecipeRepository) =
-            ApplicationRunner {
-                /* Create Dummy-User */
-                userRepository.save(UserEntity(
-                    firstName = "Hektor", lastName = "Panzer", email = "panzer@",
-                    password = "secret"
-                ))
-
-                /* Prepopulate Difficulties*/
-                difficultyRepository.save(DifficultyEntity(name = "Leicht"))
-                difficultyRepository.save(DifficultyEntity(name = "Mittel"))
-                difficultyRepository.save(DifficultyEntity(name = "Schwer"))
-
-                /* Prepopulate Categories */
-                categoryRepository.save(CategoryEntity(name = "Gebäck"))
-                categoryRepository.save(CategoryEntity(name = "Nudeln"))
-                categoryRepository.save(CategoryEntity(name = "Vegetarisch"))
-                categoryRepository.save(CategoryEntity(name = "Vegan"))
-
-                /* Prepopulate Ingredients */
-                ingredientRepository.save(IngredientEntity(name = "Milch"))
-                ingredientRepository.save(IngredientEntity(name = "Hafer"))
-                ingredientRepository.save(IngredientEntity(name = "Popel"))
-                ingredientRepository.save(IngredientEntity(name = "Banane"))
-
-
-
-                /*
-                val recipe = recipeRepository.save(RecipeEntity(
-                        title = "Hektor", shortDescription = "Panzer", price = 25.9,
-                        duration = 10.8, difficulty=diff,category= cat, creator= user ,
-                        createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100,
-                        ingredients = listOf()
-                ))
-                print("recipe:" + recipe)
-
-                val ingredientRecipeDto = IngredientRecipe(
-                    id = IngredientRecipeId( recipeId = recipe.id!!, ingredientId = ingredient1.id!!),
-                    recipe = recipe.toDto(),
-                    ingredient = ingredient1.toDto(),
-                    unit = "Liter",
-                    amount = 1
+    fun databaseInitializer(
+        favoriteRepository: FavoriteRepository,
+        ingredientRepository: IngredientRepository,
+        ratingRepository: RatingRepository,
+        recipeRepository: RecipeRepository, userRepository: UserRepository,
+        categoryRepository: CategoryRepository,
+        difficultyRepository: DifficultyRepository,
+        ingredientRecipeRepository: IngredientRecipeRepository
+    ) =
+        ApplicationRunner {
+            /* Create Dummy-User */
+            userRepository.save(
+                UserEntity(
+                    firstName = "Root",
+                    lastName = "Administrator",
+                    email = "root@admin.com",
+                    password = "geheim"
                 )
-                val ingredientRecipe = ingredientRecipeRepository.save(IngredientRecipeEntity.fromDto(ingredientRecipeDto))
-                print("Ingredient-Recipe:" + ingredientRecipe)
+            )
+            userRepository.save(
+                UserEntity(
+                    firstName = "Hektor",
+                    lastName = "Panzer",
+                    email = "panzer@web.de",
+                    password = "secret"
+                )
+            )
 
-                val rating = ratingRepository.save(RatingEntity(
-                        likes= 6, dislike= 7,  recipe= recipe
-                ))
-                print("rating:" + rating)
+            /* Prepopulate Difficulties*/
+            difficultyRepository.save(DifficultyEntity(name = "Leicht"))
+            difficultyRepository.save(DifficultyEntity(name = "Mittel"))
+            difficultyRepository.save(DifficultyEntity(name = "Schwer"))
 
-                 */
+            /* Prepopulate Categories */
+            categoryRepository.save(CategoryEntity(name = "Gebäck"))
+            categoryRepository.save(CategoryEntity(name = "Nudeln"))
+            categoryRepository.save(CategoryEntity(name = "Vegetarisch"))
+            categoryRepository.save(CategoryEntity(name = "Vegan"))
 
-            }
+            /* Prepopulate Ingredients */
+            ingredientRepository.save(IngredientEntity(name = "Milch"))
+            ingredientRepository.save(IngredientEntity(name = "Hafer"))
+            ingredientRepository.save(IngredientEntity(name = "Popel"))
+            ingredientRepository.save(IngredientEntity(name = "Banane"))
+
+
+            /*
+            val recipe = recipeRepository.save(RecipeEntity(
+                    title = "Hektor", shortDescription = "Panzer", price = 25.9,
+                    duration = 10.8, difficulty=diff,category= cat, creator= user ,
+                    createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100,
+                    ingredients = listOf()
+            ))
+            print("recipe:" + recipe)
+
+            val ingredientRecipeDto = IngredientRecipe(
+                id = IngredientRecipeId( recipeId = recipe.id!!, ingredientId = ingredient1.id!!),
+                recipe = recipe.toDto(),
+                ingredient = ingredient1.toDto(),
+                unit = "Liter",
+                amount = 1
+            )
+            val ingredientRecipe = ingredientRecipeRepository.save(IngredientRecipeEntity.fromDto(ingredientRecipeDto))
+            print("Ingredient-Recipe:" + ingredientRecipe)
+
+            val rating = ratingRepository.save(RatingEntity(
+                    likes= 6, dislike= 7,  recipe= recipe
+            ))
+            print("rating:" + rating)
+
+             */
+
+        }
 
 }
 

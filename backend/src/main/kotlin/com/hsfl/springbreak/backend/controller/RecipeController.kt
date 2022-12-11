@@ -41,7 +41,5 @@ class RecipeController(val recipeService: RecipeJpaService) {
 
 
 
-    @GetMapping("recipe/favorite/{id}")
-    fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
-        recipeService.getFavoritesById(id)
+
 }

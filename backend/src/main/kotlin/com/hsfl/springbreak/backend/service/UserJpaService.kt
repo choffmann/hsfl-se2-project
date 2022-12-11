@@ -1,8 +1,11 @@
 package com.hsfl.springbreak.backend.service
 
+import com.hsfl.springbreak.backend.entity.RecipeEntity
 import com.hsfl.springbreak.backend.entity.UserEntity
 import com.hsfl.springbreak.backend.model.ApiResponse
+import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
+import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.sql.Blob
@@ -21,14 +24,17 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
         return ApiResponse(data = userRepository.save(UserEntity.fromDto(user)).toDto(), success = true)
     }
 
-    fun loginUser(loginUser: User.Login): ApiResponse<User> {
-        userRepository.findByEmail(loginUser.email)?.let { userEntity ->
-            return if (userEntity.password == loginUser.password) {
-                ApiResponse(data = userEntity.toDto(), success = true)
-            } else {
-                ApiResponse(error = "Email or password wrong", success = false)
-            }
-        } ?: return ApiResponse(error = "User doesn't exists", success = false)
+    /**
+     * Checks credentials for a given user.
+     * @param user The user to be logged in from Type User.Login(email, password).
+     */
+    fun loginUser(user: User.Login): ApiResponse<User> {
+        val userProxy = userRepository.findByEmail(user.email)
+        return if ((userProxy != null) && (userProxy.password == user.password)) {
+            ApiResponse(data = userProxy.toDto(), success = true)
+        } else {
+            ApiResponse(success = false)
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.backend.entity
 
+import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
-import org.hibernate.type.BlobType
 import java.sql.Blob
 import javax.persistence.*
 
