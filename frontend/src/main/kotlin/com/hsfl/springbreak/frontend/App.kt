@@ -43,12 +43,13 @@ private val App = FC<Props> { props ->
     MessageSnackbar()
 
     // Display Header
-    BrowserRouter {
+    HashRouter {
         Header {
             Routes {
                 // TODO: Private routes
                 Route {
                     index = true
+                    path = "/"
                     element = Home.create()
                 }
                 Route {
@@ -77,7 +78,7 @@ private val App = FC<Props> { props ->
                 }
                 Route {
                     path = "*"
-                    element = Typography.create { +"404 not found" }
+                    element = NotFound404.create()
                 }
             }
         }
