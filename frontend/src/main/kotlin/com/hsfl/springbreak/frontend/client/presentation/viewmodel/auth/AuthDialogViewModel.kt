@@ -2,10 +2,7 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth
 
 import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
-import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
-import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
-import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
-import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.client.presentation.state.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.AuthDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.di.di
@@ -16,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import web.file.File
+import web.storage.localStorage
 
 class AuthDialogViewModel(
     private val userRepository: UserRepository,
@@ -79,10 +77,9 @@ class AuthDialogViewModel(
         userRepository.login(User.Login(email, password)).collect { response ->
             response.handleDataResponse<User>(
                 onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
                     closeLoginDialog()
-                    val authState: AuthState by di.instance()
-                    authState.onEvent(AuthEvent.IsAuthorized)
-                    UiEventState.onEvent(UiEvent.ShowMessage(it.toString()))
+                    saveUserLocal(it)
                 }
             )
         }
@@ -114,23 +111,52 @@ class AuthDialogViewModel(
         userRepository.register(registerUser).collect { response ->
             response.handleDataResponse<User>(
                 onSuccess = { user ->
-                    // TODO: Save user as state
-                    UiEventState.onEvent(UiEvent.ShowMessage(user.toString()))
-                    profileImage?.let { uploadProfileImage(it) }
+                    UiEventState.onEvent(UiEvent.Idle)
+                    if(profileImage == null) {
+                        saveUserLocal(user)
+                        UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert")
+                        closeRegisterDialog()
+                    } else {
+                        uploadProfileImage(user.id, profileImage)
+                    }
                 }
             )
         }
     }
 
-    private fun uploadProfileImage(profileImage: File) = scope.launch {
-        userRepository.uploadProfileImage(profileImage).collect { response ->
+    private fun uploadProfileImage(userId: Int, profileImage: File) = scope.launch {
+        userRepository.uploadProfileImage(userId, profileImage).collect { response ->
             response.handleDataResponse<User.Image>(
-                onSuccess = { println(it) }
+                onSuccess = {
+                    UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert")
+                    closeRegisterDialog()
+                }
             )
         }
     }
-}
 
+    private fun saveUserLocal(user: User) {
+        val userState: UserState by di.instance()
+        val userToSave = User.State(
+            firstName = user.firstName,
+            lastName = user.lastName,
+            email = user.email,
+            password = user.password
+        )
+        userState.onEvent(UserStateEvent.UpdateUser(userToSave))
+        setLocalStorage(userToSave)
+    }
+
+    private fun setLocalStorage(user: User.State) {
+        val authState: AuthState by di.instance()
+        authState.onEvent(AuthEvent.IsAuthorized)
+        localStorage.setItem("isLoggedIn", true.toString())
+        localStorage.setItem("userFirstName", user.firstName!!)
+        localStorage.setItem("userLastName", user.lastName!!)
+        localStorage.setItem("userEmail", user.email!!)
+        localStorage.setItem("userImage", user.image!!)
+    }
+}
 
 
 data class RegisterPasswordTextState(val error: Boolean = false, val message: String = "")

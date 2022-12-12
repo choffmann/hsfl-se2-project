@@ -6,14 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class UserState {
     private val _userState = MutableStateFlow(
-        User(
-            id = 1,
-            firstName = "Jeeve",
-            lastName = "Philodendron",
-            email = "jeeve.philodendron@platns.com",
-            password = "geheim",
-            image = "https://plantaddiction.de/media/image/37/be/5a/philodendron-congo-apple_400x400.jpg"
-        )
+        User(-1, "", "", "", "", "")
     )
     val userState: StateFlow<User> = _userState
 

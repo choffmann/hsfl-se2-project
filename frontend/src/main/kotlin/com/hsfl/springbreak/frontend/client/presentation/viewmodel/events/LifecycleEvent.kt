@@ -11,7 +11,8 @@ sealed class LifecycleEvent :
     CreateRecipeImageEvent,
     IngredientEditDialogEvent,
     IngredientsDialogEvent,
-    IngredientsTableEvent {
+    IngredientsTableEvent,
+    RootEvent {
     object OnMount : LifecycleEvent()
     object OnUnMount : LifecycleEvent()
 }

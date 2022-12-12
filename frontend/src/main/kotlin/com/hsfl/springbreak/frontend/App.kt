@@ -3,6 +3,8 @@ package com.hsfl.springbreak.frontend
 import browser.document
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.routes.*
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
@@ -24,8 +26,13 @@ fun main() {
 
 private val Root = FC<Props> {
     val authorizedState: AuthState by di.instance()
+    val viewModel: RootViewModel by di.instance()
     val uiState = UiEventState.uiState.collectAsState()
     val authorized = authorizedState.authorized.collectAsState()
+
+    useEffect(Unit) {
+        viewModel.onEvent(LifecycleEvent.OnMount)
+    }
 
     AuthorizedContext.Provider(value = authorized) {
         UiStateContext.Provider(value = uiState) {
@@ -52,11 +59,11 @@ private val App = FC<Props> {
                 }
                 Route {
                     path = "/create-recipe"
-                    element = CreateRecipe.create()
+                    element = ProtectedRoute.create { CreateRecipe() }
                 }
                 Route {
                     path = "/favorite"
-                    element = Favorites.create()
+                    element = ProtectedRoute.create { Favorites.create() }
                 }
                 Route {
                     path = "/categories"
@@ -64,15 +71,15 @@ private val App = FC<Props> {
                 }
                 Route {
                     path = "/my-recipes"
-                    element = MyRecipes.create()
+                    element = ProtectedRoute.create { MyRecipes.create() }
                 }
                 Route {
                     path = "/settings"
-                    element = Settings.create()
+                    element = ProtectedRoute.create { Settings.create() }
                 }
                 Route {
                     path = "/user"
-                    element = MyUser.create()
+                    element = ProtectedRoute.create { MyUser.create() }
                 }
                 Route {
                     path = "*"
