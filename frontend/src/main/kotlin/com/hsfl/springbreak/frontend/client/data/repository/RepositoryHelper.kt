@@ -15,10 +15,12 @@ suspend fun <T> FlowCollector<DataResponse<T>>.repositoryHelper(callback: suspen
     } catch (e: Error) {
         e.printStackTrace()
         println(e.cause)
-        emit(DataResponse.Error("[DEBUG] ${e.message}"))
+        //emit(DataResponse.Error("[DEBUG] ${e.message}"))
+        emit(DataResponse.Error("Es ist ein Fehler aufgetreten. Bitte versuche es erneut"))
     } catch (e: Exception) {
         e.printStackTrace()
         println(e.cause)
-        emit(DataResponse.Error("[DEBUG] ${e.message}"))
+        //emit(DataResponse.Error("[DEBUG] ${e.message}"))
+        emit(DataResponse.Error("Es ist ein Fehler aufgetreten. Bitte versuche es erneut"))
     }
 }

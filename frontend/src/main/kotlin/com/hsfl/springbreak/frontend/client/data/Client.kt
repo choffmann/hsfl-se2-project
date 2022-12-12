@@ -93,21 +93,21 @@ class Client : ApiClient {
     }
 
     override suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response {
-        return client.post(urlString = "$BASE_URL/recipe") {
+        return client.post(urlString = "$BASE_URL/recipes") {
             contentType(ContentType.Application.Json)
             setBody(recipe)
         }.body()
     }
 
     override suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response {
-        return client.patch(urlString = "$BASE_URL/recipe") {
+        return client.patch(urlString = "$BASE_URL/recipes") {
             contentType(ContentType.Application.Json)
             setBody(recipe)
         }.body()
     }
 
     override suspend fun deleteRecipe(recipeId: Long): Recipe.Response {
-        return client.delete(urlString = "$BASE_URL/recipe$recipeId").body()
+        return client.delete(urlString = "$BASE_URL/recipes$recipeId").body()
     }
 
     override suspend fun updateRecipeImage(recipeImage: File?): Recipe.ImageResponse {

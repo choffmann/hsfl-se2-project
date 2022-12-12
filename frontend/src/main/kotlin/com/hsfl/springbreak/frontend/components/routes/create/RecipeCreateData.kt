@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataVM
 import com.hsfl.springbreak.frontend.di.di
@@ -25,6 +27,7 @@ val RecipeCreateData = FC<Props> {
     val difficultyTextState = viewModel.recipeDifficulty.collectAsState()
     val categoryTextState = viewModel.recipeCategory.collectAsState()
     val difficultyList = viewModel.difficultyList.collectAsState()
+    val categoryList = viewModel.categoryList.collectAsState()
 
     var name by useState(nameTextState.value)
     var shortDesc by useState(shortDescTextState.value)
@@ -131,6 +134,9 @@ val RecipeCreateData = FC<Props> {
                     difficulty = event.target.value
                     viewModel.onEvent(CreateRecipeDataEvent.RecipeDifficulty(event.target.value))
                 }
+                onOpen = {
+                    viewModel.onEvent(CreateRecipeDataEvent.OnDifficultyFieldClick)
+                }
                 difficultyList.map {
                     MenuItem {
                         value = it.id
@@ -151,39 +157,14 @@ val RecipeCreateData = FC<Props> {
                     category = event.target.value
                     viewModel.onEvent(CreateRecipeDataEvent.RecipeCategory(event.target.value))
                 }
-                if (category.isNotEmpty()) {
-                    endAdornment = InputAdornment.create {
-                        IconButton {
-                            sx { marginRight = 8.px }
-                            edge = IconButtonEdge.start
-                            size = Size.small
-                            onClick = {
-                                category = ""
-                                viewModel.onEvent(CreateRecipeDataEvent.RecipeCategory(""))
-                            }
-                            CloseOutlined()
-                        }
+                onOpen = {
+                    viewModel.onEvent(CreateRecipeDataEvent.OnCategoryFieldClick)
+                }
+                categoryList.map {
+                    MenuItem {
+                        value = it.id
+                        +it.name
                     }
-                }
-                MenuItem {
-                    value = "kuchen"
-                    +"Kuchen"
-                }
-                MenuItem {
-                    value = "nudeln"
-                    +"Nudeln"
-                }
-                MenuItem {
-                    value = "reis"
-                    +"Reis"
-                }
-                MenuItem {
-                    value = "fleisch"
-                    +"Fleisch"
-                }
-                MenuItem {
-                    value = "vegetarisch"
-                    +"Vegetarisch"
                 }
             }
             FormHelperText { +categoryTextState.errorMsg }

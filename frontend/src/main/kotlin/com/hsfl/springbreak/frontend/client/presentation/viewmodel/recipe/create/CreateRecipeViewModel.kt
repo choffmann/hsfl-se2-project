@@ -62,7 +62,7 @@ class CreateRecipeViewModel(
                 categoryId = 2 /*recipeCategory.value.value.toLong()*/,
                 creatorId = userState.userState.value.id,
                 longDescription = descriptionText.value,
-                ingredient = ingredientsList.value.map {
+                ingredients = ingredientsList.value.map {
                     Ingredient.Create(
                         name = it.item.name,
                         unit = it.item.unit,

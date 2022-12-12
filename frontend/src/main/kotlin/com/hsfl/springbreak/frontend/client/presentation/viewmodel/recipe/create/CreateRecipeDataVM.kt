@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.creat
 
 import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Difficulty
+import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.CategoryRepository
 import com.hsfl.springbreak.frontend.client.data.repository.DifficultyRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
@@ -48,10 +49,8 @@ class CreateRecipeDataVM(
     private val _selectedDifficulty = MutableStateFlow(Difficulty(-1, ""))
     val selectedDifficulty: StateFlow<Difficulty> = _selectedDifficulty
 
-    init {
-        fetchDifficulties()
-        //fetchCategories()
-    }
+    private val _selectedCategory = MutableStateFlow(Category(-1, ""))
+    val selectedCategory: StateFlow<Category> = _selectedCategory
 
     fun onEvent(event: CreateRecipeDataEvent) {
         when (event) {
@@ -79,16 +78,23 @@ class CreateRecipeDataVM(
                 _selectedDifficulty.value = difficultyList.value.find { it.id == event.value.toString().toInt() }!!
             }
 
-            is CreateRecipeDataEvent.RecipeCategory -> setText(
-                flow = _recipeCategory, value = event.value
-            )
+            is CreateRecipeDataEvent.RecipeCategory -> {
+                setText(
+                    flow = _recipeCategory, value = event.value
+                )
+                // Komischer Fehler, welcher umgehen werden kann, wenn der String erst mit toString() aufgerufen wird
+                _selectedCategory.value = categoryList.value.find { it.id == event.value.toString().toInt() }!!
+            }
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
             is CreateRecipeDataEvent.ClearStates -> clearStates()
+            is CreateRecipeDataEvent.OnCategoryFieldClick -> fetchCategories()
+            is CreateRecipeDataEvent.OnDifficultyFieldClick -> fetchDifficulties()
         }
     }
 
     private fun fetchDifficulties() = scope.launch {
+        _difficultyList.value = mutableListOf()
         difficultyRepository.getAllDifficulties().collectLatest { response ->
             response.handleDataResponse<List<Difficulty>>(onSuccess = {
                 UiEventState.onEvent(UiEvent.Idle)
@@ -98,8 +104,12 @@ class CreateRecipeDataVM(
     }
 
     private fun fetchCategories() = scope.launch {
+        _categoryList.value = mutableListOf()
         categoryRepository.getAllCategories().collectLatest { response ->
-            response.handleDataResponse<List<Category>>(onSuccess = { _categoryList.value.addAll(it) })
+            response.handleDataResponse<List<Category>>(onSuccess = {
+                UiEventState.onEvent(UiEvent.Idle)
+                _categoryList.value.addAll(it)
+            })
         }
     }
 
@@ -155,5 +165,7 @@ sealed class CreateRecipeDataEvent {
     data class RecipeDifficulty(val value: String) : CreateRecipeDataEvent()
     data class RecipeCategory(val value: String) : CreateRecipeDataEvent()
     object OnNext : CreateRecipeDataEvent()
+    object OnDifficultyFieldClick : CreateRecipeDataEvent()
+    object OnCategoryFieldClick : CreateRecipeDataEvent()
     object ClearStates : CreateRecipeDataEvent()
 }

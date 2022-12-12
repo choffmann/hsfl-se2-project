@@ -15,7 +15,7 @@ data class Recipe(
     val image: String,
     val longDescription: String,
     val views: Int,
-    val ingredient: Ingredient
+    val ingredients: Ingredient
 ) {
 
     @Serializable
@@ -28,7 +28,7 @@ data class Recipe(
         val categoryId: Int,
         val creatorId: Int,
         val longDescription: String,
-        val ingredient: List<Ingredient.Create>
+        val ingredients: List<Ingredient.Create>
     )
 
     @Serializable
@@ -48,7 +48,7 @@ data class Recipe(
         val difficultyId: Long? = null,
         val categoryId: Long? = null,
         val longDescription: String? = null,
-        val ingredient: List<Ingredient>? = null
+        val ingredients: List<Ingredient>? = null
     )
 
     @Serializable

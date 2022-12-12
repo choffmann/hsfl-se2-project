@@ -1,3 +1,3 @@
-config.output.publicPath = '/'
+//config.output.publicPath = '/'
 // Uncomment on dev server
 config.devServer.historyApiFallback = true
