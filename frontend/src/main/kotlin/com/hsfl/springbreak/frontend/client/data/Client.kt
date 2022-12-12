@@ -23,6 +23,7 @@ interface ApiClient {
     suspend fun getAllIngredients(): Ingredient.GetAllResponse
     suspend fun getAllDifficulties(): Difficulty.GetAllResponse
     suspend fun getAllCategories(): Category.GetAllResponse
+    suspend fun getAllRecipes(): Recipe.ResponseList
     suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response
     suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response
     suspend fun deleteRecipe(recipeId: Long): Recipe.Response
@@ -90,6 +91,10 @@ class Client : ApiClient {
 
     override suspend fun getAllCategories(): Category.GetAllResponse {
         return client.get(urlString = "$BASE_URL/categories").body()
+    }
+
+    override suspend fun getAllRecipes(): Recipe.ResponseList {
+        return client.get(urlString = "$BASE_URL/recipes").body()
     }
 
     override suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response {

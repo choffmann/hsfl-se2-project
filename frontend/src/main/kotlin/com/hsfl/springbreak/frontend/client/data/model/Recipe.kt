@@ -40,6 +40,13 @@ data class Recipe(
     )
 
     @Serializable
+    data class ResponseList(
+        val error: String? = null,
+        val data: List<Recipe> = emptyList(),
+        val success: Boolean = false
+    )
+
+    @Serializable
     data class Update(
         val id: Long,
         val title: String? = null,
