@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsTableEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -29,7 +31,8 @@ class IngredientsTableVM {
             is IngredientsTableEvent.OnEditRow -> onEditRow()
             is IngredientsTableEvent.OnCloseEditDialog -> closeEditDialog()
             is IngredientsTableEvent.OnSaveEditDialog -> saveEditIngredient(event.item)
-            is IngredientsTableEvent.ClearStates -> clearStates()
+            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnUnMount -> clearStates()
         }
         forceUpdate()
     }
@@ -100,13 +103,3 @@ class IngredientsTableVM {
 
 data class IngredientsTableRow(var selected: Boolean, val item: RecipeIngredient)
 
-sealed class IngredientsTableEvent {
-    object OnSelectAllRows : IngredientsTableEvent()
-    object OnDeleteRows : IngredientsTableEvent()
-    object OnEditRow : IngredientsTableEvent()
-    object OnCloseEditDialog : IngredientsTableEvent()
-    data class OnSaveEditDialog(val item: RecipeIngredient) : IngredientsTableEvent()
-    data class OnSelectRow(val index: Int) : IngredientsTableEvent()
-    data class OnNewData(val list: List<RecipeIngredient>) : IngredientsTableEvent()
-    object ClearStates: IngredientsTableEvent()
-}

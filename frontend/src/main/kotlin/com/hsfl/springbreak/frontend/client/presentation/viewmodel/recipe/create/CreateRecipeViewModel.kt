@@ -8,6 +8,7 @@ import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.*
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -51,7 +52,8 @@ class CreateRecipeViewModel(
             is CreateRecipeEvent.OnFinished -> createRecipe()
             is CreateRecipeEvent.OnCloseAbort -> closeAbortDialog()
             is CreateRecipeEvent.OnConfirmAbort -> clearStates()
-            is CreateRecipeEvent.ClearStates -> clearStates()
+            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnUnMount -> clearStates()
         }
     }
 
@@ -111,21 +113,12 @@ class CreateRecipeViewModel(
     }
 
     private fun clearStates() {
-        stepperViewModel.onEvent(StepperEvent.ClearStates)
-        dataVM.onEvent(CreateRecipeDataEvent.ClearStates)
-        tableVM.onEvent(IngredientsTableEvent.ClearStates)
-        descriptionVM.onEvent(CreateRecipeDescriptionEvent.ClearStates)
-        imageVM.onEvent(CreateRecipeImageEvent.ClearStates)
+        stepperViewModel.onEvent(LifecycleEvent.OnUnMount)
+        dataVM.onEvent(LifecycleEvent.OnUnMount)
+        tableVM.onEvent(LifecycleEvent.OnUnMount)
+        descriptionVM.onEvent(LifecycleEvent.OnUnMount)
+        imageVM.onEvent(LifecycleEvent.OnUnMount)
         closeAbortDialog()
     }
 }
 
-sealed class CreateRecipeEvent {
-    object OnNextStep : CreateRecipeEvent()
-    object OnBackStep : CreateRecipeEvent()
-    object OnAbort : CreateRecipeEvent()
-    object OnCloseAbort : CreateRecipeEvent()
-    object OnConfirmAbort : CreateRecipeEvent()
-    object ClearStates: CreateRecipeEvent()
-    object OnFinished : CreateRecipeEvent()
-}

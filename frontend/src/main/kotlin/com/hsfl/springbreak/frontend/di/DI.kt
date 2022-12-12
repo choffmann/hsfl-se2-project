@@ -5,6 +5,7 @@ import com.hsfl.springbreak.frontend.client.data.repository.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.CategoryListViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.ProfileViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
@@ -36,6 +37,7 @@ val di = DI {
     bindSingleton { CreateRecipeImageVM() }
     bindSingleton { IngredientEditDialogVM(instance()) }
     bindSingleton { ProfileViewModel(instance()) }
+    bindSingleton { CategoryListViewModel(instance()) }
 
     // States
     bindSingleton { AuthState() }

@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeImageEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import web.file.File
@@ -11,12 +13,12 @@ class CreateRecipeImageVM {
     fun onEvent(event: CreateRecipeImageEvent) {
         when (event) {
             is CreateRecipeImageEvent.SelectedFile -> _recipeImage.value = event.file
-            is CreateRecipeImageEvent.ClearStates -> _recipeImage.value = null
+            LifecycleEvent.OnMount -> TODO()
+            LifecycleEvent.OnUnMount -> clearStates()
         }
     }
-}
 
-sealed class CreateRecipeImageEvent {
-    data class SelectedFile(val file: File): CreateRecipeImageEvent()
-    object ClearStates: CreateRecipeImageEvent()
+    private fun clearStates() {
+        _recipeImage.value = null
+    }
 }

@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientEditDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientEditDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientEditDialogVM
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState

@@ -1,5 +1,9 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeDataEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.StepperEvent
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +32,8 @@ class CreateRecipeStepperViewModel {
         when (event) {
             is StepperEvent.OnNextStep -> nextStep()
             is StepperEvent.OnBackStep -> backStep()
-            is StepperEvent.ClearStates -> clearStates()
+            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnUnMount -> clearStates()
         }
     }
 
@@ -74,8 +79,3 @@ data class CreateRecipeStep(
     var completed: Boolean = false
 )
 
-sealed class StepperEvent {
-    object OnNextStep : StepperEvent()
-    object OnBackStep : StepperEvent()
-    object ClearStates : StepperEvent()
-}

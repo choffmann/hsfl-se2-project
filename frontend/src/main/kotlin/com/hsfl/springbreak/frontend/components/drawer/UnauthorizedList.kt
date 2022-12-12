@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.AuthDialogEvent
 import com.hsfl.springbreak.frontend.di.di
 import csstype.Color
 import csstype.None

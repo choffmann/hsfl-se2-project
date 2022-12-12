@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDescriptionEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeDescriptionEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDescriptionVM
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState

@@ -1,5 +1,8 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientEditDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsTableEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +42,15 @@ class IngredientEditDialogVM(
             is IngredientEditDialogEvent.OnUnitChanged -> _ingredientUnit.value = event.value
             is IngredientEditDialogEvent.OnClose -> closeDialog()
             is IngredientEditDialogEvent.OnSubmit -> submitChanges()
+            LifecycleEvent.OnMount -> TODO()
+            LifecycleEvent.OnUnMount -> clearStates()
         }
+    }
+
+    private fun clearStates() {
+        _ingredientName.value = ""
+        _ingredientAmount.value = 0
+        _ingredientUnit.value = ""
     }
 
 
@@ -48,7 +59,6 @@ class IngredientEditDialogVM(
     }
 
     private fun submitChanges() {
-        //closeDialog()
         ingredientsTableVM.onEvent(
             IngredientsTableEvent.OnSaveEditDialog(
                 RecipeIngredient(
@@ -59,12 +69,4 @@ class IngredientEditDialogVM(
             )
         )
     }
-}
-
-sealed class IngredientEditDialogEvent {
-    object OnSubmit : IngredientEditDialogEvent()
-    object OnClose : IngredientEditDialogEvent()
-    data class OnNameChanged(val value: String) : IngredientEditDialogEvent()
-    data class OnAmountChanged(val value: Int) : IngredientEditDialogEvent()
-    data class OnUnitChanged(val value: String) : IngredientEditDialogEvent()
 }

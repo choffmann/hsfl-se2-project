@@ -1,6 +1,6 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsTableEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableRow
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableVM
 import com.hsfl.springbreak.frontend.di.di

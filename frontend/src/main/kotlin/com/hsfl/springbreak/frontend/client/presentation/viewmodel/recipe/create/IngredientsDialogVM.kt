@@ -2,6 +2,9 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.creat
 
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.repository.IngredientRepository
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsTableEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +45,14 @@ class IngredientsDialogVM(
             is IngredientsDialogEvent.IngredientNameChanged -> _ingredientName.value = event.value
             is IngredientsDialogEvent.IngredientUnitChanged -> _ingredientUnit.value = event.value
             is IngredientsDialogEvent.OnIngredientAutoComplete -> if (_autoCompleteState.value.allIngredients.isEmpty()) fetchIngredientsList()
+            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnUnMount -> clearAllStates()
         }
+    }
+
+    private fun clearAllStates() {
+        resetListFlow()
+        resetTextFieldFlows()
     }
 
     private fun fetchIngredientsList() = scope.launch {
@@ -101,17 +111,6 @@ class IngredientsDialogVM(
         resetListFlow()
         _openDialog.value = false
     }
-}
-
-sealed class IngredientsDialogEvent {
-    object OnAddMoreIngredient : IngredientsDialogEvent()
-    object OnFinished : IngredientsDialogEvent()
-    object OnAbort : IngredientsDialogEvent()
-    object OnOpen : IngredientsDialogEvent()
-    object OnIngredientAutoComplete : IngredientsDialogEvent()
-    data class IngredientNameChanged(val value: String) : IngredientsDialogEvent()
-    data class IngredientAmountChanged(val value: Int) : IngredientsDialogEvent()
-    data class IngredientUnitChanged(val value: String) : IngredientsDialogEvent()
 }
 
 data class IngredientAutocompleteState(

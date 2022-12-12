@@ -6,6 +6,8 @@ import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.AuthDialogEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -44,7 +46,16 @@ class AuthDialogViewModel(
                 confirmedPassword = event.confirmedPassword,
                 profileImage = event.profileImage
             )
+
+            LifecycleEvent.OnMount -> TODO()
+            LifecycleEvent.OnUnMount -> cleanStates()
         }
+    }
+
+    private fun cleanStates() {
+        _loginDialogOpen.value = false
+        _registerDialogOpen.value = false
+        _passwordTextConfirmation.value = RegisterPasswordTextState()
     }
 
     private fun openLoginDialog() {
@@ -120,20 +131,6 @@ class AuthDialogViewModel(
     }
 }
 
-sealed class AuthDialogEvent {
-    object OpenLoginDialog : AuthDialogEvent()
-    object OpenRegisterDialog : AuthDialogEvent()
-    data class OnCloseLoginDialog(val event: dynamic, val reason: String) : AuthDialogEvent()
-    data class OnCloseRegisterDialog(val event: dynamic, val reason: String) : AuthDialogEvent()
-    data class OnLogin(val email: String, val password: String) : AuthDialogEvent()
-    data class OnRegister(
-        val firstName: String,
-        val lastName: String,
-        val email: String,
-        val password: String,
-        val confirmedPassword: String,
-        val profileImage: File?
-    ) : AuthDialogEvent()
-}
+
 
 data class RegisterPasswordTextState(val error: Boolean = false, val message: String = "")

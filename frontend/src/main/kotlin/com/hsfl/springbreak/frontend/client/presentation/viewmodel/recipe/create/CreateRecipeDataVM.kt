@@ -2,11 +2,12 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.creat
 
 import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Difficulty
-import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.CategoryRepository
 import com.hsfl.springbreak.frontend.client.data.repository.DifficultyRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeDataEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,9 +88,11 @@ class CreateRecipeDataVM(
             }
 
             is CreateRecipeDataEvent.OnNext -> validateInput()
-            is CreateRecipeDataEvent.ClearStates -> clearStates()
-            is CreateRecipeDataEvent.OnCategoryFieldClick -> fetchCategories()
-            is CreateRecipeDataEvent.OnDifficultyFieldClick -> fetchDifficulties()
+            LifecycleEvent.OnMount -> {
+                fetchCategories()
+                fetchDifficulties()
+            }
+            LifecycleEvent.OnUnMount -> clearStates()
         }
     }
 
@@ -156,16 +159,3 @@ class CreateRecipeDataVM(
 data class FormTextFieldState<T>(
     val value: T, val required: Boolean = false, val error: Boolean = false, val errorMsg: String = ""
 )
-
-sealed class CreateRecipeDataEvent {
-    data class RecipeName(val value: String) : CreateRecipeDataEvent()
-    data class RecipeShortDesc(val value: String) : CreateRecipeDataEvent()
-    data class RecipePrice(val value: Double) : CreateRecipeDataEvent()
-    data class RecipeDuration(val value: Int) : CreateRecipeDataEvent()
-    data class RecipeDifficulty(val value: String) : CreateRecipeDataEvent()
-    data class RecipeCategory(val value: String) : CreateRecipeDataEvent()
-    object OnNext : CreateRecipeDataEvent()
-    object OnDifficultyFieldClick : CreateRecipeDataEvent()
-    object OnCategoryFieldClick : CreateRecipeDataEvent()
-    object ClearStates : CreateRecipeDataEvent()
-}

@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeViewModel
 import com.hsfl.springbreak.frontend.components.routes.create.*
 import com.hsfl.springbreak.frontend.di.di
@@ -21,7 +22,7 @@ val CreateRecipe = FC<Props> {
 
     useEffect(Unit) {
         cleanup {
-            viewModel.onEvent(CreateRecipeEvent.ClearStates)
+            viewModel.onEvent(LifecycleEvent.OnUnMount)
         }
     }
 

@@ -1,5 +1,7 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeDescriptionEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -10,16 +12,12 @@ class CreateRecipeDescriptionVM {
     fun onEvent(event: CreateRecipeDescriptionEvent) {
         when (event) {
             is CreateRecipeDescriptionEvent.TextChanged -> _descriptionText.value = event.value
-            is CreateRecipeDescriptionEvent.ClearStates -> clearStates()
+            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnUnMount -> clearStates()
         }
     }
 
     private fun clearStates() {
         _descriptionText.value = ""
     }
-}
-
-sealed class CreateRecipeDescriptionEvent {
-    data class TextChanged(val value: String): CreateRecipeDescriptionEvent()
-    object ClearStates: CreateRecipeDescriptionEvent()
 }

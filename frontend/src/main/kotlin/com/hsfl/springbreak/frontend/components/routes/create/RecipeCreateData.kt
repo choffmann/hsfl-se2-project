@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CreateRecipeDataEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataVM
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
@@ -32,6 +33,11 @@ val RecipeCreateData = FC<Props> {
     var price by useState(priceTextState.value)
     var difficulty by useState(difficultyTextState.value)
     var category by useState(categoryTextState.value)
+
+    // Call on mount and fetch lists
+    useEffect(Unit) {
+        viewModel.onEvent(LifecycleEvent.OnMount)
+    }
 
     Toolbar {
         Typography {
@@ -131,9 +137,6 @@ val RecipeCreateData = FC<Props> {
                     difficulty = event.target.value
                     viewModel.onEvent(CreateRecipeDataEvent.RecipeDifficulty(event.target.value))
                 }
-                onOpen = {
-                    viewModel.onEvent(CreateRecipeDataEvent.OnDifficultyFieldClick)
-                }
                 difficultyList.map {
                     MenuItem {
                         value = it.id
@@ -153,9 +156,6 @@ val RecipeCreateData = FC<Props> {
                 onChange = { event, _ ->
                     category = event.target.value
                     viewModel.onEvent(CreateRecipeDataEvent.RecipeCategory(event.target.value))
-                }
-                onOpen = {
-                    viewModel.onEvent(CreateRecipeDataEvent.OnCategoryFieldClick)
                 }
                 categoryList.map {
                     MenuItem {

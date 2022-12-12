@@ -1,8 +1,8 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientAutocompleteState
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsDialogVM
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.RecipeIngredient
 import com.hsfl.springbreak.frontend.di.di
