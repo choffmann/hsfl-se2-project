@@ -187,6 +187,7 @@ private val IngredientAccordion = FC<DialogContentNotEmptyProps> { props ->
     Box {
         props.ingredientList.forEach { ingredient ->
             Accordion {
+                sx { marginBottom = 8.px }
                 AccordionSummary {
                     expandIcon = Icon.create { ExpandMore() }
                     Typography { +ingredient.name }
