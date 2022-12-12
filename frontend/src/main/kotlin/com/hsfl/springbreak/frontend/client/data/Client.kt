@@ -26,7 +26,7 @@ interface ApiClient {
     suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response
     suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response
     suspend fun deleteRecipe(recipeId: Long): Recipe.Response
-    suspend fun updateRecipeImage(recipeImage: File?): Recipe.ImageResponse
+    suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse
 }
 
 class Client : ApiClient {
@@ -110,13 +110,13 @@ class Client : ApiClient {
         return client.delete(urlString = "$BASE_URL/recipes$recipeId").body()
     }
 
-    override suspend fun updateRecipeImage(recipeImage: File?): Recipe.ImageResponse {
+    override suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse {
         val formData = FormData()
         recipeImage?.let { file ->
             formData.append("image", file.slice(), file.name)
         }
         return window.fetch(
-            input = "$BASE_URL/upload-recipe-image", init = RequestInit(
+            input = "$BASE_URL/recipes/image/$recipeId", init = RequestInit(
                 method = "POST",
                 body = formData
             )

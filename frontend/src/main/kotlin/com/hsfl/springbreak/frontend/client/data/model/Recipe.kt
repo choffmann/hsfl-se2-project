@@ -11,11 +11,12 @@ data class Recipe(
     val duration: Double,
     val difficulty: Difficulty,
     val category: Category,
-    val creator: User,
-    val image: String,
+    val creatorId: Int,
+    val createTime: String,
+    val image: String?,
     val longDescription: String,
     val views: Int,
-    val ingredients: Ingredient
+    val ingredients: List<Ingredient>
 ) {
 
     @Serializable

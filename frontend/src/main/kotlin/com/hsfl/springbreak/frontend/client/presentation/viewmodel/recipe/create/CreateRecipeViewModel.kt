@@ -1,9 +1,12 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create
 
+import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Difficulty
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +39,7 @@ class CreateRecipeViewModel(
     val recipeDuration: StateFlow<FormTextFieldState<Int>> = dataVM.recipeDuration
     val recipeDifficulty: StateFlow<Difficulty> = dataVM.selectedDifficulty
     val recipeImage: StateFlow<File?> = imageVM.recipeImage
+    private val recipeCategory: StateFlow<Category> = dataVM.selectedCategory
     private val ingredientsList: StateFlow<List<IngredientsTableRow>> = tableVM.ingredientsList
     private val descriptionText: StateFlow<String> = descriptionVM.descriptionText
 
@@ -51,32 +55,42 @@ class CreateRecipeViewModel(
     }
 
     private fun createRecipe() {
-        scope.launch {
-            val userState: UserState by di.instance()
-            val recipe = Recipe.Create(
-                title = recipeName.value.value,
-                shortDescription = recipeShortDesc.value.value,
-                price = recipePrice.value.value,
-                duration = recipeDuration.value.value.toDouble(),
-                difficultyId = recipeDifficulty.value.id,
-                categoryId = 2 /*recipeCategory.value.value.toLong()*/,
-                creatorId = userState.userState.value.id,
-                longDescription = descriptionText.value,
-                ingredients = ingredientsList.value.map {
-                    Ingredient.Create(
-                        name = it.item.name,
-                        unit = it.item.unit,
-                        amount = it.item.amount
-                    )
-                }
-            )
-
-            recipeRepository.createRecipe(recipe).collectLatest { response ->
-                response.handleDataResponse<Recipe>(
-                    onSuccess = { println(it) }
+        val userState: UserState by di.instance()
+        val recipe = Recipe.Create(
+            title = recipeName.value.value,
+            shortDescription = recipeShortDesc.value.value,
+            price = recipePrice.value.value,
+            duration = recipeDuration.value.value.toDouble(),
+            difficultyId = recipeDifficulty.value.id,
+            categoryId = recipeCategory.value.id,
+            creatorId = userState.userState.value.id,
+            longDescription = descriptionText.value,
+            ingredients = ingredientsList.value.map {
+                Ingredient.Create(
+                    name = it.item.name,
+                    unit = it.item.unit,
+                    amount = it.item.amount
                 )
             }
+        )
+        uploadRecipe(recipe)
+    }
+
+    private fun uploadRecipe(recipe: Recipe.Create) = scope.launch {
+        recipeRepository.createRecipe(recipe).collectLatest { response ->
+            response.handleDataResponse<Recipe>(
+                onSuccess = { recipe ->
+                    recipeImage.value?.let { file ->
+                        uploadRecipeImage(recipe.id, file)
+                    } ?: UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich erstellt"))
+                    println(recipe)
+                }
+            )
         }
+    }
+
+    private fun uploadRecipeImage(recipeId: Int, file: File) = scope.launch {
+        recipeRepository.uploadImage(recipeId, file)
     }
 
     private fun onNextStep() {

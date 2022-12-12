@@ -12,7 +12,7 @@ interface RecipeRepository {
     suspend fun createRecipe(recipe: Recipe.Create): Flow<DataResponse<Recipe>>
     suspend fun updateRecipe(recipe: Recipe.Update): Flow<DataResponse<Recipe>>
     suspend fun deleteRecipe(recipeId: Long): Flow<DataResponse<Recipe>>
-    suspend fun uploadImage(recipeImage: File?): Flow<DataResponse<Recipe.Image>>
+    suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>>
 }
 
 class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
@@ -37,9 +37,9 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
         }
     }
 
-    override suspend fun uploadImage(recipeImage: File?): Flow<DataResponse<Recipe.Image>> = flow {
+    override suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>> = flow {
         repositoryHelper {
-            val response: Recipe.ImageResponse = client.updateRecipeImage(recipeImage)
+            val response: Recipe.ImageResponse = client.updateRecipeImage(recipeId, recipeImage)
             APIResponse.fromResponse(response.error, Recipe.Image(response.imageUrl ?: ""), response.success)
         }
     }
