@@ -11,12 +11,20 @@ import mui.system.sx
 import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.useEffect
 
 val CreateRecipe = FC<Props> {
     val viewModel: CreateRecipeViewModel by di.instance()
     val currentStep = viewModel.currentStepIndex.collectAsState()
     val enableNextStepButton = viewModel.enableNextStepButton.collectAsState()
     val openConfirmAbortDialog = viewModel.openAbortDialog.collectAsState()
+
+    useEffect(Unit) {
+        cleanup {
+            viewModel.onEvent(CreateRecipeEvent.ClearStates)
+        }
+    }
+
 
     Box {
         sx {
@@ -39,6 +47,7 @@ val CreateRecipe = FC<Props> {
             open = openConfirmAbortDialog
             onClose = { viewModel.onEvent(CreateRecipeEvent.OnCloseAbort) }
             onConfirm = { viewModel.onEvent(CreateRecipeEvent.OnConfirmAbort) }
+            navigateTo = "/"
         }
         Box {
             sx {

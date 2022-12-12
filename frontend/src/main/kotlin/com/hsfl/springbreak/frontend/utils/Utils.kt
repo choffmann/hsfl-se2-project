@@ -36,12 +36,6 @@ inline var StepButtonProps.color: String?
         asDynamic().color = value
     }
 
-inline var StepButtonProps.onClick: () -> Unit
-    get() = TODO("Prop is write-only!")
-    set(value) {
-        value()
-    }
-
 fun Int.toMuiPx(): Length = (this * 8).px
 
 // Subscribe to StateFlow as a state hook

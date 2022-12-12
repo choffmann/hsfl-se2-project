@@ -1,21 +1,20 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import csstype.Color
-import csstype.None
-import emotion.react.css
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import react.FC
 import react.Props
-import react.router.dom.NavLink
+import react.router.useNavigate
 
 external interface ConfirmAbortDialogProps : Props {
     var open: Boolean
     var onClose: () -> Unit
     var onConfirm: () -> Unit
+    var navigateTo: String
 }
 
 val ConfirmAbortDialog = FC<ConfirmAbortDialogProps> { props ->
+    val navigator = useNavigate()
     Dialog {
         open = props.open
         onClose = { _, _ ->
@@ -35,20 +34,14 @@ val ConfirmAbortDialog = FC<ConfirmAbortDialogProps> { props ->
                 }
                 +"Abbrechen"
             }
-            NavLink {
-                to = "/"
-                // ignore style
-                css {
-                    textDecoration = None.none
-                    color = Color.currentcolor
+            Button {
+                onClick = {
+                    props.onConfirm()
+                    navigator(props.navigateTo)
                 }
-                Button {
-                    onClick = {
-                        props.onConfirm()
-                    }
-                    +"Verlassen"
-                }
+                +"Verlassen"
             }
+
         }
     }
 }

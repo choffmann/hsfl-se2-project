@@ -50,7 +50,8 @@ class CreateRecipeViewModel(
             is CreateRecipeEvent.OnAbort -> onAbort()
             is CreateRecipeEvent.OnFinished -> createRecipe()
             is CreateRecipeEvent.OnCloseAbort -> closeAbortDialog()
-            is CreateRecipeEvent.OnConfirmAbort -> onConfirmAbort()
+            is CreateRecipeEvent.OnConfirmAbort -> clearStates()
+            is CreateRecipeEvent.ClearStates -> clearStates()
         }
     }
 
@@ -109,7 +110,7 @@ class CreateRecipeViewModel(
         _openAbortDialog.value = false
     }
 
-    private fun onConfirmAbort() {
+    private fun clearStates() {
         stepperViewModel.onEvent(StepperEvent.ClearStates)
         dataVM.onEvent(CreateRecipeDataEvent.ClearStates)
         tableVM.onEvent(IngredientsTableEvent.ClearStates)
@@ -125,5 +126,6 @@ sealed class CreateRecipeEvent {
     object OnAbort : CreateRecipeEvent()
     object OnCloseAbort : CreateRecipeEvent()
     object OnConfirmAbort : CreateRecipeEvent()
+    object ClearStates: CreateRecipeEvent()
     object OnFinished : CreateRecipeEvent()
 }

@@ -2,10 +2,7 @@ package com.hsfl.springbreak.frontend.components.routes
 
 import csstype.*
 import emotion.react.css
-import mui.material.Box
-import mui.material.Button
-import mui.material.ButtonVariant
-import mui.material.Typography
+import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
@@ -23,16 +20,29 @@ val NotFound404 = FC<Props> {
             flexDirection = FlexDirection.column
         }
         img {
+            css {
+                borderRadius = 8.px
+                boxShadow = BoxShadow(
+                    offsetX = 3.px,
+                    offsetY = 3.px,
+                    blurRadius = 8.px,
+                    color = Color("lightgrey")
+                )
+            }
             src =
                 "https://media4.giphy.com/media/3o7aTskHEUdgCQAXde/giphy.gif?cid=ecf05e47wwyf5uolme13n99gngiql42tw8xziz1own58ywn3&rid=giphy.gif&ct=g"
         }
         Typography {
-            variant = TypographyVariant.h5
+            sx {
+                paddingTop = 16.px
+                fontWeight = FontWeight.bold
+            }
+            variant = TypographyVariant.h4
             +"Ooops."
         }
         Typography {
-            variant = TypographyVariant.subtitle1
-            +"Das konnten wir leider nicht finden."
+            variant = TypographyVariant.body1
+            +"Deine Anfrage konnten wir leider nicht bearbeiten."
         }
         NavLink {
             css {

@@ -1,15 +1,11 @@
 package com.hsfl.springbreak.frontend.components.drawer
 
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.NavViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.*
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.FontWeight
-import emotion.react.css
-import csstype.Color
-import csstype.None.none
 import mui.icons.material.*
 import mui.material.*
 import mui.material.List
@@ -17,7 +13,7 @@ import mui.system.sx
 import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.router.dom.NavLink
+import react.router.useNavigate
 
 data class NavBarItem(
     val name: String,
@@ -35,52 +31,45 @@ val AuthorizedList = FC<Props> {
     )
     val userState: UserState by di.instance()
     val user = userState.userState.collectAsState()
+    val navigator = useNavigate()
+
     List {
-        NavLink {
-            to = "/user"
-            // ignore style
-            css {
-                textDecoration = none
-                color = Color.currentcolor
+        ListItemButton {
+            onClick = {
+                navigator("/user")
             }
-            ListItemButton {
-                ListItemAvatar {
-                    Avatar {
-                        //src = user.image
-                        user.image?.let {
-                            src = it
-                        } ?: +"${user.firstName[0]}${user.lastName[0]}"
-                    }
+            ListItemAvatar {
+                Avatar {
+                    //src = user.image
+                    user.image?.let {
+                        src = it
+                    } ?: +"${user.firstName[0]}${user.lastName[0]}"
                 }
-                ListItemText {
-                    Typography {
-                        sx { fontWeight = FontWeight.bold }
-                        +"${user.firstName} ${user.lastName}"
-                    }
-                    Typography {
-                        color = "text.secondary"
-                        +user.email
-                    }
+            }
+            ListItemText {
+                Typography {
+                    sx { fontWeight = FontWeight.bold }
+                    +"${user.firstName} ${user.lastName}"
+                }
+                Typography {
+                    color = "text.secondary"
+                    +user.email
                 }
             }
         }
         listItems.forEach { item ->
-            NavLink {
-                to = item.linkTo
-                // ignore style
-                css {
-                    textDecoration = none
-                    color = Color.currentcolor
+            ListItemButton {
+                onClick = {
+                    navigator(item.linkTo)
                 }
-                ListItemButton {
-                    ListItemIcon {
-                        item.icon()
-                    }
-                    ListItemText {
-                        Typography { +item.name }
-                    }
+                ListItemIcon {
+                    item.icon()
+                }
+                ListItemText {
+                    Typography { +item.name }
                 }
             }
+
         }
         ListItemButton {
             onClick = {

@@ -11,13 +11,11 @@ import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.CssBaseline
-import mui.material.Typography
 import org.kodein.di.instance
 import react.*
 import react.dom.client.createRoot
 import react.router.Route
 import react.router.Routes
-import react.router.dom.BrowserRouter
 import react.router.dom.HashRouter
 
 fun main() {
@@ -36,7 +34,7 @@ private val Root = FC<Props> {
     }
 }
 
-private val App = FC<Props> { props ->
+private val App = FC<Props> {
     // Default Css
     CssBaseline()
 

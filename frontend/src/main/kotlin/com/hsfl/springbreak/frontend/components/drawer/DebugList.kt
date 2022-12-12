@@ -12,6 +12,8 @@ import mui.material.*
 import mui.material.List
 import org.kodein.di.instance
 import react.*
+import react.router.useNavigate
+import web.location.location
 
 
 val DebugListProvider = FC<Props> {
@@ -34,6 +36,7 @@ private val DebugList = FC<DebugListProps> { props ->
     var open by useState(false)
     val uiState = useContext(UiStateContext)
     val isAuthorized = useContext(AuthorizedContext)
+    val routes = useNavigate()
 
     List {
         Divider()
@@ -89,6 +92,25 @@ private val DebugList = FC<DebugListProps> { props ->
                     }
                     ListItemText { +"Send info message" }
                 }
+                ListItemButton {
+                    onClick = {
+                        location.reload()
+                    }
+                    ListItemIcon {
+                        Refresh()
+                    }
+                    ListItemText { +"Refresh Page" }
+                }
+                ListItemButton {
+                    onClick = {
+                        routes("/blabla")
+                    }
+                    ListItemIcon {
+                        Directions()
+                    }
+                    ListItemText { +"Redirect programmatically" }
+                }
+
 
                 // Show information
                 ListSubheader { +"Debug View" }

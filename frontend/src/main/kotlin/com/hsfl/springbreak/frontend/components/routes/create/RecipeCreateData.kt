@@ -1,7 +1,5 @@
 package com.hsfl.springbreak.frontend.components.routes.create
 
-import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
-import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.CreateRecipeDataVM
 import com.hsfl.springbreak.frontend.di.di
@@ -9,7 +7,6 @@ import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.px
 import dom.html.HTMLInputElement
 import dom.html.HTMLTextAreaElement
-import mui.icons.material.CloseOutlined
 import mui.icons.material.Euro
 import mui.material.*
 import mui.material.styles.TypographyVariant
