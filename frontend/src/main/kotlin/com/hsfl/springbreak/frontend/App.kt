@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.frontend
 
 import browser.document
+import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
@@ -13,6 +14,7 @@ import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.CssBaseline
+import mui.material.Typography
 import org.kodein.di.instance
 import react.*
 import react.dom.client.createRoot
@@ -29,19 +31,27 @@ private val Root = FC<Props> {
     val viewModel: RootViewModel by di.instance()
     val uiState = UiEventState.uiState.collectAsState()
     val authorized = authorizedState.authorized.collectAsState()
+    val recipeListState = viewModel.recipeList.collectAsState()
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)
+        cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
     }
 
     AuthorizedContext.Provider(value = authorized) {
         UiStateContext.Provider(value = uiState) {
-            App()
+            App {
+                recipeList = recipeListState
+            }
         }
     }
 }
 
-private val App = FC<Props> {
+external interface AppProps: Props {
+    var recipeList: List<Recipe>
+}
+
+private val App = FC<AppProps> {props ->
     // Default Css
     CssBaseline()
 
@@ -80,6 +90,12 @@ private val App = FC<Props> {
                 Route {
                     path = "/user"
                     element = ProtectedRoute.create { MyUser() }
+                }
+                props.recipeList.map {
+                    Route {
+                        path = "recipe/${it.id}"
+                        element = Typography.create {+"Hello World!"}
+                    }
                 }
                 Route {
                     path = "*"

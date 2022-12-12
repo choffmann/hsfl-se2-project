@@ -1,22 +1,51 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.data.model.User
-import com.hsfl.springbreak.frontend.client.presentation.state.AuthEvent
-import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
-import com.hsfl.springbreak.frontend.client.presentation.state.UserState
-import com.hsfl.springbreak.frontend.client.presentation.state.UserStateEvent
+import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RootEvent
 import com.hsfl.springbreak.frontend.di.di
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import web.storage.localStorage
 
-class RootViewModel {
+class RootViewModel(
+    private val recipeRepository: RecipeRepository,
+    private val scope: CoroutineScope = MainScope()
+) {
+
+    private val _recipeList = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipeList: StateFlow<List<Recipe>> = _recipeList
 
     fun onEvent(event: RootEvent) {
         when (event) {
-            LifecycleEvent.OnMount -> checkIsLoggedIn()
-            LifecycleEvent.OnUnMount -> TODO()
+            LifecycleEvent.OnMount -> {
+                fetchRecipeList()
+                checkIsLoggedIn()
+            }
+            LifecycleEvent.OnUnMount -> clearStates()
+        }
+    }
+
+    private fun clearStates() {
+        _recipeList.value = emptyList()
+    }
+
+    private fun fetchRecipeList() = scope.launch {
+        recipeRepository.getAllRecipes().collectLatest { response ->
+            response.handleDataResponse<List<Recipe>>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
+                    _recipeList.value = it
+                }
+            )
         }
     }
 

@@ -137,23 +137,17 @@ class AuthDialogViewModel(
 
     private fun saveUserLocal(user: User) {
         val userState: UserState by di.instance()
-        val userToSave = User.State(
-            firstName = user.firstName,
-            lastName = user.lastName,
-            email = user.email,
-            password = user.password
-        )
-        userState.onEvent(UserStateEvent.UpdateUser(userToSave))
-        setLocalStorage(userToSave)
+        userState.onEvent(UserStateEvent.SetUser(user))
+        setLocalStorage(user)
     }
 
-    private fun setLocalStorage(user: User.State) {
+    private fun setLocalStorage(user: User) {
         val authState: AuthState by di.instance()
         authState.onEvent(AuthEvent.IsAuthorized)
         localStorage.setItem("isLoggedIn", true.toString())
-        localStorage.setItem("userFirstName", user.firstName ?: "")
-        localStorage.setItem("userLastName", user.lastName ?: "")
-        localStorage.setItem("userEmail", user.email ?: "")
+        localStorage.setItem("userFirstName", user.firstName)
+        localStorage.setItem("userLastName", user.lastName)
+        localStorage.setItem("userEmail", user.email)
         localStorage.setItem("userImage", user.image ?: "")
     }
 }

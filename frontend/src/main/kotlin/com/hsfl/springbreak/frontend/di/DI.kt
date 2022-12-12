@@ -39,7 +39,7 @@ val di = DI {
     bindSingleton { IngredientEditDialogVM(instance()) }
     bindSingleton { ProfileViewModel(instance()) }
     bindSingleton { CategoryListViewModel(instance()) }
-    bindSingleton { RootViewModel() }
+    bindSingleton { RootViewModel(instance()) }
 
     // States
     bindSingleton { AuthState() }
