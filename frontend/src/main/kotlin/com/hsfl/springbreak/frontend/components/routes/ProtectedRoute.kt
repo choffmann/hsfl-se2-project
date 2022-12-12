@@ -14,10 +14,7 @@ val ProtectedRoute = FC<PropsWithChildren> { props ->
     val isAuthorized = authState.authorized.collectAsState()
     val navigator = useNavigate()
     useEffect(Unit) {
-        if (isAuthorized) {
-            +props.children
-        } else {
-            navigator("/")
-        }
+        if (!isAuthorized) navigator("/")
     }
+    +props.children
 }

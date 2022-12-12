@@ -63,7 +63,7 @@ private val App = FC<Props> {
                 }
                 Route {
                     path = "/favorite"
-                    element = ProtectedRoute.create { Favorites.create() }
+                    element = ProtectedRoute.create { Favorites() }
                 }
                 Route {
                     path = "/categories"
@@ -71,15 +71,15 @@ private val App = FC<Props> {
                 }
                 Route {
                     path = "/my-recipes"
-                    element = ProtectedRoute.create { MyRecipes.create() }
+                    element = ProtectedRoute.create { MyRecipes() }
                 }
                 Route {
                     path = "/settings"
-                    element = ProtectedRoute.create { Settings.create() }
+                    element = ProtectedRoute.create { Settings() }
                 }
                 Route {
                     path = "/user"
-                    element = ProtectedRoute.create { MyUser.create() }
+                    element = ProtectedRoute.create { MyUser() }
                 }
                 Route {
                     path = "*"

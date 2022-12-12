@@ -9,9 +9,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
+import web.storage.localStorage
 
 object NavViewModel {
-
     private val _loginButtonClicked = MutableStateFlow(false)
     val authState: AuthState by di.instance()
 
@@ -19,12 +19,6 @@ object NavViewModel {
         when (event) {
             is NavEvent.OnOpenLoginDialog -> onOpenLoginDialog()
             is NavEvent.OnCloseLoginDialog -> onCloseLoginDialog()
-            is NavEvent.OnCategory -> TODO()
-            is NavEvent.OnFavorites -> TODO()
-            is NavEvent.OnMyRecipes -> TODO()
-            is NavEvent.OnCreateRecipes -> TODO()
-            is NavEvent.OnProfile -> TODO()
-            is NavEvent.OnSettings -> TODO()
             is NavEvent.OnLogout -> onLogout()
         }
     }
@@ -39,18 +33,13 @@ object NavViewModel {
 
     private fun onLogout() {
         authState.onEvent(AuthEvent.IsUnauthorized)
-        UiEventState.onEvent(UiEvent.ShowMessage("You have been successfully logged out"))
+        localStorage.clear()
+        UiEventState.onEvent(UiEvent.ShowMessage("Du wurdest erfolgreich abgemeldet"))
     }
 }
 
 sealed class NavEvent {
-    object OnOpenLoginDialog: NavEvent()
-    object OnCloseLoginDialog: NavEvent()
-    object OnCategory: NavEvent()
-    object OnFavorites: NavEvent()
-    object OnMyRecipes: NavEvent()
-    object OnCreateRecipes: NavEvent()
-    object OnProfile: NavEvent()
-    object OnSettings: NavEvent()
-    object OnLogout: NavEvent()
+    object OnOpenLoginDialog : NavEvent()
+    object OnCloseLoginDialog : NavEvent()
+    object OnLogout : NavEvent()
 }

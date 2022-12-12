@@ -74,6 +74,7 @@ val AuthorizedList = FC<Props> {
         ListItemButton {
             onClick = {
                 NavViewModel.onEvent(NavEvent.OnLogout)
+                navigator("/")
             }
             ListItemIcon {
                 Logout()
