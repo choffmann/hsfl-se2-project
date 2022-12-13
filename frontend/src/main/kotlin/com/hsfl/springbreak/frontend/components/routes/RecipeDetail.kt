@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.components.routes
 
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailViewModel
 import com.hsfl.springbreak.frontend.di.di
@@ -26,11 +27,20 @@ import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.span
 import web.file.File
 
-val RecipeDetail = FC<Props> {
+external interface RecipeDetailProps: Props {
+    var recipeId: Int
+}
+
+val RecipeDetail = FC<RecipeDetailProps> {props ->
     val viewModel: RecipeDetailViewModel by di.instance()
     val recipeState = viewModel.recipe.collectAsState()
     val myRecipeState = viewModel.isMyRecipe.collectAsState()
     val editModeState = viewModel.editMode.collectAsState()
+
+    useEffect(Unit) {
+        viewModel.onEvent(RecipeDetailEvent.RecipeId(props.recipeId))
+        cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
+    }
 
     if (editModeState) {
         RecipeDetailEdit {

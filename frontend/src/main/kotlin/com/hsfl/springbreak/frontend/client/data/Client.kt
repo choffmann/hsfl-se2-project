@@ -138,6 +138,8 @@ class Client : ApiClient {
     }
 
     override suspend fun getRecipeById(recipeId: Int): Recipe.Response {
-        return client.get(urlString = "$BASE_URL/recipe/$recipeId").body()
+        return client.submitForm(url = "$BASE_URL/recipes", formParameters = Parameters.build {
+            append("id", recipeId.toString())
+        }, encodeInQuery = true).body()
     }
 }

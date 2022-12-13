@@ -14,7 +14,6 @@ import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import mui.material.CssBaseline
-import mui.material.Typography
 import org.kodein.di.instance
 import react.*
 import react.dom.client.createRoot
@@ -91,14 +90,14 @@ private val App = FC<AppProps> { props ->
                     path = "/user"
                     element = ProtectedRoute.create { MyUser() }
                 }
-                Route {
+                /*Route {
                     path = "recipe/1"
                     element = ProtectedRoute.create { RecipeDetail() }
-                }
+                }*/
                 props.recipeList.map {
                     Route {
                         path = "recipe/${it.id}"
-                        element = Typography.create { +"Hello World!" }
+                        element = ProtectedRoute.create { RecipeDetail { recipeId = it.id } }
                     }
                 }
                 Route {

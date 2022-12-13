@@ -58,10 +58,10 @@ class RecipeDetailViewModel(
         views = 120
     )
 
-    private val _editMode = MutableStateFlow(true)
+    private val _editMode = MutableStateFlow(false)
     val editMode: StateFlow<Boolean> = _editMode
 
-    private val _isMyRecipe = MutableStateFlow(true)
+    private val _isMyRecipe = MutableStateFlow(false)
     val isMyRecipe: StateFlow<Boolean> = _isMyRecipe
 
     private val _recipe = MutableStateFlow(testRecipe)
