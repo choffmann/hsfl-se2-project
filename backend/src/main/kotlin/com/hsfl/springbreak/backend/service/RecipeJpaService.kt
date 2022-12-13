@@ -29,9 +29,11 @@ class RecipeJpaService(
      * Return a recipe by its id.
      * @param id The id of the recipe to be returned.
      */
-    fun getRecipeById(id: Long): ApiResponse<Recipe> {
+    fun getRecipeById(id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
-            ApiResponse(data = recipeRepository.findById(id).get().toDto(), success = true)
+            val recipeProxy = recipeRepository.findById(id).get()
+            recipeProxy.views += 1
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
             ApiResponse(error = "No recipe with id: $id", success = false)
         }
@@ -41,10 +43,10 @@ class RecipeJpaService(
      * Return a recipe by its name
      * @param name The id of the recipe to be returned
      */
-    fun getRecipeByName(name: String): ApiResponse<Recipe> {
+    fun getRecipeByName(name: String): ApiResponse<Recipe.Response> {
         val recipe = recipeRepository.findRecipeByTitle(name)
         return if (recipe != null)
-            ApiResponse(data = recipe.toDto(), success = true)
+            ApiResponse(data = recipe.toResponse(), success = true)
         else
             ApiResponse(error = "No recipe with name: $name", success = false)
     }
@@ -78,7 +80,7 @@ class RecipeJpaService(
      * @param recipe The recipe to be updated from type Recipe.ChangeRecipe.
      */
 
-    fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe> {
+    fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe.Response> {
         // fetch recipe proxy
         val recipeProxy = recipeRepository.findById(recipe.recipeId).orElse(null)
             ?: return ApiResponse("Recipe not found", success = false)
@@ -97,20 +99,18 @@ class RecipeJpaService(
         recipeProxy.ingredients = saveIngredients(recipe.ingredients, recipeProxy)
 
         // save changes to database
-        recipeRepository.save(recipeProxy)
-
-        return ApiResponse(success = true)
+        return ApiResponse(data = recipeRepository.save(recipeProxy).toResponse(), success = true)
     }
 
     /**
      * Delete a recipe from the database by its id.
      * @param id The id of the recipe to be deleted.
      */
-    fun deleteRecipeById(id: Long): ApiResponse<Recipe> {
+    fun deleteRecipeById(id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
             val proxy = recipeRepository.findById(id).get()
             recipeRepository.deleteById(id)
-            ApiResponse(data = proxy.toDto(), success = true)
+            ApiResponse(data = proxy.toResponse(), success = true)
         } else {
             ApiResponse(error = "No recipe with id: $id", success = false)
         }
@@ -142,7 +142,7 @@ class RecipeJpaService(
      * @param file The file to be saved as new image.
      * @param id The image of the corresponding recipe.
      */
-    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe> {
+    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
             // fetch recipe from database
             val recipeProxy = recipeRepository.findById(id).get()
@@ -154,7 +154,7 @@ class RecipeJpaService(
             recipeProxy.image = blob
             recipeRepository.save(recipeProxy)
 
-            ApiResponse(data = recipeProxy.toDto(), success = true)
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
             ApiResponse(error = "No recipe with id: $id", success = false)
         }
@@ -164,7 +164,7 @@ class RecipeJpaService(
     /**
      * Return a list of all recipes from database.
      */
-    fun getRecipes(): ApiResponse<List<Recipe>> {
-        return ApiResponse(data = recipeRepository.findAll().map { it.toDto() }, success = true)
+    fun getRecipes(): ApiResponse<List<Recipe.Response>> {
+        return ApiResponse(data = recipeRepository.findAll().map { it.toResponse() }, success = true)
     }
 }

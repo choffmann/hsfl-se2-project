@@ -17,7 +17,8 @@ data class IngredientRecipe(
     )
 
     data class Response(
-        val recipeId: Long,
+        val id: Long,
+        val name: String,
         val unit: String,
         val amount: Int
     )

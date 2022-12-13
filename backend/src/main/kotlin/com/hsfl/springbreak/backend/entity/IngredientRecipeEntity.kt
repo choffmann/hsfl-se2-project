@@ -37,7 +37,8 @@ data class IngredientRecipeEntity(
     )
 
     fun toResponse(): IngredientRecipe.Response = IngredientRecipe.Response(
-        recipeId = this.ingredient?.id!!,
+        id = this.ingredient?.id!!,
+        name = this.ingredient.name,
         unit = this.unit,
         amount = this.amount
     )

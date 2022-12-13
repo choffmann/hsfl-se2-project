@@ -96,10 +96,10 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      * Returns a List of a users favorite recipes.
      * @param id The id of the user whose favorites shall be returned.
      */
-    fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
+    fun getFavoritesById(id: Long): ApiResponse<List<Recipe.Response>> {
         return if (userRepository.existsById(id)) {
             val userProxy = userRepository.findById(id).get()
-            ApiResponse(data = userProxy.favorites.map { it.toDto() }, success = true)
+            ApiResponse(data = userProxy.favorites.map { it.toResponse() }, success = true)
         } else {
             ApiResponse(error = "User not found", success = false)
         }

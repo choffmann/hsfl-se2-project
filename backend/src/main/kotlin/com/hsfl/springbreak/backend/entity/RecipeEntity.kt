@@ -2,7 +2,6 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
 import java.sql.Blob
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -19,7 +18,7 @@ data class RecipeEntity(
         @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
         @Column var createTime: LocalDateTime,
         @Column @Lob var image: Blob? = null,
-        @Column var longDescription: String?,
+        @Column(columnDefinition = "TEXT") var longDescription: String?,
         @Column var views: Int = 0,
         @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
         @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
@@ -56,7 +55,7 @@ data class RecipeEntity(
         duration = this.duration!!,
         difficulty = this.difficulty.toDto(),
         category = this.category.toDto(),
-        creatorId = this.creator.id!!,
+        creator = this.creator.toResponse(),
         createTime = this.createTime,
         image = this.image,
         longDescription = this.longDescription,
