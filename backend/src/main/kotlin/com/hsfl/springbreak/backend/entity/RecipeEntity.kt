@@ -8,11 +8,11 @@ import javax.persistence.*
 
 @Entity(name = "recipe")
 data class RecipeEntity(
-        @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
-        @Column var title: String,
-        @Column(columnDefinition = "TEXT") var shortDescription: String?,
-        @Column var price: Double?,
-        @Column var duration: Double?,
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
+    @Column var title: String,
+    @Column(columnDefinition = "TEXT") var shortDescription: String?,
+    @Column var price: Double?,
+    @Column var duration: Double?,
     // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
     @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
     @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
@@ -44,10 +44,9 @@ data class RecipeEntity(
         image = this.image,
         longDescription = this.longDescription,
         views = this.views,
+        score = this.score,
+        ratings = this.ratings!!.map { it.toDto() },
         ingredients = this.ingredients!!.map { it.toDto() } // TODO: Hier nur die ID zurückgeben
-        /*
-        rating = this.rating!!.toDto(),
-         */
     )
 
     fun toResponse(): Recipe.Response = Recipe.Response(

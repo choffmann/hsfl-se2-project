@@ -16,6 +16,8 @@ data class Recipe(
     val image: Blob?,
     val longDescription: String?,
     val views: Int,
+    val score: Double,
+    val ratings: List<Rating>,
     val ingredients: List<IngredientRecipe>
     /*
     val rating: Rating,
