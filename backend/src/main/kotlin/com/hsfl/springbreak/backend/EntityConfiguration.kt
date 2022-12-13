@@ -1,9 +1,11 @@
 package com.hsfl.springbreak.backend
 
+import com.hsfl.springbreak.backend.controller.RecipeController
 import com.hsfl.springbreak.backend.entity.*
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
+import com.hsfl.springbreak.backend.service.RecipeJpaService
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,7 +22,8 @@ class EntityConfiguration {
         recipeRepository: RecipeRepository, userRepository: UserRepository,
         categoryRepository: CategoryRepository,
         difficultyRepository: DifficultyRepository,
-        ingredientRecipeRepository: IngredientRecipeRepository
+        ingredientRecipeRepository: IngredientRecipeRepository,
+        recipeJpaService: RecipeJpaService
     ) =
         ApplicationRunner {
             /* Create Dummy-User */
@@ -89,8 +92,7 @@ class EntityConfiguration {
             ingredientRepository.save(IngredientEntity(name = "Zucker"))
 
             /* Prepopulate Recipes */
-
-            var recipe = Recipe.CreateRecipe(
+            recipeJpaService.createRecipe(Recipe.CreateRecipe(
                 title = "Haselnusskuchen",
                 categoryId = 3,
                 creatorId = 1,
@@ -98,9 +100,27 @@ class EntityConfiguration {
                 duration = 10.00,
                 ingredients = listOf(
                     IngredientRecipe.WithoutRecipe(
-                        "Sauerteig",
+                        "Zucker",
                         "Gramm",
-                        150),
+                        200),
+                ),
+                longDescription = "Die Eier mit dem Zucker schaumig rühren. Die gemahlenen Haselnüsse zufügen, durchrühren. Nur noch in eine Kasten- oder andere beliebige Form füllen und bei ca. 170°C ca. 40 Minuten backen. Der Kuchen ist supersaftig!\n" +
+                        "\n" +
+                        "Geht auch mit Mandeln, dann ist er aber etwas trockener. Wer will, glasiert ihn noch.",
+                price = 8.00,
+                shortDescription = "Der einfachste Kuchen, den ich kenne. Nur 3 Zutaten. Das kann jeder!"
+            ))
+
+            recipeJpaService.createRecipe(Recipe.CreateRecipe(
+                title = "Roggenmischbrot",
+                categoryId = 3,
+                creatorId = 1,
+                difficultyId = 1,
+                duration = 10.00,
+                ingredients = listOf(IngredientRecipe.WithoutRecipe(
+                    "Sauerteig",
+                    "Gramm",
+                    150),
                     IngredientRecipe.WithoutRecipe(
                         "Roggenmehl Type 1150",
                         "Gramm",
@@ -137,31 +157,7 @@ class EntityConfiguration {
                         "Wasser",
                         "ml",
                         340)
-                    ),
-                longDescription = "Die Eier mit dem Zucker schaumig rühren. Die gemahlenen Haselnüsse zufügen, durchrühren. Nur noch in eine Kasten- oder andere beliebige Form füllen und bei ca. 170°C ca. 40 Minuten backen. Der Kuchen ist supersaftig!\n" +
-                        "\n" +
-                        "Geht auch mit Mandeln, dann ist er aber etwas trockener. Wer will, glasiert ihn noch.",
-                price = 8.00,
-                shortDescription = "Der einfachste Kuchen, den ich kenne. Nur 3 Zutaten. Das kann jeder!"
-            )
-            recipeRepository.save(RecipeEntity.fromDto(
-                recipe,
-                userRepository.findById(recipe.categoryId).get(),
-                categoryRepository.findById(recipe.categoryId).get(),
-                difficultyRepository.findById(recipe.difficultyId).get(),
-                LocalDateTime.now()
-            ))
-
-            recipe = Recipe.CreateRecipe(
-                title = "Roggenmischbrot",
-                categoryId = 3,
-                creatorId = 1,
-                difficultyId = 1,
-                duration = 10.00,
-                ingredients = listOf(IngredientRecipe.WithoutRecipe(
-                    "Zucker",
-                    "Gramm",
-                    200)),
+                ),
                 longDescription = "Sauerteig, Weizen- und Roggenmehl, Salz, Zucker, Hefe, Brotgewürz und Backmalz in eine Rührschüssel geben. Das Wasser hinzufügen und den Teig von einer Rührmaschine ein paar Minuten auf kleinster Stufe kneten lassen. Den Teig an einem warmen Ort 4 Stunden gehen lassen, bis sich das Volumen sichtbar vergrößert hat.\n" +
                         "\n" +
                         "Den Teig in eine große, eingefettete Kaiserkuchenbackform geben und den Ofen auf 240 Grad vorheizen. Das Brot nochmals gehen lassen, bis der Ofen auf Temperatur ist.\n" +
@@ -169,13 +165,6 @@ class EntityConfiguration {
                         "Das Brot 30 Minuten backen, dann die Temperatur auf 150 Grad stellen und weitere 20 - 30 Minuten backen.",
                 price = 4.00,
                 shortDescription = "Mit Sauerteig und Weizenmehl."
-            )
-            recipeRepository.save(RecipeEntity.fromDto(
-                recipe,
-                userRepository.findById(recipe.categoryId).get(),
-                categoryRepository.findById(recipe.categoryId).get(),
-                difficultyRepository.findById(recipe.difficultyId).get(),
-                LocalDateTime.now()
             ))
 
         }

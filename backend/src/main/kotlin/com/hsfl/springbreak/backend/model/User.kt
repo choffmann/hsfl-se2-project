@@ -39,5 +39,13 @@ data class User(
         val password: String,
         val image: Blob?
     )
+
+    data class Limited(
+        val id: Long,
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val image: Blob?
+    )
 }
 
