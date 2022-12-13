@@ -164,7 +164,7 @@ class RecipeJpaService(
     /**
      * Return a list of all recipes from database.
      */
-    fun getRecipes(): ApiResponse<List<RecipeEntity>> {
-        return ApiResponse(data = recipeRepository.findAll().toList(), success = true)
+    fun getRecipes(): ApiResponse<List<Recipe>> {
+        return ApiResponse(data = recipeRepository.findAll().map { it.toDto() }, success = true)
     }
 }
