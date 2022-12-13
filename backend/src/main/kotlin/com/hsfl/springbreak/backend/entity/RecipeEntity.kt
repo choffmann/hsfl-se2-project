@@ -10,7 +10,7 @@ import javax.persistence.*
 data class RecipeEntity(
         @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
         @Column var title: String,
-        @Column var shortDescription: String?,
+        @Column(columnDefinition = "TEXT") var shortDescription: String?,
         @Column var price: Double?,
         @Column var duration: Double?,
     // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,

@@ -33,7 +33,7 @@ class RecipeJpaService(
         return if (recipeRepository.existsById(id)) {
             ApiResponse(data = recipeRepository.findById(id).get().toDto(), success = true)
         } else {
-            ApiResponse(error = "No such recipe", success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
     }
 
@@ -46,7 +46,7 @@ class RecipeJpaService(
         return if (recipe != null)
             ApiResponse(data = recipe.toDto(), success = true)
         else
-            ApiResponse(error = "No such recipe name", success = false)
+            ApiResponse(error = "No recipe with name: $name", success = false)
     }
 
     /**
@@ -112,7 +112,7 @@ class RecipeJpaService(
             recipeRepository.deleteById(id)
             ApiResponse(data = proxy.toDto(), success = true)
         } else {
-            ApiResponse(error = "Element not found", success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
     }
 
@@ -156,7 +156,7 @@ class RecipeJpaService(
 
             ApiResponse(data = recipeProxy.toDto(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
 
     }

@@ -33,7 +33,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
         return if ((userProxy != null) && (userProxy.password == user.password)) {
             ApiResponse(data = userProxy.toDto(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -48,7 +48,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
                 success = true
             )
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
 
     }
@@ -72,7 +72,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
 
             ApiResponse(data = userProxy.toDto(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -88,7 +88,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
             userRepository.save(userProxy)
             ApiResponse(success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "Invalid user recipe combination", success = false)
         }
     }
 
@@ -101,7 +101,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
             val userProxy = userRepository.findById(id).get()
             ApiResponse(data = userProxy.favorites.map { it.toDto() }, success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -120,7 +120,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
                 }
             }
         }
-        return ApiResponse(success = false)
+        return ApiResponse(error = "Invalid user recipe combination", success = false)
     }
 
 }
