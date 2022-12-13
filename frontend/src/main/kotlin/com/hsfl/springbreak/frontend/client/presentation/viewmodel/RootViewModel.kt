@@ -61,13 +61,14 @@ class RootViewModel(
 
     private fun readUserState() {
         val userState: UserState by di.instance()
-        userState.onEvent(UserStateEvent.UpdateUser(
-            User.State(
-                firstName = localStorage.getItem("userFirstName"),
-                lastName = localStorage.getItem("userLastName"),
-                email = localStorage.getItem("userEmail"),
+        userState.onEvent(UserStateEvent.SetUser(
+            User(
+                id = localStorage.getItem("userId")?.toInt() ?: -1,
+                firstName = localStorage.getItem("userFirstName") ?: "",
+                lastName = localStorage.getItem("userLastName")?: "",
+                email = localStorage.getItem("userEmail")?: "",
                 image = localStorage.getItem("userImage"),
-                password = null
+                password = ""
             )
         ))
     }

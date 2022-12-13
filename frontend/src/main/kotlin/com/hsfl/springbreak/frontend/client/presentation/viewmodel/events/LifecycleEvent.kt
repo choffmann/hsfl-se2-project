@@ -14,7 +14,8 @@ sealed class LifecycleEvent :
     IngredientsTableEvent,
     RootEvent,
     RecipeDetailEvent,
-    HomeViewEvent {
+    HomeViewEvent,
+    ProfileEvent {
     object OnMount : LifecycleEvent()
     object OnUnMount : LifecycleEvent()
 }

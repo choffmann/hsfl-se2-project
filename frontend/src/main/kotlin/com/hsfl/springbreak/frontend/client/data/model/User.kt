@@ -52,5 +52,13 @@ data class User(
         val imageUrl: String? = null,
         val success: Boolean = false
     )
+
+    @Serializable
+    data class UpdateProfile(
+        val id: Int,
+        val firstName: String?,
+        val lastName: String?,
+        val password: String?
+    )
 }
 

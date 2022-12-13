@@ -20,6 +20,7 @@ import org.w3c.xhr.FormData
 interface ApiClient {
     suspend fun login(user: User.Login): User.Response
     suspend fun register(user: User.Register): User.Response
+    suspend fun updateProfile(user: User.UpdateProfile): User.Response
     suspend fun updateProfileImage(userId: Int, profileImage: File?): User.ImageResponse
     suspend fun getAllIngredients(): Ingredient.GetAllResponse
     suspend fun getAllDifficulties(): Difficulty.GetAllResponse
@@ -58,6 +59,13 @@ class Client : ApiClient {
 
     override suspend fun register(user: User.Register): User.Response {
         return client.post(urlString = "$BASE_URL/user/register") {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }.body()
+    }
+
+    override suspend fun updateProfile(user: User.UpdateProfile): User.Response {
+        return client.put(urlString = "$BASE_URL/user/update") {
             contentType(ContentType.Application.Json)
             setBody(user)
         }.body()

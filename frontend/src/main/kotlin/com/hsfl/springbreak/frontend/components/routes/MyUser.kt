@@ -1,7 +1,8 @@
 package com.hsfl.springbreak.frontend.components.routes
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.ProfileEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.ProfileViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.ProfileEvent
 import com.hsfl.springbreak.frontend.components.avatar.UploadAvatar
 import com.hsfl.springbreak.frontend.components.recipe.ShowMyRecipes
 import com.hsfl.springbreak.frontend.di.di
@@ -29,6 +30,11 @@ val MyUser = FC<Props> {
     val passwordState = viewModel.passwordState.collectAsState()
     val confirmedPasswordState = viewModel.confirmedPasswordState.collectAsState()
     val profileImageState = viewModel.profileImage.collectAsState()
+
+    useEffect(Unit) {
+        viewModel.onEvent(LifecycleEvent.OnMount)
+        cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
+    }
 
     Typography {
         variant = TypographyVariant.h6

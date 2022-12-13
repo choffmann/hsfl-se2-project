@@ -1,16 +1,26 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
 import com.hsfl.springbreak.frontend.client.data.model.User
+import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
+import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserStateEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.ProfileEvent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import web.file.File
+import web.storage.localStorage
 
 class ProfileViewModel(
-    private val userState: UserState
+    private val userState: UserState,
+    private val userRepository: UserRepository,
+    private val scope: CoroutineScope = MainScope()
 ) {
     private val _editMode = MutableStateFlow(false)
     val editMode: StateFlow<Boolean> = _editMode
@@ -36,10 +46,6 @@ class ProfileViewModel(
     private val _selectedProfileImage = MutableStateFlow<File?>(null)
     val selectedProfileImage: StateFlow<File?> = _selectedProfileImage
 
-    init {
-        setFlowsToUser()
-    }
-
     fun onEvent(event: ProfileEvent) {
         when (event) {
             is ProfileEvent.FirstNameChanged -> _firstNameState.value = event.value
@@ -50,7 +56,9 @@ class ProfileViewModel(
             is ProfileEvent.ProfileImageChanged -> _selectedProfileImage.value = event.file
             is ProfileEvent.OnAbort -> exitEditMode()
             is ProfileEvent.OnEdit -> enterEditMode()
-            is ProfileEvent.OnSave -> if(validateConfirmedPassword()) saveEditValues()
+            is ProfileEvent.OnSave -> if (validateConfirmedPassword()) saveEditValues()
+            LifecycleEvent.OnMount -> setFlowsToUser()
+            LifecycleEvent.OnUnMount -> {}
         }
     }
 
@@ -79,36 +87,53 @@ class ProfileViewModel(
         // TODO: Show error in UI
     }
 
-    private fun saveEditValues() {
+    private fun saveEditValues() = scope.launch {
         // TODO: Send to backend
-        userState.onEvent(UserStateEvent.UpdateUser(User.State(
-            firstName = _firstNameState.value,
-            lastName = _lastNameState.value,
-            email = _emailState.value,
-            password = _passwordState.value,
-            // TODO: Has to be the new URL from the backend when the profile image is uploaded
-            image = _profileImage.value
-        )))
-        exitEditMode()
-
-        // TODO: On Success
-        showMessage("Dein Profil wurde erfolgreich aktualisiert")
+        userRepository.updateUser(
+            User.UpdateProfile(
+                id = userState.userState.value.id,
+                firstName = firstNameState.value,
+                lastName = lastNameState.value,
+                password = if(passwordState.value.isNotEmpty()) passwordState.value else null
+            )
+        ).collectLatest { response ->
+            response.handleDataResponse<User>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
+                    savetoUserState(it)
+                    updateLocalStorage(it)
+                    exitEditMode()
+                    showMessage("Dein Profil wurde erfolgreich aktualisiert")
+                }
+            )
+        }
     }
 
     private fun showMessage(msg: String) {
         MessageViewModel.onEvent(SnackbarEvent.Show(msg))
     }
 
-}
+    private fun savetoUserState(user: User) {
+        userState.onEvent(
+            UserStateEvent.UpdateUser(
+                User.State(
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    email = user.email,
+                    password = user.password,
+                    // TODO: Has to be the new URL from the backend when the profile image is uploaded
+                    image = user.image
+                )
+            )
+        )
+    }
 
-sealed class ProfileEvent {
-    object OnEdit : ProfileEvent()
-    object OnSave : ProfileEvent()
-    object OnAbort : ProfileEvent()
-    data class FirstNameChanged(val value: String) : ProfileEvent()
-    data class LastNameChanged(val value: String) : ProfileEvent()
-    data class EmailChanged(val value: String) : ProfileEvent()
-    data class PasswordChanged(val value: String) : ProfileEvent()
-    data class ConfirmedPasswordChanged(val value: String) : ProfileEvent()
-    data class ProfileImageChanged(val file: File) : ProfileEvent()
+    private fun updateLocalStorage(user: User) {
+        localStorage.setItem("userId", user.id.toString())
+        localStorage.setItem("userFirstName", user.firstName)
+        localStorage.setItem("userLastName", user.lastName)
+        localStorage.setItem("userEmail", user.email)
+        localStorage.setItem("userImage", user.image ?: "")
+    }
+
 }

@@ -20,7 +20,6 @@ class UserState {
             )
 
             is UserStateEvent.SetUser -> _userState.value = event.user
-
         }
     }
 }

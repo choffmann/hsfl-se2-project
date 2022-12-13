@@ -12,6 +12,7 @@ interface UserRepository {
     suspend fun login(user: User.Login): Flow<DataResponse<User>>
     suspend fun register(user: User.Register): Flow<DataResponse<User>>
     suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<User.Image>>
+    suspend fun updateUser(user: User.UpdateProfile): Flow<DataResponse<User>>
 }
 
 class UserRepositoryImpl(private val client: Client) : UserRepository {
@@ -32,7 +33,18 @@ class UserRepositoryImpl(private val client: Client) : UserRepository {
     override suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<User.Image>> = flow {
         repositoryHelper {
             val response: User.ImageResponse = client.updateProfileImage(userId, profileImage)
-            APIResponse.fromResponse(data = User.Image(response.imageUrl ?: ""), success = response.success, error = response.error)
+            APIResponse.fromResponse(
+                data = User.Image(response.imageUrl ?: ""),
+                success = response.success,
+                error = response.error
+            )
+        }
+    }
+
+    override suspend fun updateUser(user: User.UpdateProfile): Flow<DataResponse<User>> = flow {
+        repositoryHelper {
+            val response = client.updateProfile(user)
+            APIResponse.fromResponse(data = response.data, success = response.success, error = response.error)
         }
     }
 }
