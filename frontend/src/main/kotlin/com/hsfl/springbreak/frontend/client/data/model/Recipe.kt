@@ -11,7 +11,7 @@ data class Recipe(
     val duration: Double,
     val difficulty: Difficulty,
     val category: Category,
-    val creatorId: Int,
+    val creator: User,
     val createTime: String,
     val image: String?,
     val longDescription: String,

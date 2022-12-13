@@ -47,11 +47,11 @@ private val Root = FC<Props> {
     }
 }
 
-external interface AppProps: Props {
+external interface AppProps : Props {
     var recipeList: List<Recipe>
 }
 
-private val App = FC<AppProps> {props ->
+private val App = FC<AppProps> { props ->
     // Default Css
     CssBaseline()
 
@@ -91,10 +91,14 @@ private val App = FC<AppProps> {props ->
                     path = "/user"
                     element = ProtectedRoute.create { MyUser() }
                 }
+                Route {
+                    path = "recipe/1"
+                    element = ProtectedRoute.create { RecipeDetail() }
+                }
                 props.recipeList.map {
                     Route {
                         path = "recipe/${it.id}"
-                        element = Typography.create {+"Hello World!"}
+                        element = Typography.create { +"Hello World!" }
                     }
                 }
                 Route {
