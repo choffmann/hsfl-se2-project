@@ -5,6 +5,7 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.service.RecipeService
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import javax.transaction.Transactional
 
 /**
@@ -16,20 +17,17 @@ import javax.transaction.Transactional
 class RecipeController(val recipeService: RecipeService) {
 
     @GetMapping("api/recipes", params = ["id"])
-    fun getRecipeById(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> =
-        recipeService.getRecipeById(id)
+    fun getRecipeById(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> = recipeService.getRecipeById(id)
 
     @GetMapping("api/recipes", params = ["name"])
     fun getRecipeByName(@RequestParam("name") name: String): ApiResponse<Recipe.Response> =
         recipeService.getRecipeByName(name)
 
     @GetMapping("api/recipes")
-    fun getRecipes(): ApiResponse<List<Recipe.Response>> =
-        recipeService.getRecipes()
+    fun getRecipes(): ApiResponse<List<Recipe.Response>> = recipeService.getRecipes()
 
     @GetMapping("api/recipes/popularity")
-    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response?>> =
-        recipeService.getRecipesByPopularity()
+    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response?>> = recipeService.getRecipesByPopularity()
 
     @GetMapping("api/recipes/creator")
     fun getRecipesByCreator(@RequestParam("id") id: Long): ApiResponse<List<Recipe.Response?>> =
@@ -48,7 +46,6 @@ class RecipeController(val recipeService: RecipeService) {
         recipeService.updateRecipeImage(file.bytes, id)
 
     @DeleteMapping("api/recipes")
-    fun deleteRecipe(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> =
-        recipeService.deleteRecipeById(id)
+    fun deleteRecipe(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> = recipeService.deleteRecipeById(id)
 
 }
