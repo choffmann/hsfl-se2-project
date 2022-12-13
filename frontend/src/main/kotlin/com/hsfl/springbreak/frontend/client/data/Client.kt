@@ -30,6 +30,7 @@ interface ApiClient {
     suspend fun deleteRecipe(recipeId: Long): Recipe.Response
     suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse
     suspend fun getRecipeById(recipeId: Int): Recipe.Response
+    suspend fun getRecipeByPopularity(): Recipe.ResponseList
 }
 
 class Client : ApiClient {
@@ -141,5 +142,9 @@ class Client : ApiClient {
         return client.submitForm(url = "$BASE_URL/recipes", formParameters = Parameters.build {
             append("id", recipeId.toString())
         }, encodeInQuery = true).body()
+    }
+
+    override suspend fun getRecipeByPopularity(): Recipe.ResponseList {
+        return client.get(urlString = "$BASE_URL/recipes/popularity").body()
     }
 }

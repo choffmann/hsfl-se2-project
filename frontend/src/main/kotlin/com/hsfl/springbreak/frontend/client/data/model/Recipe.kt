@@ -16,7 +16,8 @@ data class Recipe(
     val image: String?,
     val longDescription: String,
     val views: Int,
-    val ingredients: List<Ingredient>
+    val ingredients: List<Ingredient>,
+    val score: Double
 ) {
 
     @Serializable

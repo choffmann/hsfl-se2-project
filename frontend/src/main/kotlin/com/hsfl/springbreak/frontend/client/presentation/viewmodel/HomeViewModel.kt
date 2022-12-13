@@ -53,7 +53,7 @@ class HomeViewModel(
             HomeRecipeTab.AllTab -> recipeRepository.getAllRecipes().saveToState()
             HomeRecipeTab.CheapTab -> recipeRepository.getRecipeCheapOrder().saveToState()
             HomeRecipeTab.FastTab -> recipeRepository.getRecipeFastOrder().saveToState()
-            HomeRecipeTab.PopularTab -> TODO()
+            HomeRecipeTab.PopularTab -> recipeRepository.getRecipePopularOrder().saveToState()
         }
     }
 

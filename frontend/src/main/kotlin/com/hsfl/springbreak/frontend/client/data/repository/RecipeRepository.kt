@@ -15,7 +15,6 @@ interface RecipeRepository {
     suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>>
     suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>>
-
     suspend fun getRecipeCheapOrder(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipeFastOrder(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipePopularOrder(): Flow<DataResponse<List<Recipe>>>
@@ -79,9 +78,9 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
     }
 
     override suspend fun getRecipePopularOrder(): Flow<DataResponse<List<Recipe>>> = flow {
-        /*repositoryHelper {
-            val response: Recipe.ResponseList = client.getAllRecipes()
+        repositoryHelper {
+            val response: Recipe.ResponseList = client.getRecipeByPopularity()
             APIResponse.fromResponse(response.error, response.data.sortedBy { it.price }, response.success)
-        }*/
+        }
     }
 }
