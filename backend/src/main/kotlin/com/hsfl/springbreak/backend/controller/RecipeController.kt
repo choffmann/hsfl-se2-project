@@ -41,6 +41,14 @@ class RecipeController(val recipeService: RecipeService) {
     fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe): ApiResponse<Recipe.Response> =
         recipeService.updateRecipe(changes)
 
+    @PostMapping("upload-profile-image")
+    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long): ApiResponse<String> {
+        println(file.originalFilename)
+        val newPath = "/temp/save-profile-image/$id"
+        File(newPath).writeBytes(file.inputStream.readAllBytes())
+        return ApiResponse(data = "http://localhost:8080/profile-image/1")
+    }
+
     @PutMapping("api/recipes/image")
     fun setImage(@RequestParam("image") file: MultipartFile, @RequestParam id: Long): ApiResponse<Recipe.Response> =
         recipeService.updateRecipeImage(file.bytes, id)
