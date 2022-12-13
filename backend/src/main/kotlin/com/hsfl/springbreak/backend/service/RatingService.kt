@@ -32,7 +32,7 @@ class RatingService(val ratingRepository: RatingRepository,
                 ratingProxy.stars = rating.stars
                 ratingRepository.save(ratingProxy)
             }
-            
+
             ApiResponse(data = calcScore(rating.recipeId), success = true)
         } else {
             ApiResponse(error = "Invalid user recipe combination", success = false)
