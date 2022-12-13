@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class RatingController(val ratingRepository: RatingRepository) {
 
-    @PostMapping("rating")
+    @PostMapping("api/rating")
     fun createNewRating(@RequestBody rating: Rating): ApiResponse<Rating> {
         val savedRating = ratingRepository.save(RatingEntity.fromDto(rating)).toDto()
         print("-------- " + savedRating + "----- \n")
@@ -21,7 +21,7 @@ class RatingController(val ratingRepository: RatingRepository) {
         }
     }
 
-    @PutMapping("rating/like/{id}")
+    @PutMapping("api/rating/like/{id}")
     fun addLike(@PathVariable("id") id: Long): ApiResponse<Rating> {
         if (ratingRepository.existsById(id)) {
             val result = ratingRepository.findById(id).get()
@@ -32,7 +32,7 @@ class RatingController(val ratingRepository: RatingRepository) {
             return ApiResponse(error = "No Recipe with the ID: ${id} ", success = false)
     }
 
-    @PutMapping("rating/dislike/{id}")
+    @PutMapping("api/rating/dislike/{id}")
     fun addDisLike(@PathVariable("id") id: Long): ApiResponse<Rating> {
         return if (ratingRepository.existsById(id)) {
             val result = ratingRepository.findById(id).get()

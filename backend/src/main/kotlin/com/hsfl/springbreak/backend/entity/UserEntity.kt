@@ -40,6 +40,15 @@ data class UserEntity(
         return resultList
     }
 
+    fun toResponse(): User.Response = User.Response(
+        id = this.id!!,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email,
+        password = this.password,
+        image = this.image
+    )
+
 
     companion object {
         fun fromDto(dto: User): UserEntity = UserEntity(

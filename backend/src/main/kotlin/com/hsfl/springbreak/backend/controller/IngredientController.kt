@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class IngredientController(val ingredientRecipeRepository: IngredientRecipeRepository, val ingredientRepository: IngredientRepository) {
 
-    @GetMapping("ingredients")
+    @GetMapping("api/ingredients")
     fun getAllIngredients(): ApiResponse<List<Ingredient>> {
         val ingredientEntities = ingredientRepository.findAll().distinct()
         return if (ingredientEntities.isNotEmpty()) {

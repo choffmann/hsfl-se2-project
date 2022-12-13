@@ -10,7 +10,7 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
 import java.sql.Blob
-import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
@@ -29,11 +29,13 @@ class RecipeJpaService(
      * Return a recipe by its id.
      * @param id The id of the recipe to be returned.
      */
-    fun getRecipeById(id: Long): ApiResponse<Recipe> {
+    fun getRecipeById(id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
-            ApiResponse(data = recipeRepository.findById(id).get().toDto(), success = true)
+            val recipeProxy = recipeRepository.findById(id).get()
+            recipeProxy.views += 1
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
-            ApiResponse(error = "No such recipe", success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
     }
 
@@ -41,12 +43,12 @@ class RecipeJpaService(
      * Return a recipe by its name
      * @param name The id of the recipe to be returned
      */
-    fun getRecipeByName(name: String): ApiResponse<Recipe> {
+    fun getRecipeByName(name: String): ApiResponse<Recipe.Response> {
         val recipe = recipeRepository.findRecipeByTitle(name)
         return if (recipe != null)
-            ApiResponse(data = recipe.toDto(), success = true)
+            ApiResponse(data = recipe.toResponse(), success = true)
         else
-            ApiResponse(error = "No such recipe name", success = false)
+            ApiResponse(error = "No recipe with name: $name", success = false)
     }
 
     /**
@@ -58,7 +60,7 @@ class RecipeJpaService(
         val user = userRepository.findById(recipe.creatorId).get()
         val category = categoryRepository.findById(recipe.categoryId).get()
         val difficulty = difficultyRepository.findById(recipe.difficultyId).get()
-        val createTime = LocalDate.now()
+        val createTime = LocalDateTime.now()
 
         // save new recipe to database
         val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(recipe, user, category, difficulty, createTime))
@@ -78,7 +80,7 @@ class RecipeJpaService(
      * @param recipe The recipe to be updated from type Recipe.ChangeRecipe.
      */
 
-    fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe> {
+    fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe.Response> {
         // fetch recipe proxy
         val recipeProxy = recipeRepository.findById(recipe.recipeId).orElse(null)
             ?: return ApiResponse("Recipe not found", success = false)
@@ -97,22 +99,20 @@ class RecipeJpaService(
         recipeProxy.ingredients = saveIngredients(recipe.ingredients, recipeProxy)
 
         // save changes to database
-        recipeRepository.save(recipeProxy)
-
-        return ApiResponse(success = true)
+        return ApiResponse(data = recipeRepository.save(recipeProxy).toResponse(), success = true)
     }
 
     /**
      * Delete a recipe from the database by its id.
      * @param id The id of the recipe to be deleted.
      */
-    fun deleteRecipeById(id: Long): ApiResponse<Recipe> {
+    fun deleteRecipeById(id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
             val proxy = recipeRepository.findById(id).get()
             recipeRepository.deleteById(id)
-            ApiResponse(data = proxy.toDto(), success = true)
+            ApiResponse(data = proxy.toResponse(), success = true)
         } else {
-            ApiResponse(error = "Element not found", success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
     }
 
@@ -142,7 +142,7 @@ class RecipeJpaService(
      * @param file The file to be saved as new image.
      * @param id The image of the corresponding recipe.
      */
-    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe> {
+    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(id)) {
             // fetch recipe from database
             val recipeProxy = recipeRepository.findById(id).get()
@@ -154,10 +154,17 @@ class RecipeJpaService(
             recipeProxy.image = blob
             recipeRepository.save(recipeProxy)
 
-            ApiResponse(data = recipeProxy.toDto(), success = true)
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "No recipe with id: $id", success = false)
         }
 
+    }
+
+    /**
+     * Return a list of all recipes from database.
+     */
+    fun getRecipes(): ApiResponse<List<Recipe.Response>> {
+        return ApiResponse(data = recipeRepository.findAll().map { it.toResponse() }, success = true)
     }
 }

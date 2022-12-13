@@ -30,5 +30,22 @@ data class User(
         val lastName: String?,
         val password: String?
     )
+
+    data class Response(
+        val id: Long,
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val password: String,
+        val image: Blob?
+    )
+
+    data class Limited(
+        val id: Long,
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val image: Blob?
+    )
 }
 

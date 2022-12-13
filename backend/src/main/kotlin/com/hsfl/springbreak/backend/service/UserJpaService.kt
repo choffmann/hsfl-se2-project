@@ -33,7 +33,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
         return if ((userProxy != null) && (userProxy.password == user.password)) {
             ApiResponse(data = userProxy.toDto(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -48,7 +48,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
                 success = true
             )
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
 
     }
@@ -72,7 +72,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
 
             ApiResponse(data = userProxy.toDto(), success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -88,7 +88,7 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
             userRepository.save(userProxy)
             ApiResponse(success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "Invalid user recipe combination", success = false)
         }
     }
 
@@ -96,12 +96,12 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      * Returns a List of a users favorite recipes.
      * @param id The id of the user whose favorites shall be returned.
      */
-    fun getFavoritesById(id: Long): ApiResponse<List<Recipe>> {
+    fun getFavoritesById(id: Long): ApiResponse<List<Recipe.Response>> {
         return if (userRepository.existsById(id)) {
             val userProxy = userRepository.findById(id).get()
-            ApiResponse(data = userProxy.favorites.map { it.toDto() }, success = true)
+            ApiResponse(data = userProxy.favorites.map { it.toResponse() }, success = true)
         } else {
-            ApiResponse(success = false)
+            ApiResponse(error = "User not found", success = false)
         }
     }
 
@@ -112,14 +112,14 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      */
     fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
         if (userRepository.existsById(uId)) {
-            for (favorite: RecipeEntity in userRepository.findById(uId).get().favorites) {
-                if (favorite.id == rId) {
-                    recipeRepository.deleteById(rId)
+            for (favoriteRecipe: RecipeEntity in userRepository.findById(uId).get().favorites) {
+                if (favoriteRecipe.id == rId) {
+                    userRepository.findById(uId).get().favorites.remove(favoriteRecipe)
                     return ApiResponse(success = true)
                 }
             }
         }
-        return ApiResponse(success = false)
+        return ApiResponse(error = "Invalid user recipe combination", success = false)
     }
 
 }

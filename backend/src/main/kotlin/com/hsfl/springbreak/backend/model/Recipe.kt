@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.backend.model
 
 import java.sql.Blob
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Recipe(
     val id: Long,
@@ -12,7 +12,7 @@ data class Recipe(
     val difficulty: Difficulty,
     val category: Category,
     val creator: User,
-    val createTime: LocalDate,
+    val createTime: LocalDateTime,
     val image: Blob?,
     val longDescription: String?,
     val views: Int,
@@ -24,16 +24,15 @@ data class Recipe(
 ) {
 
     data class CreateRecipe(
-        val title: String,
-        val shortDescription: String?,
-        val price: Double?,
-        val duration: Double?,
-        val difficultyId: Long,
-        val categoryId: Long,
-        val creatorId: Long,
-        val createTime: LocalDate?,
-        val longDescription: String?,
-        val ingredients: List<IngredientRecipe.WithoutRecipe>
+            val title: String,
+            val shortDescription: String?,
+            val price: Double?,
+            val duration: Double?,
+            val difficultyId: Long,
+            val categoryId: Long,
+            val creatorId: Long,
+            val longDescription: String?,
+            val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
     data class ChangeRecipe(
@@ -56,8 +55,8 @@ data class Recipe(
         val duration: Double,
         val difficulty: Difficulty,
         val category: Category,
-        val creatorId: Long,
-        val createTime: LocalDate,
+        val creator: User.Response,
+        val createTime: LocalDateTime,
         val image: Blob?,
         val longDescription: String?,
         val views: Int,

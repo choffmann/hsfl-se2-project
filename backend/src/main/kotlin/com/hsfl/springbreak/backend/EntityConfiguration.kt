@@ -1,13 +1,15 @@
 package com.hsfl.springbreak.backend
 
-import com.hsfl.springbreak.backend.entity.CategoryEntity
-import com.hsfl.springbreak.backend.entity.DifficultyEntity
-import com.hsfl.springbreak.backend.entity.IngredientEntity
-import com.hsfl.springbreak.backend.entity.UserEntity
+import com.hsfl.springbreak.backend.controller.RecipeController
+import com.hsfl.springbreak.backend.entity.*
+import com.hsfl.springbreak.backend.model.IngredientRecipe
+import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
+import com.hsfl.springbreak.backend.service.RecipeJpaService
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.time.LocalDateTime
 
 @Configuration
 class EntityConfiguration {
@@ -20,7 +22,8 @@ class EntityConfiguration {
         recipeRepository: RecipeRepository, userRepository: UserRepository,
         categoryRepository: CategoryRepository,
         difficultyRepository: DifficultyRepository,
-        ingredientRecipeRepository: IngredientRecipeRepository
+        ingredientRecipeRepository: IngredientRecipeRepository,
+        recipeJpaService: RecipeJpaService
     ) =
         ApplicationRunner {
             /* Create Dummy-User */
@@ -47,69 +50,123 @@ class EntityConfiguration {
             difficultyRepository.save(DifficultyEntity(name = "Schwer"))
 
             /* Prepopulate Categories */
+            categoryRepository.save(CategoryEntity(name = "Brot"))
+            categoryRepository.save(CategoryEntity(name = "Eis"))
             categoryRepository.save(CategoryEntity(name = "Gebäck"))
-            categoryRepository.save(CategoryEntity(name = "Nudeln"))
+            categoryRepository.save(CategoryEntity(name = "Kuchen"))
+            categoryRepository.save(CategoryEntity(name = "Pasta & Nudeln"))
+            categoryRepository.save(CategoryEntity(name = "Pizza"))
+            categoryRepository.save(CategoryEntity(name = "Reis"))
+            categoryRepository.save(CategoryEntity(name = "Rind"))
+            categoryRepository.save(CategoryEntity(name = "Salat"))
+            categoryRepository.save(CategoryEntity(name = "Schwein"))
+            categoryRepository.save(CategoryEntity(name = "Suppen"))
             categoryRepository.save(CategoryEntity(name = "Vegetarisch"))
             categoryRepository.save(CategoryEntity(name = "Vegan"))
 
             /* Prepopulate Ingredients */
-            ingredientRepository.save(IngredientEntity(name = "Milch"))
-            ingredientRepository.save(IngredientEntity(name = "Hafer"))
-            ingredientRepository.save(IngredientEntity(name = "Popel"))
+            ingredientRepository.save(IngredientEntity(name = "Apfel"))
             ingredientRepository.save(IngredientEntity(name = "Banane"))
+            ingredientRepository.save(IngredientEntity(name = "Birne"))
+            ingredientRepository.save(IngredientEntity(name = "Brombeeren"))
+            ingredientRepository.save(IngredientEntity(name = "Butter"))
+            ingredientRepository.save(IngredientEntity(name = "Chilli"))
+            ingredientRepository.save(IngredientEntity(name = "Currypulver"))
+            ingredientRepository.save(IngredientEntity(name = "Haferflocken"))
+            ingredientRepository.save(IngredientEntity(name = "Heidelbeeren"))
+            ingredientRepository.save(IngredientEntity(name = "Leinensamen"))
+            ingredientRepository.save(IngredientEntity(name = "Mehl"))
+            ingredientRepository.save(IngredientEntity(name = "Milch"))
+            ingredientRepository.save(IngredientEntity(name = "Nudeln"))
+            ingredientRepository.save(IngredientEntity(name = "Orangen"))
+            ingredientRepository.save(IngredientEntity(name = "Paprika"))
+            ingredientRepository.save(IngredientEntity(name = "Paprikapulver"))
+            ingredientRepository.save(IngredientEntity(name = "Petersilie"))
+            ingredientRepository.save(IngredientEntity(name = "Pfeffer"))
+            ingredientRepository.save(IngredientEntity(name = "Reis"))
+            ingredientRepository.save(IngredientEntity(name = "Salz"))
+            ingredientRepository.save(IngredientEntity(name = "Schlagsahne"))
+            ingredientRepository.save(IngredientEntity(name = "Speisestärke"))
+            ingredientRepository.save(IngredientEntity(name = "Rosinen"))
+            ingredientRepository.save(IngredientEntity(name = "Zimt"))
+            ingredientRepository.save(IngredientEntity(name = "Zucker"))
 
-
-            /*
-            val recipe = recipeRepository.save(RecipeEntity(
-                    title = "Hektor", shortDescription = "Panzer", price = 25.9,
-                    duration = 10.8, difficulty=diff,category= cat, creator= user ,
-                    createTime = LocalDate.now(), image ="halloImage" , longDescription = "kkskskwkwkwk", views = 100,
-                    ingredients = listOf()
+            /* Prepopulate Recipes */
+            recipeJpaService.createRecipe(Recipe.CreateRecipe(
+                title = "Haselnusskuchen",
+                categoryId = 3,
+                creatorId = 1,
+                difficultyId = 1,
+                duration = 10.00,
+                ingredients = listOf(
+                    IngredientRecipe.WithoutRecipe(
+                        "Zucker",
+                        "Gramm",
+                        200),
+                ),
+                longDescription = "Die Eier mit dem Zucker schaumig rühren. Die gemahlenen Haselnüsse zufügen, durchrühren. Nur noch in eine Kasten- oder andere beliebige Form füllen und bei ca. 170°C ca. 40 Minuten backen. Der Kuchen ist supersaftig!\n" +
+                        "\n" +
+                        "Geht auch mit Mandeln, dann ist er aber etwas trockener. Wer will, glasiert ihn noch.",
+                price = 8.00,
+                shortDescription = "Der einfachste Kuchen, den ich kenne. Nur 3 Zutaten. Das kann jeder!"
             ))
-            print("recipe:" + recipe)
 
-            val ingredientRecipeDto = IngredientRecipe(
-                id = IngredientRecipeId( recipeId = recipe.id!!, ingredientId = ingredient1.id!!),
-                recipe = recipe.toDto(),
-                ingredient = ingredient1.toDto(),
-                unit = "Liter",
-                amount = 1
-            )
-            val ingredientRecipe = ingredientRecipeRepository.save(IngredientRecipeEntity.fromDto(ingredientRecipeDto))
-            print("Ingredient-Recipe:" + ingredientRecipe)
-
-            val rating = ratingRepository.save(RatingEntity(
-                    likes= 6, dislike= 7,  recipe= recipe
+            recipeJpaService.createRecipe(Recipe.CreateRecipe(
+                title = "Roggenmischbrot",
+                categoryId = 3,
+                creatorId = 1,
+                difficultyId = 1,
+                duration = 10.00,
+                ingredients = listOf(IngredientRecipe.WithoutRecipe(
+                    "Sauerteig",
+                    "Gramm",
+                    150),
+                    IngredientRecipe.WithoutRecipe(
+                        "Roggenmehl Type 1150",
+                        "Gramm",
+                        150),
+                    IngredientRecipe.WithoutRecipe(
+                        "Weizenvollkornmehl",
+                        "Gramm",
+                        200),
+                    IngredientRecipe.WithoutRecipe(
+                        "Weizenmehl",
+                        "Gramm",
+                        100),
+                    IngredientRecipe.WithoutRecipe(
+                        "Salz",
+                        "TL",
+                        1),
+                    IngredientRecipe.WithoutRecipe(
+                        "Zucker",
+                        "TL",
+                        1),
+                    IngredientRecipe.WithoutRecipe(
+                        "Trockenhefe",
+                        "Pck.",
+                        1),
+                    IngredientRecipe.WithoutRecipe(
+                        "Backmalz",
+                        "Gramm",
+                        5),
+                    IngredientRecipe.WithoutRecipe(
+                        "Brotgewürzmischung aus Kümmel, Anis und Fenchel",
+                        "TL",
+                        1),
+                    IngredientRecipe.WithoutRecipe(
+                        "Wasser",
+                        "ml",
+                        340)
+                ),
+                longDescription = "Sauerteig, Weizen- und Roggenmehl, Salz, Zucker, Hefe, Brotgewürz und Backmalz in eine Rührschüssel geben. Das Wasser hinzufügen und den Teig von einer Rührmaschine ein paar Minuten auf kleinster Stufe kneten lassen. Den Teig an einem warmen Ort 4 Stunden gehen lassen, bis sich das Volumen sichtbar vergrößert hat.\n" +
+                        "\n" +
+                        "Den Teig in eine große, eingefettete Kaiserkuchenbackform geben und den Ofen auf 240 Grad vorheizen. Das Brot nochmals gehen lassen, bis der Ofen auf Temperatur ist.\n" +
+                        "\n" +
+                        "Das Brot 30 Minuten backen, dann die Temperatur auf 150 Grad stellen und weitere 20 - 30 Minuten backen.",
+                price = 4.00,
+                shortDescription = "Mit Sauerteig und Weizenmehl."
             ))
-            print("rating:" + rating)
-
-             */
 
         }
 
 }
-
-
-/*
-            recipeRepository.save(RecipeEntity(
-                id = null,
-                title = "Müsli", shortDescription = "lecker", price = 3.00, duration = 10.00,
-               category = cat,
-               creator = user))
-        }
-}
-
-                rating = null,
-                difficulty = difficulty,
-                createTime = LocalDate.now(),
-                ingredients = null,
-                image = "https://www.einfachbacken.de/sites/einfachbacken.de/files/styles/700_530/public/2019-05/schokomuffins.jpg?h=a1e1a043&itok=by_zr_C7",
-                longDescription = "Butter mit Zucker und Vanillezucker verrühren. Eier unterrühren. Zartbitterschokolade grob hacken. Ofen auf 180 Grad (Umluft: 160 Grad) vorheizen. Mehl mit Kakaopulver, Salz und Backpulver vermischen. Mehlmischung mit der Milch zur Butter-Zuckermischung geben und alles gut verrühren. Etwa zwei Drittel der gehackten Schokolade unterheben",
-                views = 0
-
-                ))
-
-
-        }
-
-                 */
