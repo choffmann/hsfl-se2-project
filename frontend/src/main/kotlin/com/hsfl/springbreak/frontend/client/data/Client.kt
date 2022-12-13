@@ -78,7 +78,7 @@ class Client : ApiClient {
             formData.append("image", file.slice(), file.name)
         }
         return window.fetch(
-            input = "$BASE_URL/user/image/$userId", init = RequestInit(
+            input = "$BASE_URL/user/image?id=$userId", init = RequestInit(
                 method = "POST",
                 body = formData
             )

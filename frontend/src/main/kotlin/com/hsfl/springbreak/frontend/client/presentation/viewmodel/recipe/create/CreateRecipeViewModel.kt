@@ -8,6 +8,7 @@ import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.*
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
@@ -83,6 +84,7 @@ class CreateRecipeViewModel(
         recipeRepository.createRecipe(recipe).collectLatest { response ->
             response.handleDataResponse<Recipe>(
                 onSuccess = { recipe ->
+                    sendRecipeToRouter(recipe)
                     recipeImage.value?.let { file ->
                         uploadRecipeImage(recipe.id, file)
                     } ?: UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich erstellt"))
@@ -90,6 +92,11 @@ class CreateRecipeViewModel(
                 }
             )
         }
+    }
+
+    private fun sendRecipeToRouter(recipe: Recipe) {
+        val rootViewModel: RootViewModel by di.instance()
+        rootViewModel.onEvent(RootEvent.OnNewRecipe(recipe))
     }
 
     private fun uploadRecipeImage(recipeId: Int, file: File) = scope.launch {

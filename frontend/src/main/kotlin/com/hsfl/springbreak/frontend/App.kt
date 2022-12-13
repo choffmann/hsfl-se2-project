@@ -97,7 +97,7 @@ private val App = FC<AppProps> { props ->
                 props.recipeList.map {
                     Route {
                         path = "recipe/${it.id}"
-                        element = ProtectedRoute.create { RecipeDetail { recipeId = it.id } }
+                        element = RecipeDetail.create { recipeId = it.id }
                     }
                 }
                 Route {

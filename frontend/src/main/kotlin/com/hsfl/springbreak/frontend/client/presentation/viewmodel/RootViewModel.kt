@@ -21,7 +21,7 @@ class RootViewModel(
     private val scope: CoroutineScope = MainScope()
 ) {
 
-    private val _recipeList = MutableStateFlow<List<Recipe>>(emptyList())
+    private val _recipeList = MutableStateFlow<MutableList<Recipe>>(mutableListOf())
     val recipeList: StateFlow<List<Recipe>> = _recipeList
 
     fun onEvent(event: RootEvent) {
@@ -31,11 +31,12 @@ class RootViewModel(
                 checkIsLoggedIn()
             }
             LifecycleEvent.OnUnMount -> clearStates()
+            is RootEvent.OnNewRecipe -> _recipeList.value.add(event.recipe)
         }
     }
 
     private fun clearStates() {
-        _recipeList.value = emptyList()
+        _recipeList.value = mutableListOf()
     }
 
     private fun fetchRecipeList() = scope.launch {
@@ -43,7 +44,7 @@ class RootViewModel(
             response.handleDataResponse<List<Recipe>>(
                 onSuccess = {
                     UiEventState.onEvent(UiEvent.Idle)
-                    _recipeList.value = it
+                    _recipeList.value = it.toMutableList()
                 }
             )
         }
