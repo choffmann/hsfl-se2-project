@@ -7,6 +7,7 @@ import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.browser.window
@@ -28,6 +29,7 @@ interface ApiClient {
     suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response
     suspend fun deleteRecipe(recipeId: Long): Recipe.Response
     suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse
+    suspend fun getRecipeById(recipeId: Int): Recipe.Response
 }
 
 class Client : ApiClient {
@@ -133,5 +135,9 @@ class Client : ApiClient {
             }
             .catch { return@catch Recipe.ImageResponse(error = it.message, success = false) }
             .await()
+    }
+
+    override suspend fun getRecipeById(recipeId: Int): Recipe.Response {
+        return client.get(urlString = "$BASE_URL/recipe/$recipeId").body()
     }
 }

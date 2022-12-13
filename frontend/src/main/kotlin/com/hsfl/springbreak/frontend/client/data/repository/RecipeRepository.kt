@@ -4,6 +4,7 @@ import com.hsfl.springbreak.frontend.client.data.Client
 import com.hsfl.springbreak.frontend.client.data.DataResponse
 import com.hsfl.springbreak.frontend.client.data.model.APIResponse
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import web.file.File
@@ -14,6 +15,7 @@ interface RecipeRepository {
     suspend fun deleteRecipe(recipeId: Long): Flow<DataResponse<Recipe>>
     suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>>
     suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>>
+    suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>>
 }
 
 class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
@@ -48,6 +50,13 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
     override suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>> = flow {
         repositoryHelper {
             val response: Recipe.ResponseList = client.getAllRecipes()
+            APIResponse.fromResponse(response.error, response.data, response.success)
+        }
+    }
+
+    override suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>> = flow {
+        repositoryHelper {
+            val response: Recipe.Response = client.getRecipeById(recipeId)
             APIResponse.fromResponse(response.error, response.data, response.success)
         }
     }

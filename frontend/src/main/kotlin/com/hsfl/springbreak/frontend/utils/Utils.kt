@@ -30,6 +30,12 @@ inline var ButtonProps.component: react.ElementType<*>?
         asDynamic().component = value
     }
 
+inline var FabProps.component: react.ElementType<*>?
+    get() = TODO("Prop is write-only!")
+    set(value) {
+        asDynamic().component = value
+    }
+
 inline var StepButtonProps.color: String?
     get() = TODO("Prop is write-only!")
     set(value) {
