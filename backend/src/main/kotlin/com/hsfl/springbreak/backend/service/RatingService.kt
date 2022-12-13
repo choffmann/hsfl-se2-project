@@ -11,9 +11,9 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class RatingService(val ratingRepository: RatingRepository,
-                    val recipeRepository: RecipeRepository,
-                    val userRepository: UserRepository) {
+class RatingService(
+    val ratingRepository: RatingRepository, val recipeRepository: RecipeRepository, val userRepository: UserRepository
+) {
 
     /**
      * Saves a new rating to database or updates an existing entry.
@@ -46,7 +46,7 @@ class RatingService(val ratingRepository: RatingRepository,
         for (rating: RatingEntity in ratings) {
             sum += rating.stars
         }
-        
+
         val score = sum / ratings.size
         val recipeProxy = recipeRepository.findById(id).get()
         recipeProxy.score = score

@@ -8,7 +8,6 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
-import org.hibernate.criterion.Order
 import org.springframework.stereotype.Service
 import java.sql.Blob
 import java.time.LocalDateTime
@@ -46,10 +45,8 @@ class RecipeService(
      */
     fun getRecipeByName(name: String): ApiResponse<Recipe.Response> {
         val recipe = recipeRepository.findRecipeByTitle(name)
-        return if (recipe != null)
-            ApiResponse(data = recipe.toResponse(), success = true)
-        else
-            ApiResponse(error = "No recipe with name: $name", success = false)
+        return if (recipe != null) ApiResponse(data = recipe.toResponse(), success = true)
+        else ApiResponse(error = "No recipe with name: $name", success = false)
     }
 
     /**
@@ -83,8 +80,10 @@ class RecipeService(
 
     fun updateRecipe(recipe: Recipe.ChangeRecipe): ApiResponse<Recipe.Response> {
         // fetch recipe proxy
-        val recipeProxy = recipeRepository.findById(recipe.recipeId).orElse(null)
-            ?: return ApiResponse("Recipe not found", success = false)
+        val recipeProxy = recipeRepository.findById(recipe.recipeId).orElse(null) ?: return ApiResponse(
+            "Recipe not found",
+            success = false
+        )
 
         // delete existing recipeIngredientEntities
         ingredientRecipeRepository.deleteByRecipeId(recipeProxy.id!!)
@@ -123,8 +122,7 @@ class RecipeService(
      * @param recipe The referenced recipe.
      */
     private fun saveIngredients(
-        ingredients: List<IngredientRecipe.WithoutRecipe>,
-        recipe: RecipeEntity
+        ingredients: List<IngredientRecipe.WithoutRecipe>, recipe: RecipeEntity
     ): List<IngredientRecipeEntity> {
         return ingredients.map { ingredient ->
             val ingredientProxy = ingredientRepository.findByName(ingredient.ingredientName)
@@ -132,7 +130,9 @@ class RecipeService(
 
             IngredientRecipeEntity(
                 id = IngredientRecipeKey(recipeId = recipe.id, ingredientId = ingredientProxy.id),
-                recipe = recipe, ingredient = ingredientProxy, unit = ingredient.unit,
+                recipe = recipe,
+                ingredient = ingredientProxy,
+                unit = ingredient.unit,
                 amount = ingredient.amount
             )
         }
@@ -181,6 +181,8 @@ class RecipeService(
      * @param id The user's id whose recipes shall be returned.
      */
     fun getRecipesByCreator(id: Long): ApiResponse<List<Recipe.Response?>> {
-        return ApiResponse(data = recipeRepository.findRecipeEntitiesByCreator_Id(id).map { it?.toResponse() }, success = true)
+        return ApiResponse(
+            data = recipeRepository.findRecipeEntitiesByCreator_Id(id).map { it?.toResponse() }, success = true
+        )
     }
 }

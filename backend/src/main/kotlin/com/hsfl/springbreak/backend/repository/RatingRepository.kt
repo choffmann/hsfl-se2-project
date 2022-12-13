@@ -1,7 +1,6 @@
 package com.hsfl.springbreak.backend.repository
 
 import com.hsfl.springbreak.backend.entity.RatingEntity
-import org.springframework.data.repository.query.Param
 import org.springframework.data.repository.CrudRepository
 import javax.transaction.Transactional
 
