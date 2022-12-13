@@ -28,7 +28,7 @@ class RecipeController(val recipeService: RecipeService) {
         recipeService.getRecipes()
 
     @GetMapping("api/recipes/popularity")
-    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response>> =
+    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response?>> =
         recipeService.getRecipesByPopularity()
 
     @GetMapping("api/recipes/creator")

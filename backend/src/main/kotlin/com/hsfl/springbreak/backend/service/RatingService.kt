@@ -46,6 +46,12 @@ class RatingService(val ratingRepository: RatingRepository,
         for (rating: RatingEntity in ratings) {
             sum += rating.stars
         }
-        return sum / ratings.size
+        
+        val score = sum / ratings.size
+        val recipeProxy = recipeRepository.findById(id).get()
+        recipeProxy.score = score
+        recipeRepository.save(recipeProxy)
+
+        return score
     }
 }

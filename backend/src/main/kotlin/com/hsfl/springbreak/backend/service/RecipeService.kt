@@ -8,6 +8,7 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
+import org.hibernate.criterion.Order
 import org.springframework.stereotype.Service
 import java.sql.Blob
 import java.time.LocalDateTime
@@ -171,8 +172,8 @@ class RecipeService(
     /**
      * Return a list of all recipes sorted by score.
      */
-    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response>> {
-        return ApiResponse()
+    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response?>> {
+        return ApiResponse(data = recipeRepository.findByOrderByScoreDesc().map { it?.toResponse() }, success = true)
     }
 
     /**

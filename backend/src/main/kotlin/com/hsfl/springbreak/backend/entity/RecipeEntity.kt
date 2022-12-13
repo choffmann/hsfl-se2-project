@@ -62,7 +62,8 @@ data class RecipeEntity(
         image = this.image,
         longDescription = this.longDescription,
         views = this.views,
-        ingredients = this.ingredients!!.map { it.toResponse() }
+        ingredients = this.ingredients!!.map { it.toResponse() },
+        score = this.score
     )
 
     companion object {

@@ -19,10 +19,6 @@ data class Recipe(
     val score: Double,
     val ratings: List<Rating>,
     val ingredients: List<IngredientRecipe>
-    /*
-    val rating: Rating,
-    val ingredients: List<Ingredient>,
-     */
 ) {
 
     data class CreateRecipe(
@@ -62,7 +58,8 @@ data class Recipe(
         val image: Blob?,
         val longDescription: String?,
         val views: Int,
-        val ingredients: List<IngredientRecipe.Response>
+        val ingredients: List<IngredientRecipe.Response>,
+        val score: Double
     )
 
 }
