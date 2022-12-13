@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.backend.controller
 
+import com.hsfl.springbreak.backend.entity.RecipeEntity
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.service.RecipeJpaService
@@ -22,6 +23,10 @@ class RecipeController(val recipeService: RecipeJpaService) {
     @GetMapping("api/recipes/findByName/{name}")
     fun getRecipeByName(@PathVariable("name") name: String): ApiResponse<Recipe> =
         recipeService.getRecipeByName(name)
+
+    @GetMapping("api/recipes")
+    fun getRecipes(): ApiResponse<List<RecipeEntity>> =
+        recipeService.getRecipes()
 
     @PostMapping("api/recipes")
     fun createRecipe(@RequestBody recipe: Recipe.CreateRecipe): ApiResponse<Recipe.Response> =
