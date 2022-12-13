@@ -16,7 +16,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class RecipeJpaService(
+class RecipeService(
     private val recipeRepository: RecipeRepository,
     val userRepository: UserRepository,
     val ingredientRecipeRepository: IngredientRecipeRepository,
@@ -162,9 +162,24 @@ class RecipeJpaService(
     }
 
     /**
-     * Return a list of all recipes from database.
+     * Return a list of all recipes.
      */
     fun getRecipes(): ApiResponse<List<Recipe.Response>> {
         return ApiResponse(data = recipeRepository.findAll().map { it.toResponse() }, success = true)
+    }
+
+    /**
+     * Return a list of all recipes sorted by score.
+     */
+    fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response>> {
+        return ApiResponse()
+    }
+
+    /**
+     * Return a list of all recipes created by a given user.
+     * @param id The user's id whose recipes shall be returned.
+     */
+    fun getRecipesByCreator(id: Long): ApiResponse<List<Recipe.Response?>> {
+        return ApiResponse(data = recipeRepository.findRecipeByUsers_id(id).map { it?.toResponse() }, success = true)
     }
 }
