@@ -1,12 +1,24 @@
 package com.hsfl.springbreak.frontend.components.routes
 
-import com.hsfl.springbreak.frontend.components.routes.home.AllTab
-import com.hsfl.springbreak.frontend.components.routes.home.CheapTab
-import com.hsfl.springbreak.frontend.components.routes.home.FastTab
-import com.hsfl.springbreak.frontend.components.routes.home.PopularTab
+import com.hsfl.springbreak.frontend.client.data.model.Recipe
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeRecipeTab
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.HomeViewEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
+import com.hsfl.springbreak.frontend.di.di
+import com.hsfl.springbreak.frontend.utils.collectAsState
+import csstype.Display
+import csstype.JustifyContent
+import csstype.number
+import csstype.px
 import mui.icons.material.*
+import mui.lab.Masonry
 import mui.material.*
 import mui.material.Tab
+import mui.system.responsive
+import mui.system.sx
+import org.kodein.di.instance
 import react.*
 import react.dom.aria.AriaRole
 import react.dom.events.SyntheticEvent
@@ -25,128 +37,42 @@ data class Recipe(
 )
 
 external interface TabPanelProps : PropsWithChildren {
-    var index: Int
-    var value: Int
+    var index: HomeRecipeTab
+    var value: HomeRecipeTab
 }
 
 var TabPanel = FC<TabPanelProps> { props ->
     div {
         role = AriaRole.tabpanel
         hidden = props.value != props.index
-        if (props.value == props.index) +props.children
+        if (props.index == props.value) +props.children
     }
 }
 
 
 var Home = FC<Props> {
-    val list = listOf(
-        Recipe(
-            title = "Chicken Tikka Masala",
-            createdDate = "November 13, 2022",
-            creator = "James Sullivan",
-            imageSrc =
-            "https://image.essen-und-trinken.de/11854764/t/Gb/v8/w960/r1/-/chicken-tikka-masala-c3c77cebac45a391e04fcbcff54bee08-chicken-tikka-masala-jpg--20494-.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "1",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ),
-        Recipe(
-            title = "Flammkuchen",
-            createdDate = "November 13, 2022",
-            creator = "Mike Glotzkowski",
-            creatorImg = "https://i.imgflip.com/2/3e74xu.jpg",
-            imageSrc =
-            "https://img.chefkoch-cdn.de/rezepte/1112251217261411/bilder/1021874/crop-960x720/einfacher-flammkuchen.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "5",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ), Recipe(
-            title = "Ratatouille ala Remy",
-            createdDate = "November 13, 2022",
-            creator = "Remy Ratte",
-            creatorImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRajFS3H5bfZokcLlPh6gBgLj7CAa5UU1z7sQ&usqp=CAU",
-            imageSrc =
-            "https://stillcracking.com/wp-content/uploads/2016/02/Ratatouille1-550x375.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "3",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ), Recipe(
-            title = "Spaghetti Carbonara",
-            createdDate = "November 13, 2022",
-            creator = "Ron Weasley",
-            imageSrc =
-            "https://www.springlane.de/magazin/wp-content/uploads/2016/01/Spaghetti_Carbonara_23727_Featured.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "1",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ), Recipe(
-            title = "Chicken Tikka Masala",
-            createdDate = "November 13, 2022",
-            creator = "James Sullivan",
-            imageSrc =
-            "https://image.essen-und-trinken.de/11854764/t/Gb/v8/w960/r1/-/chicken-tikka-masala-c3c77cebac45a391e04fcbcff54bee08-chicken-tikka-masala-jpg--20494-.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "6",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ), Recipe(
-            title = "Ratatouille ala Remy",
-            createdDate = "November 13, 2022",
-            creator = "Remy Ratte",
-            creatorImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRajFS3H5bfZokcLlPh6gBgLj7CAa5UU1z7sQ&usqp=CAU",
-            imageSrc =
-            "https://stillcracking.com/wp-content/uploads/2016/02/Ratatouille1-550x375.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "10",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ),
-        Recipe(
-            title = "Flammkuchen",
-            createdDate = "November 13, 2022",
-            creator = "Mike Glotzkowski",
-            creatorImg = "https://i.imgflip.com/2/3e74xu.jpg",
-            imageSrc =
-            "https://img.chefkoch-cdn.de/rezepte/1112251217261411/bilder/1021874/crop-960x720/einfacher-flammkuchen.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "15",
-            duration = "45 min",
-            difficulty = "Mittel"
-        ), Recipe(
-            title = "Spaghetti Carbonara",
-            createdDate = "November 13, 2022",
-            creator = "Ron Weasley",
-            imageSrc =
-            "https://www.springlane.de/magazin/wp-content/uploads/2016/01/Spaghetti_Carbonara_23727_Featured.jpg",
-            shortDescription =
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
-            cost = "3",
-            duration = "45 min",
-            difficulty = "Mittel"
-        )
-    )
+    val viewModel: HomeViewModel by di.instance()
+    val currentTab = viewModel.currentTab.collectAsState()
+    val recipeList = viewModel.recipeList.collectAsState()
 
-    var tabValue by useState(0)
+    useEffect(Unit) {
+        viewModel.onEvent(LifecycleEvent.OnMount)
+        cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
+    }
 
-    val handleChange: (SyntheticEvent<*, *>, Int) -> Unit = { _, newValue ->
-        tabValue = newValue
+    val handleChange: (SyntheticEvent<*, *>, Int) -> Unit = { _, value ->
+        when (value) {
+            0 -> viewModel.onEvent(HomeViewEvent.OnTabChange(HomeRecipeTab.CheapTab))
+            1 -> viewModel.onEvent(HomeViewEvent.OnTabChange(HomeRecipeTab.FastTab))
+            2 -> viewModel.onEvent(HomeViewEvent.OnTabChange(HomeRecipeTab.PopularTab))
+            3 -> viewModel.onEvent(HomeViewEvent.OnTabChange(HomeRecipeTab.AllTab))
+        }
     }
 
     Box {
         Box {
             Tabs {
-                value = tabValue
+                value = currentTab.toInt()
                 onChange = handleChange
                 Tab {
                     icon = Icon.create { AttachMoney() }
@@ -173,26 +99,63 @@ var Home = FC<Props> {
             Divider()
         }
         TabPanel {
-            value = tabValue
-            index = 0
-            CheapTab { recipeList = list.sortedBy { it.title } }
+            value = currentTab
+            index = HomeRecipeTab.CheapTab
+            TabView { list = recipeList }
         }
         TabPanel {
-            value = tabValue
-            index = 1
-            FastTab { recipeList = list.sortedBy { it.creator } }
+            value = currentTab
+            index = HomeRecipeTab.FastTab
+            TabView { list = recipeList }
         }
         TabPanel {
-            value = tabValue
-            index = 2
-            PopularTab { recipeList = list.sortedBy { it.cost } }
+            value = currentTab
+            index = HomeRecipeTab.PopularTab
+            TabView { list = recipeList }
         }
         TabPanel {
-            value = tabValue
-            index = 3
-            AllTab { recipeList = list }
+            value = currentTab
+            index = HomeRecipeTab.AllTab
+            TabView { list = recipeList }
         }
     }
+}
 
 
+external interface TabViewProps : Props {
+    var list: List<Recipe>
+}
+
+val TabView = FC<TabViewProps> { props ->
+    Box {
+        sx {
+            flexGrow = number(1.0)
+            margin = 8.px
+            display = Display.flex
+            justifyContent = JustifyContent.center
+        }
+
+        Masonry {
+            sx {
+                minWidth = 1000.px
+                maxWidth = 1400.px
+            }
+            columns = responsive(3)
+            spacing = responsive(2)
+            props.list.forEach {
+                RecipeCard {
+                    id = it.id
+                    title = it.title
+                    createdDate = "Bla"
+                    creator = "${it.creator.firstName} ${it.creator.lastName}"
+                    imageSrc = it.image ?: ""
+                    shortDescription = it.shortDescription
+                    cost = it.price.toInt().toString()
+                    duration = it.duration.toInt().toString()
+                    difficulty = it.difficulty.name
+                    creatorImg = it.creator.image
+                }
+            }
+        }
+    }
 }

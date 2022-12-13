@@ -23,6 +23,7 @@ data class NavBarItem(
 
 val AuthorizedList = FC<Props> {
     val listItems = listOf(
+        NavBarItem("Übersicht", Home, "/"),
         NavBarItem("Favoriten", Favorite, "/favorite"),
         NavBarItem("Kategorien", Category, "/categories"),
         NavBarItem("Rezept erstellen", Add, "/create-recipe"),

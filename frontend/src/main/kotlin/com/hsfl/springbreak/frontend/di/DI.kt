@@ -5,10 +5,7 @@ import com.hsfl.springbreak.frontend.client.data.repository.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.CategoryListViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.DebugViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.ProfileViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailViewModel
 import org.kodein.di.DI
@@ -42,6 +39,7 @@ val di = DI {
     bindSingleton { CategoryListViewModel(instance()) }
     bindSingleton { RootViewModel(instance()) }
     bindSingleton { RecipeDetailViewModel(instance()) }
+    bindSingleton { HomeViewModel(instance()) }
 
     // States
     bindSingleton { AuthState() }

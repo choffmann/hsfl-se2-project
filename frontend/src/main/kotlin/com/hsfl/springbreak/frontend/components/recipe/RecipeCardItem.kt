@@ -21,6 +21,7 @@ data class Point(val x: Double, val y: Double)
 const val recipeCardWidth = 344
 
 external interface RecipeCardItemProps : Props {
+    var id: Int
     var title: String
     var createdDate: String
     var creator: String
@@ -30,6 +31,7 @@ external interface RecipeCardItemProps : Props {
     var cost: String
     var duration: String
     var difficulty: String
+    var onClick: (Int) -> Unit
 }
 
 val RecipeCardItem = FC<RecipeCardItemProps> { props ->
@@ -93,6 +95,9 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
                 image = props.imageSrc
             }
             CardContent {
+                onClick = {
+                    props.onClick(props.id)
+                }
                 Typography {
                     variant = TypographyVariant.body2
                     color = "text.secondary"

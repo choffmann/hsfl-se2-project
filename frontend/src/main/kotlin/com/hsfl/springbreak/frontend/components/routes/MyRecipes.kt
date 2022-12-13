@@ -1,13 +1,8 @@
 package com.hsfl.springbreak.frontend.components.routes
 
-import com.hsfl.springbreak.frontend.components.recipe.ShowMyRecipes
-import com.hsfl.springbreak.frontend.utils.color
-import csstype.px
 import mui.icons.material.*
 import mui.material.*
 import mui.material.Tab
-import mui.material.styles.TypographyVariant
-import mui.system.sx
 import react.FC
 import react.Props
 import react.create
@@ -40,7 +35,7 @@ val MyRecipes = FC<Props> {
         Divider()
     }
 
-    TabPanel {
+    /*TabPanel {
         value = tabValue
         index = 0
         Typography {
@@ -56,6 +51,6 @@ val MyRecipes = FC<Props> {
             sx { marginTop = 16.px }
             ShowMyRecipes()
         }
-    }
+    }*/
 
 }

@@ -42,27 +42,31 @@ val RecipeDetail = FC<RecipeDetailProps> {props ->
         cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
     }
 
-    if (editModeState) {
-        RecipeDetailEdit {
-            recipe = recipeState
-            onSave = {}
-            onCancel = {
-                viewModel.onEvent(RecipeDetailEvent.CancelEdit)
+    recipeState?.let {
+        if (editModeState) {
+            RecipeDetailEdit {
+                recipe = it
+                onSave = {}
+                onCancel = {
+                    viewModel.onEvent(RecipeDetailEvent.CancelEdit)
+                }
             }
-        }
-    } else {
-        RecipeDetailView {
-            recipe = recipeState
-            isMyRecipe = myRecipeState
-            onFavoriteClick = {}
-            onLikeClick = {}
-            onDislikeClick = {}
-            onEditClick = {
-                viewModel.onEvent(RecipeDetailEvent.OnEdit)
+        } else {
+            RecipeDetailView {
+                recipe = it
+                isMyRecipe = myRecipeState
+                onFavoriteClick = {}
+                onLikeClick = {}
+                onDislikeClick = {}
+                onEditClick = {
+                    viewModel.onEvent(RecipeDetailEvent.OnEdit)
+                }
+                onDeleteClick = {}
             }
-            onDeleteClick = {}
         }
     }
+
+
 
 }
 

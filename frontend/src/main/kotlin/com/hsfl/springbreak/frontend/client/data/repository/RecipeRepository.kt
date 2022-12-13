@@ -4,7 +4,6 @@ import com.hsfl.springbreak.frontend.client.data.Client
 import com.hsfl.springbreak.frontend.client.data.DataResponse
 import com.hsfl.springbreak.frontend.client.data.model.APIResponse
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import web.file.File
@@ -16,6 +15,10 @@ interface RecipeRepository {
     suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>>
     suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>>
+
+    suspend fun getRecipeCheapOrder(): Flow<DataResponse<List<Recipe>>>
+    suspend fun getRecipeFastOrder(): Flow<DataResponse<List<Recipe>>>
+    suspend fun getRecipePopularOrder(): Flow<DataResponse<List<Recipe>>>
 }
 
 class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
@@ -59,5 +62,26 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
             val response: Recipe.Response = client.getRecipeById(recipeId)
             APIResponse.fromResponse(response.error, response.data, response.success)
         }
+    }
+
+    override suspend fun getRecipeCheapOrder(): Flow<DataResponse<List<Recipe>>> = flow {
+        repositoryHelper {
+            val response: Recipe.ResponseList = client.getAllRecipes()
+            APIResponse.fromResponse(response.error, response.data.sortedBy { it.price }, response.success)
+        }
+    }
+
+    override suspend fun getRecipeFastOrder(): Flow<DataResponse<List<Recipe>>> = flow {
+        repositoryHelper {
+            val response: Recipe.ResponseList = client.getAllRecipes()
+            APIResponse.fromResponse(response.error, response.data.sortedBy { it.duration }, response.success)
+        }
+    }
+
+    override suspend fun getRecipePopularOrder(): Flow<DataResponse<List<Recipe>>> = flow {
+        /*repositoryHelper {
+            val response: Recipe.ResponseList = client.getAllRecipes()
+            APIResponse.fromResponse(response.error, response.data.sortedBy { it.price }, response.success)
+        }*/
     }
 }

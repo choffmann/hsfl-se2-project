@@ -20,7 +20,7 @@ class RecipeDetailViewModel(
     private val recipeRepository: RecipeRepository,
     private val scope: CoroutineScope = MainScope()
 ) {
-    private val testRecipe = Recipe(
+    /*private val testRecipe = Recipe(
         id = 1,
         title = "Chicken Tikka Masala",
         creator = User(
@@ -56,7 +56,7 @@ class RecipeDetailViewModel(
         ),
         longDescription = "1. Knoblauch und Ingwer mit dem feinsten Aufsatz der Käsereibe reiben und in eine Schüssel geben. Die Chilis so fein wie möglich schneiden und mit dem Knoblauch und Ingwer mischen. Einen guten Schuss Olivenöl in einer Pfanne erhitzen und die Senfsaat hinengeben. Sobald sie zu platzen beginnen, zusammen mit Cumin, Paprikapulver, dem gemahlenen Koriander und 2 El Garam Masala zur Knoblauch-Ingwer-Mischung geben. Die Hälfte der Mischung mit dem Joghurt vermengen, mit den Putenstücken in eine Schüssel geben, umrühren und ca.eine halbe Stunde marinieren.\n\n2. Butter schmelzen, Zwiebeln und die übrige Hälfte der Gewürzmischung dazugeben, ca. 15 min. köcheln lassen ohne es zu sehr braun werden zu lassen- es sollte angenehm riechen! Tomatenmark, die gemahlenen Nüsse, einen halben Liter Wasser und einen halben Tl Salz dazugeben. Gut umrühren und einige Minuten köcheln lassen bis die Soße reduziert hat und leicht dick geworden ist und zur Seite stellen.\n\n3. Die marinierten Putenstücke in eine heiße Pfanne geben und anbraten.\n\n4. Die Soße erhitzen und Crème Double und den anderen El Garam Masala hinzugeben. Sobald es zu kochen beginnt, Herd abschalten und die gebratenen Putenstücke dazugeben. Gegebenenfalls nachwürzen und mit gehacktem Koriander und Limettensaft servieren. Dazu passt Basmatireis.",
         views = 120
-    )
+    )*/
 
     private val _editMode = MutableStateFlow(false)
     val editMode: StateFlow<Boolean> = _editMode
@@ -64,13 +64,13 @@ class RecipeDetailViewModel(
     private val _isMyRecipe = MutableStateFlow(false)
     val isMyRecipe: StateFlow<Boolean> = _isMyRecipe
 
-    private val _recipe = MutableStateFlow(testRecipe)
-    val recipe: StateFlow<Recipe> = _recipe
+    private val _recipe = MutableStateFlow<Recipe?>(null)
+    val recipe: StateFlow<Recipe?> = _recipe
 
     fun onEvent(event: RecipeDetailEvent) {
         when (event) {
-            LifecycleEvent.OnMount -> TODO()
-            LifecycleEvent.OnUnMount -> TODO()
+            LifecycleEvent.OnMount -> {}
+            LifecycleEvent.OnUnMount -> clearStates()
             RecipeDetailEvent.OnDelete -> TODO()
             RecipeDetailEvent.OnEdit -> _editMode.value = true
             RecipeDetailEvent.CancelEdit -> _editMode.value = false
@@ -79,8 +79,13 @@ class RecipeDetailViewModel(
             is RecipeDetailEvent.RecipeId -> {
                 fetchRecipe(event.id)
             }
-
         }
+    }
+
+    private fun clearStates() {
+        _editMode.value = false
+        _isMyRecipe.value = false
+        _recipe.value = null
     }
 
     private fun fetchRecipe(recipeId: Int) = scope.launch {

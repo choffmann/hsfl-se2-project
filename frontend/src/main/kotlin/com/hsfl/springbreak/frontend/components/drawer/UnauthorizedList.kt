@@ -3,19 +3,18 @@ package com.hsfl.springbreak.frontend.components.drawer
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDialogViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.AuthDialogEvent
 import com.hsfl.springbreak.frontend.di.di
-import csstype.Color
-import csstype.None
-import emotion.react.css
 import mui.icons.material.Category
+import mui.icons.material.Home
 import mui.icons.material.Login
 import mui.material.*
 import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.router.dom.NavLink
+import react.router.useNavigate
 
 val UnauthorizedList = FC<Props> { props ->
     val authDialogViewModel: AuthDialogViewModel by di.instance()
+    val navigator = useNavigate()
     List {
         ListItemButton {
             onClick = { authDialogViewModel.onEvent(AuthDialogEvent.OpenLoginDialog) }
@@ -26,20 +25,22 @@ val UnauthorizedList = FC<Props> { props ->
                 Typography { +"Anmelden" }
             }
         }
-        NavLink {
-            to ="/categories"
-            // ignore style
-            css {
-                textDecoration = None.none
-                color = Color.currentcolor
+        ListItemButton {
+            onClick = {navigator("/")}
+            ListItemIcon {
+                Home()
             }
-            ListItemButton {
-                ListItemIcon {
-                    Category()
-                }
-                ListItemText {
-                    Typography { +"Kategorien" }
-                }
+            ListItemText {
+                Typography { +"Übersicht" }
+            }
+        }
+        ListItemButton {
+            onClick = {navigator("/categories")}
+            ListItemIcon {
+                Category()
+            }
+            ListItemText {
+                Typography { +"Kategorien" }
             }
         }
     }
