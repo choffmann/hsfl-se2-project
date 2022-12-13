@@ -37,8 +37,6 @@ class UserController(val repository: UserRepository, val userService: UserServic
             userService.getFavoritesById(id)
 
     @DeleteMapping("api/user/favorite")
-    fun deleteFavoriteById(
-        @RequestParam(value = "recipeId", required = true) recipeId:Long,
-        @RequestParam(value = "userId", required = true) userId:Long
-    ): ApiResponse<Recipe> = userService.deleteFavoriteById(recipeId, userId)
+    fun deleteFavoriteById(@RequestParam("rId") rId: Long, @RequestParam("uId") uId: Long)=
+       userService.deleteFavoriteById(rId, uId)
 }
