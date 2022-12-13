@@ -15,27 +15,27 @@ import javax.transaction.Transactional
 @RestController
 class RecipeController(val recipeService: RecipeJpaService) {
 
-    @GetMapping("recipes/{id}")
+    @GetMapping("api/recipes/{id}")
     fun getRecipeById(@PathVariable("id") id: Long): ApiResponse<Recipe> =
         recipeService.getRecipeById(id)
 
-    @GetMapping("recipes/findByName/{name}")
+    @GetMapping("api/recipes/findByName/{name}")
     fun getRecipeByName(@PathVariable("name") name: String): ApiResponse<Recipe> =
         recipeService.getRecipeByName(name)
 
-    @PostMapping("recipes")
+    @PostMapping("api/recipes")
     fun createRecipe(@RequestBody recipe: Recipe.CreateRecipe): ApiResponse<Recipe.Response> =
         recipeService.createRecipe(recipe)
 
-    @PutMapping("recipes")
+    @PutMapping("api/recipes")
     fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe) =
         recipeService.updateRecipe(changes)
 
-    @PutMapping("recipes/image/{id}")
+    @PutMapping("api/recipes/image/{id}")
     fun setImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<Recipe> =
         recipeService.updateRecipeImage(file.bytes, id)
 
-    @DeleteMapping("recipes/{id}")
+    @DeleteMapping("api/recipes/{id}")
     fun deleteRecipe(@PathVariable("id") id: Long): ApiResponse<Recipe> =
         recipeService.deleteRecipeById(id)
 

@@ -30,5 +30,12 @@ data class User(
         val lastName: String?,
         val password: String?
     )
+
+    data class Response(
+        val id: Long,
+        val firstName: String?,
+        val lastName: String?,
+        val password: String?
+    )
 }
 

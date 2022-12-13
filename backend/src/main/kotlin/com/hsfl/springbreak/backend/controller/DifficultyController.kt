@@ -14,7 +14,7 @@ class DifficultyController(val difficultyRepository: DifficultyRepository) {
     /**
      * Returns a list of all difficulties.
      */
-    @GetMapping("difficulties")
+    @GetMapping("api/difficulties")
     fun retrieveDifficulties(): ApiResponse<List<Difficulty>> {
         return ApiResponse(data = difficultyRepository.findAll().map { it.toDto() }, success = true)
     }
