@@ -12,6 +12,7 @@ import mui.system.sx
 import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.router.useNavigate
 import react.useEffect
 
 val CreateRecipe = FC<Props> {
@@ -19,6 +20,7 @@ val CreateRecipe = FC<Props> {
     val currentStep = viewModel.currentStepIndex.collectAsState()
     val enableNextStepButton = viewModel.enableNextStepButton.collectAsState()
     val openConfirmAbortDialog = viewModel.openAbortDialog.collectAsState()
+    val navigator = useNavigate()
 
     useEffect(Unit) {
         cleanup {
@@ -71,7 +73,10 @@ val CreateRecipe = FC<Props> {
             Button {
                 variant = ButtonVariant.contained
                 disabled = !enableNextStepButton
-                onClick = { viewModel.onEvent(CreateRecipeEvent.OnNextStep) }
+                onClick = {
+                    viewModel.onEvent(CreateRecipeEvent.OnNextStep)
+                    if (currentStep == 4) navigator("/")
+                }
                 +if (currentStep == 4) "Abschließen" else "Weiter"
             }
         }

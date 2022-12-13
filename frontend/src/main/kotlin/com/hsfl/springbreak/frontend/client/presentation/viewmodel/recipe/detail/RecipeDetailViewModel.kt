@@ -37,14 +37,14 @@ class RecipeDetailViewModel(
         //image = null,
         shortDescription =
         "Ein sehr leckeres Gericht. Es passt perfekt zu Basmatireis",
-        duration = 45.0,
+        duration = 60.0,
         difficulty = Difficulty(
             id = 1,
             name = "Mittel"
         ),
         category = Category(
             id = 1,
-            name = "Nudeln"
+            name = "Asiatisch"
         ),
         ingredients = listOf(
             Ingredient(id = 1, name = "Knoblauchzehen", amount = 6, unit = ""),
@@ -58,10 +58,10 @@ class RecipeDetailViewModel(
         views = 120
     )
 
-    private val _editMode = MutableStateFlow(false)
+    private val _editMode = MutableStateFlow(true)
     val editMode: StateFlow<Boolean> = _editMode
 
-    private val _isMyRecipe = MutableStateFlow(false)
+    private val _isMyRecipe = MutableStateFlow(true)
     val isMyRecipe: StateFlow<Boolean> = _isMyRecipe
 
     private val _recipe = MutableStateFlow(testRecipe)
@@ -72,12 +72,14 @@ class RecipeDetailViewModel(
             LifecycleEvent.OnMount -> TODO()
             LifecycleEvent.OnUnMount -> TODO()
             RecipeDetailEvent.OnDelete -> TODO()
-            RecipeDetailEvent.OnEdit -> TODO()
+            RecipeDetailEvent.OnEdit -> _editMode.value = true
+            RecipeDetailEvent.CancelEdit -> _editMode.value = false
             RecipeDetailEvent.OnFavorite -> TODO()
             RecipeDetailEvent.OnUnFavorite -> TODO()
             is RecipeDetailEvent.RecipeId -> {
                 fetchRecipe(event.id)
             }
+
         }
     }
 

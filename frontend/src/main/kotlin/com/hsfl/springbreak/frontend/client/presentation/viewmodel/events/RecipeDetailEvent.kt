@@ -6,4 +6,5 @@ sealed interface RecipeDetailEvent {
     object OnFavorite: RecipeDetailEvent
     object OnUnFavorite: RecipeDetailEvent
     object OnDelete: RecipeDetailEvent
+    object CancelEdit: RecipeDetailEvent
 }

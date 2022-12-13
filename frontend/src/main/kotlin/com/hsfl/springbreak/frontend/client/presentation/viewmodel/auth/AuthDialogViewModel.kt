@@ -145,6 +145,7 @@ class AuthDialogViewModel(
         val authState: AuthState by di.instance()
         authState.onEvent(AuthEvent.IsAuthorized)
         localStorage.setItem("isLoggedIn", true.toString())
+        localStorage.setItem("userId", user.id.toString())
         localStorage.setItem("userFirstName", user.firstName)
         localStorage.setItem("userLastName", user.lastName)
         localStorage.setItem("userEmail", user.email)

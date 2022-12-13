@@ -1,9 +1,12 @@
 package com.hsfl.springbreak.frontend.components.routes
 
+import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailViewModel
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
+import com.hsfl.springbreak.frontend.utils.color
 import com.hsfl.springbreak.frontend.utils.component
 import csstype.*
 import emotion.react.css
@@ -27,25 +30,43 @@ val RecipeDetail = FC<Props> {
     val viewModel: RecipeDetailViewModel by di.instance()
     val recipeState = viewModel.recipe.collectAsState()
     val myRecipeState = viewModel.isMyRecipe.collectAsState()
+    val editModeState = viewModel.editMode.collectAsState()
 
-    RecipeDetailView {
-        recipe = recipeState
-        isMyRecipe = myRecipeState
+    if (editModeState) {
+        RecipeDetailEdit {
+            recipe = recipeState
+            onSave = {}
+            onCancel = {
+                viewModel.onEvent(RecipeDetailEvent.CancelEdit)
+            }
+        }
+    } else {
+        RecipeDetailView {
+            recipe = recipeState
+            isMyRecipe = myRecipeState
+            onFavoriteClick = {}
+            onLikeClick = {}
+            onDislikeClick = {}
+            onEditClick = {
+                viewModel.onEvent(RecipeDetailEvent.OnEdit)
+            }
+            onDeleteClick = {}
+        }
     }
-    /*RecipeDetailEdit {
-        recipe = recipeState
-    }*/
+
 }
 
 private external interface RecipeDetailEditProps : Props {
     var recipe: Recipe
     var onProfileImageChanged: (File) -> Unit
+    var onCancel: () -> Unit
+    var onSave: () -> Unit
 }
 
 private val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
-    var profileImage by useState<String?>(props.recipe.image)
+    var profileImageState by useState(props.recipe.image)
     Box {
-        profileImage?.let { image ->
+        profileImageState?.let { image ->
             if (image.isNotEmpty()) {
                 Box {
                     div {
@@ -74,7 +95,7 @@ private val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                                 alignItems = AlignItems.center
                             }
                             UploadRecipeImageButton {
-                                onProfileImageChanged = { profileImage = URL.createObjectURL(it) }
+                                onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
                             }
                         }
                     }
@@ -86,7 +107,7 @@ private val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                     paddingTop = 16.px
                 }
                 UploadRecipeImageButton {
-                    onProfileImageChanged = { profileImage = URL.createObjectURL(it) }
+                    onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
                 }
             }
         } ?: Box {
@@ -96,8 +117,21 @@ private val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                 paddingTop = 16.px
             }
             UploadRecipeImageButton {
-                onProfileImageChanged = { profileImage = URL.createObjectURL(it) }
+                onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
             }
+        }
+
+        Box {
+            sx {
+                marginTop = 16.px
+                paddingLeft = 8.px
+                paddingRight = 8.px
+            }
+            RecipeTitleEdit {
+                title = props.recipe.title
+                subtitle = props.recipe.shortDescription
+            }
+
         }
 
         Box {
@@ -106,14 +140,56 @@ private val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                 paddingLeft = 8.px
                 paddingRight = 8.px
                 display = Display.flex
-                justifyContent = JustifyContent.spaceBetween
+                flexDirection = FlexDirection.row
+                alignItems = AlignItems.center
             }
-            RecipeTitleEdit {
-                title = props.recipe.title
-                subtitle = props.recipe.shortDescription
+
+            Tooltip {
+                title = ReactNode("Schwierigkeit bearbeiten")
+                RecipeMetaData {
+                    metaDataText = props.recipe.difficulty.name
+                    editMode = true
+                    chipIcon = Icon.create { ShowChart() }
+                }
             }
-            RecipeActionEdit {
+
+
+            RecipeMetaData {
+                metaDataText = props.recipe.category.name
+                editMode = true
+                chipIcon = Icon.create { Category() }
             }
+
+            RecipeMetaData {
+                metaDataText = props.recipe.price.toInt().toString()
+                editMode = true
+                chipIcon = Icon.create { Euro() }
+            }
+
+            RecipeMetaData {
+                metaDataText = "${props.recipe.duration.toInt()} min"
+                editMode = true
+                chipIcon = Icon.create { AccessTime() }
+            }
+        }
+        RecipeIngredientTableEdit {
+            recipe = props.recipe
+            selectedIngredients = listOf()
+        }
+    }
+
+    TextField {
+        sx { marginTop = 8.px }
+        label = ReactNode("Beschreibung")
+        fullWidth = true
+        multiline = true
+        value = props.recipe.longDescription
+    }
+    Box {
+        sx { marginTop = 8.px }
+        RecipeActionEdit {
+            onSave = props.onSave
+            onCancel = props.onCancel
         }
     }
 }
@@ -128,6 +204,7 @@ private val RecipeTitleEdit = FC<RecipeTitleEditProps> { props ->
         direction = responsive(StackDirection.column)
         spacing = responsive(2)
         TextField {
+            fullWidth = true
             label = ReactNode("Rezeptname")
             value = props.title
         }
@@ -166,19 +243,100 @@ private val UploadRecipeImageButton = FC<UploadRecipeImageButtonProps> { props -
 }
 
 private external interface RecipeActionEditProps : Props {
-    var myRecipe: Boolean
+    var onCancel: () -> Unit
+    var onSave: () -> Unit
 }
 
 private val RecipeActionEdit = FC<RecipeActionEditProps> { props ->
     Box {
+        sx {
+            display = Display.flex
+            flexDirection = FlexDirection.row
+            justifyContent = JustifyContent.flexEnd
+            alignItems = AlignItems.flexStart
+            paddingLeft = 8.px
+        }
         Button {
-            sx { paddingLeft = 8.px }
+            onClick = {
+                props.onCancel()
+            }
             +"Abbrechen"
         }
         Button {
             variant = ButtonVariant.contained
             startIcon = Icon.create { Save() }
+            onClick = { props.onSave() }
             +"Speichern"
+        }
+    }
+}
+
+private external interface RecipeIngredientTableEditProps: Props {
+    var recipe: Recipe
+    var selectedIngredients: List<Ingredient>
+}
+
+private val RecipeIngredientTableEdit = FC<RecipeIngredientTableEditProps> { props ->
+    TableContainer {
+        if(props.selectedIngredients.isNotEmpty()) {
+            Toolbar {
+                sx {
+                    display = Display.flex
+                    justifyContent = JustifyContent.spaceBetween
+                    marginTop = 16.px
+                    if (props.selectedIngredients.isNotEmpty())
+                        backgroundColor = Color("lightgrey")
+                }
+                Typography {
+                    variant = TypographyVariant.subtitle1
+                    color = "inherit"
+                    +"${props.selectedIngredients.size} ausgewählt"
+                }
+                Box {
+                    if (props.selectedIngredients.size == 1) Tooltip {
+                        title = Typography.create { +"Bearbeiten" }
+                        IconButton {
+                            onClick = {
+
+                            }
+                            Edit()
+                        }
+                    }
+                    Tooltip {
+                        title = Typography.create { +"Löschen" }
+                        IconButton {
+                            onClick = {
+
+                            }
+                            Delete()
+                        }
+                    }
+                }
+            }
+        }
+        Table {
+            TableHead {
+                TableCell {
+                    padding = TableCellPadding.checkbox
+                    +""
+                }
+                TableCell { +"Menge" }
+                TableCell { +"Zutat" }
+            }
+            TableBody {
+                props.recipe.ingredients.map {
+                    TableRow {
+                        TableCell {
+                            padding = TableCellPadding.checkbox
+                            Checkbox {
+
+                            }
+                        }
+                        TableCell { +"${it.amount} ${it.unit}" }
+                        TableCell { +it.name }
+                    }
+                }
+            }
         }
     }
 }
@@ -186,6 +344,12 @@ private val RecipeActionEdit = FC<RecipeActionEditProps> { props ->
 private external interface RecipeDetailViewProps : Props {
     var recipe: Recipe
     var isMyRecipe: Boolean
+    var isFavorite: Boolean
+    var onFavoriteClick: () -> Unit
+    var onLikeClick: () -> Unit
+    var onDislikeClick: () -> Unit
+    var onEditClick: () -> Unit
+    var onDeleteClick: () -> Unit
 }
 
 private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
@@ -232,6 +396,12 @@ private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
             }
             RecipeAction {
                 myRecipe = props.isMyRecipe
+                isFavorite = props.isFavorite
+                onDeleteClick = props.onDeleteClick
+                onLikeClick = props.onLikeClick
+                onDislikeClick = props.onDislikeClick
+                onFavoriteClick = props.onFavoriteClick
+                onEditClick = props.onEditClick
             }
         }
 
@@ -260,9 +430,8 @@ private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
                 chipIcon = Icon.create { ShowChart() }
             }
 
-
             RecipeMetaData {
-                metaDataText = props.recipe.difficulty.name
+                metaDataText = props.recipe.category.name
                 chipIcon = Icon.create { Category() }
             }
 
@@ -272,7 +441,7 @@ private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
             }
 
             RecipeMetaData {
-                metaDataText = props.recipe.duration.toInt().toString()
+                metaDataText = "${props.recipe.duration.toInt()} min"
                 chipIcon = Icon.create { AccessTime() }
             }
 
@@ -347,40 +516,68 @@ private val RecipeTitle = FC<RecipeTitleProps> { props ->
 
 private external interface RecipeActionProps : Props {
     var myRecipe: Boolean
+    var isFavorite: Boolean
+    var onFavoriteClick: () -> Unit
+    var onLikeClick: () -> Unit
+    var onDislikeClick: () -> Unit
+    var onEditClick: () -> Unit
+    var onDeleteClick: () -> Unit
 }
 
 private val RecipeAction = FC<RecipeActionProps> { props ->
     Box {
-        Tooltip {
-            title = ReactNode("Das Rezept gefällt mir nicht")
+        sx {
+            display = Display.flex
+            alignItems = AlignItems.center
+            justifyContent = JustifyContent.flexStart
+        }
+        Rating {
+            value = 2.5
+            precision = 0.5
+        }
+        /*Tooltip {
+            title = ReactNode("Bewerte dieses Rezept")
             IconButton {
-                ThumbDown {
+                onClick = { props.onFavoriteClick() }
+                Star {
+                    color = SvgIconColor.inherit
+                }
+            }
+        }*/
+        Tooltip {
+            title = ReactNode("Als Favorite speichern")
+            IconButton {
+                onClick = { props.onFavoriteClick() }
+                Favorite {
                     color = SvgIconColor.inherit
                 }
             }
         }
-        Tooltip {
+        /*Tooltip {
             title = ReactNode("Das Rezept gefällt mir")
             IconButton {
+                onClick = { props.onLikeClick() }
                 ThumbUp {
                     color = SvgIconColor.inherit
                 }
             }
         }
         Tooltip {
-            title = ReactNode("Als Favorite speichern")
+            title = ReactNode("Das Rezept gefällt mir nicht")
             IconButton {
-                Favorite {
+                onClick = { props.onDislikeClick() }
+                ThumbDown {
                     color = SvgIconColor.inherit
                 }
             }
-        }
+        }*/
 
         if (props.myRecipe) {
             Tooltip {
                 title = ReactNode("Dieses Rezept bearbeiten")
                 IconButton {
                     Edit {
+                        onClick = { props.onEditClick() }
                         color = SvgIconColor.inherit
                     }
                 }
@@ -388,7 +585,8 @@ private val RecipeAction = FC<RecipeActionProps> { props ->
             Tooltip {
                 title = ReactNode("Dieses Rezept löschen")
                 IconButton {
-                    Delete {
+                    onClick = { props.onDeleteClick() }
+                    DeleteForever {
                         color = SvgIconColor.error
                     }
                 }
@@ -403,6 +601,8 @@ private external interface RecipeMetaDataProps : Props {
     var userLastName: String?
     var chipIcon: ReactElement<*>?
     var metaDataText: String
+    var editMode: Boolean
+    var onChipClick: () -> Unit
 }
 
 private val RecipeMetaData = FC<RecipeMetaDataProps> { props ->
@@ -412,8 +612,14 @@ private val RecipeMetaData = FC<RecipeMetaDataProps> { props ->
         }
         props.chipIcon?.let {
             Chip {
+                sx {
+                    alignItems = AlignItems.center
+                }
                 icon = it
                 label = ReactNode(props.metaDataText)
+                if (props.editMode) {
+                    onClick = { props.onChipClick() }
+                }
             }
         } ?: Chip {
             avatar = Avatar.create {
