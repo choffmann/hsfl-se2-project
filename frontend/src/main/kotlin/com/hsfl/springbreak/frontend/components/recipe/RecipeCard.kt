@@ -14,6 +14,7 @@ val RecipeCard = FC<RecipeCardItemProps> { props ->
         RecipeCardSkeleton()
     } else {
         RecipeCardItem {
+            isMyRecipe = props.isMyRecipe
             id = props.id
             title = props.title
             createdDate = props.createdDate

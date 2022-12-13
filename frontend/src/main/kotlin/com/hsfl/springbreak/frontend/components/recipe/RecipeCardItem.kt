@@ -4,19 +4,13 @@ import com.hsfl.springbreak.frontend.utils.color
 import csstype.Color
 import csstype.FontWeight
 import csstype.px
-import kotlinx.js.jso
 import mui.icons.material.*
 import mui.material.*
-import mui.material.Menu
 import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import react.*
-import react.dom.events.MouseEvent
-import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.img
-
-data class Point(val x: Double, val y: Double)
 
 const val recipeCardWidth = 344
 
@@ -31,34 +25,14 @@ external interface RecipeCardItemProps : Props {
     var cost: String
     var duration: String
     var difficulty: String
+    var score: Double
+    var isMyRecipe: Boolean
+    var isFavorite: Boolean
     var onClick: (Int) -> Unit
+    var onFavoriteClick: (Int) -> Unit
 }
 
 val RecipeCardItem = FC<RecipeCardItemProps> { props ->
-    var point by useState<Point>()
-    var isFavorite by useState(false)
-    var showSnackbar by useState(false)
-
-
-    val handleContextMenu = { event: MouseEvent<*, *> ->
-        event.preventDefault()
-        point = if (point == null) {
-            Point(
-                x = event.clientX - 2, y = event.clientY - 4
-            )
-        } else {
-            null
-        }
-    }
-
-    val handleClose: MouseEventHandler<*> = { point = null }
-
-    val handleClickFavorite: MouseEventHandler<*> = {
-        if (!isFavorite) {
-            showSnackbar = true
-        }
-        isFavorite = !isFavorite
-    }
 
     // Returned the first letters from a name (James Sullivan => JS)
     val userNameInLetter: (String) -> String = {
@@ -76,10 +50,6 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
                         src = it
                     } ?: +userNameInLetter(props.creator)
                 }
-            }
-            action = IconButton.create {
-                onClick = handleContextMenu
-                MoreVert()
             }
             title = Typography.create {
                 sx { fontWeight = FontWeight.bold }
@@ -130,15 +100,19 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
         CardActions {
             disableSpacing = true
             IconButton {
-                onClick = handleClickFavorite
-                Tooltip {
+                onClick = { props.onFavoriteClick(props.id) }
+                disabled = props.isMyRecipe
+                if (props.isMyRecipe) Tooltip {
+                    title = Typography.create {+"Du kannst dein eigenes Rezept nicht speichern"}
+                    Favorite()
+                } else Tooltip {
                     title = Typography.create {
-                        if (isFavorite) +"Aus Favoriten entfernen"
+                        if (props.isFavorite) +"Aus Favoriten entfernen"
                         else +"Zu Favoriten hinzufügen"
                     }
                     Favorite {
                         sx {
-                            if (isFavorite) color = Color("red")
+                            if (props.isFavorite) color = Color("red")
                         }
                     }
                 }
@@ -147,43 +121,11 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
                 direction = responsive(StackDirection.row)
                 spacing = responsive(1)
                 Rating {
-                    value = 2.5
+                    value = props.score
                     precision = 0.5
                     size = Size.small
                     readOnly = true
                 }
-                Typography {
-                    variant = TypographyVariant.body2
-                    color = "text.secondary"
-                    +"(123)"
-                }
-            }
-        }
-        Menu {
-            open = point != null
-            onClose = handleClose
-
-            anchorReference = PopoverReference.anchorPosition
-            anchorPosition = if (point != null) {
-                jso {
-                    top = point!!.y
-                    left = point!!.x
-                }
-            } else {
-                undefined
-            }
-
-            MenuItem {
-                ListItemIcon { Visibility() }
-                ListItemText { +"View" }
-            }
-            MenuItem {
-                ListItemIcon { Edit() }
-                ListItemText { +"Edit" }
-            }
-            MenuItem {
-                ListItemIcon { Delete() }
-                ListItemText { +"Delete" }
             }
         }
     }

@@ -144,6 +144,7 @@ val TabView = FC<TabViewProps> { props ->
             spacing = responsive(2)
             props.list.forEach {
                 RecipeCard {
+                    isMyRecipe = true
                     id = it.id
                     title = it.title
                     createdDate = "Bla"
