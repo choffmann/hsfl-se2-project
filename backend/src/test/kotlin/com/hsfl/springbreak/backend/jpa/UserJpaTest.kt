@@ -2,7 +2,7 @@ package com.hsfl.springbreak.backend.jpa
 
 import com.hsfl.springbreak.backend.entity.UserEntity
 import com.hsfl.springbreak.backend.repository.UserRepository
-import com.hsfl.springbreak.backend.service.UserJpaService
+import com.hsfl.springbreak.backend.service.UserService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,7 +20,7 @@ class UserJpaTest {
     private lateinit var repository: UserRepository
     
     @Autowired
-    private lateinit var service: UserJpaService
+    private lateinit var service: UserService
 
     val demoUsers = listOf(
         UserEntity(

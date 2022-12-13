@@ -180,6 +180,6 @@ class RecipeService(
      * @param id The user's id whose recipes shall be returned.
      */
     fun getRecipesByCreator(id: Long): ApiResponse<List<Recipe.Response?>> {
-        return ApiResponse(data = recipeRepository.findRecipeByUsers_id(id).map { it?.toResponse() }, success = true)
+        return ApiResponse(data = recipeRepository.findRecipeEntitiesByCreator_Id(id).map { it?.toResponse() }, success = true)
     }
 }

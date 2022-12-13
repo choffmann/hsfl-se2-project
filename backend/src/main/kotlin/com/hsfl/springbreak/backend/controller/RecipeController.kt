@@ -15,12 +15,12 @@ import javax.transaction.Transactional
 @RestController
 class RecipeController(val recipeService: RecipeService) {
 
-    @GetMapping("api/recipes?user={id}")
-    fun getRecipeById(@PathVariable("id") id: Long): ApiResponse<Recipe.Response> =
+    @GetMapping("api/recipes", params = ["id"])
+    fun getRecipeById(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> =
         recipeService.getRecipeById(id)
 
-    @GetMapping("api/recipes?name={name}")
-    fun getRecipeByName(@PathVariable("name") name: String): ApiResponse<Recipe.Response> =
+    @GetMapping("api/recipes", params = ["name"])
+    fun getRecipeByName(@RequestParam("name") name: String): ApiResponse<Recipe.Response> =
         recipeService.getRecipeByName(name)
 
     @GetMapping("api/recipes")
@@ -31,8 +31,8 @@ class RecipeController(val recipeService: RecipeService) {
     fun getRecipesByPopularity(): ApiResponse<List<Recipe.Response>> =
         recipeService.getRecipesByPopularity()
 
-    @GetMapping("api/recipes/creator?user={id}")
-    fun getRecipesByCreator(@PathVariable("id") id: Long): ApiResponse<List<Recipe.Response?>> =
+    @GetMapping("api/recipes/creator")
+    fun getRecipesByCreator(@RequestParam("id") id: Long): ApiResponse<List<Recipe.Response?>> =
         recipeService.getRecipesByCreator(id)
 
     @PostMapping("api/recipes")
@@ -43,12 +43,12 @@ class RecipeController(val recipeService: RecipeService) {
     fun updateRecipe(@RequestBody changes: Recipe.ChangeRecipe): ApiResponse<Recipe.Response> =
         recipeService.updateRecipe(changes)
 
-    @PutMapping("api/recipes/image?recipe={id}")
-    fun setImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<Recipe.Response> =
+    @PutMapping("api/recipes/image")
+    fun setImage(@RequestParam("image") file: MultipartFile, @RequestParam id: Long): ApiResponse<Recipe.Response> =
         recipeService.updateRecipeImage(file.bytes, id)
 
-    @DeleteMapping("api/recipes?recipe={id}")
-    fun deleteRecipe(@PathVariable("id") id: Long): ApiResponse<Recipe.Response> =
+    @DeleteMapping("api/recipes")
+    fun deleteRecipe(@RequestParam("id") id: Long): ApiResponse<Recipe.Response> =
         recipeService.deleteRecipeById(id)
 
 }
