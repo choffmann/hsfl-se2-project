@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 class RatingController(val ratingService: RatingService) {
 
     @PostMapping("api/rating")
-    fun setRating(@RequestBody rating: Rating.SendRating): ApiResponse<Rating> =
+    fun setRating(@RequestBody rating: Rating.SendRating): ApiResponse<Double> =
         ratingService.setRating(rating)
 
 }

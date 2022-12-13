@@ -3,25 +3,28 @@ package com.hsfl.springbreak.backend.entity
 import com.hsfl.springbreak.backend.model.Recipe
 import java.sql.Blob
 import java.time.LocalDateTime
+import java.util.DoubleSummaryStatistics
 import javax.persistence.*
 
 @Entity(name = "recipe")
 data class RecipeEntity(
-        @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
-        @Column var title: String,
-        @Column(columnDefinition = "TEXT") var shortDescription: String?,
-        @Column var price: Double?,
-        @Column var duration: Double?,
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
+    @Column var title: String,
+    @Column(columnDefinition = "TEXT") var shortDescription: String?,
+    @Column var price: Double?,
+    @Column var duration: Double?,
     // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
-        @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
-        @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
-        @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
-        @Column var createTime: LocalDateTime,
-        @Column @Lob var image: Blob? = null,
-        @Column(columnDefinition = "TEXT") var longDescription: String?,
-        @Column var views: Int = 0,
-        @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
-        @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
+    @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
+    @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
+    @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
+    @Column var createTime: LocalDateTime,
+    @Column @Lob var image: Blob? = null,
+    @Column(columnDefinition = "TEXT") var longDescription: String?,
+    @Column var views: Int = 0,
+    @Column var score: Double = 0.00,
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ratings: List<RatingEntity>? = listOf(),
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
+    @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
         /*
         @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?
         @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
@@ -41,10 +44,9 @@ data class RecipeEntity(
         image = this.image,
         longDescription = this.longDescription,
         views = this.views,
+        score = this.score,
+        ratings = this.ratings!!.map { it.toDto() },
         ingredients = this.ingredients!!.map { it.toDto() } // TODO: Hier nur die ID zurückgeben
-        /*
-        rating = this.rating!!.toDto(),
-         */
     )
 
     fun toResponse(): Recipe.Response = Recipe.Response(

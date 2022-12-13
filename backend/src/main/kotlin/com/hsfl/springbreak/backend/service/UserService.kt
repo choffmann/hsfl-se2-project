@@ -14,7 +14,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserJpaService(val userRepository: UserRepository, val recipeRepository: RecipeRepository) {
+class UserService(val userRepository: UserRepository, val recipeRepository: RecipeRepository) {
 
     /**
      * Creates a new User.

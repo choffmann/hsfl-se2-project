@@ -47,11 +47,11 @@ class RecipeJpaTest {
         recipeId = controller.createRecipe(testRecipe).data?.id ?: 0
     }
 
-    @Test
-    @Description("Test adding recipe as favorite")
-    fun testAddFavorite() {
-        controller.setFavoriteById(recipeId, userId)
-    }
+//    @Test
+//    @Description("Test adding recipe as favorite")
+//    fun testAddFavorite() {
+//        controller.setFavoriteById(recipeId, userId)
+//    }
 
     @Test
     @Description("Test correct RecipeController.findRecipeById(id) with existing id")

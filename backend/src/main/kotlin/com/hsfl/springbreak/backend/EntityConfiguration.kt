@@ -1,15 +1,13 @@
 package com.hsfl.springbreak.backend
 
-import com.hsfl.springbreak.backend.controller.RecipeController
 import com.hsfl.springbreak.backend.entity.*
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
-import com.hsfl.springbreak.backend.service.RecipeJpaService
+import com.hsfl.springbreak.backend.service.RecipeService
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.time.LocalDateTime
 
 @Configuration
 class EntityConfiguration {
@@ -23,7 +21,7 @@ class EntityConfiguration {
         categoryRepository: CategoryRepository,
         difficultyRepository: DifficultyRepository,
         ingredientRecipeRepository: IngredientRecipeRepository,
-        recipeJpaService: RecipeJpaService
+        recipeService: RecipeService
     ) =
         ApplicationRunner {
             /* Create Dummy-User */
@@ -92,7 +90,7 @@ class EntityConfiguration {
             ingredientRepository.save(IngredientEntity(name = "Zucker"))
 
             /* Prepopulate Recipes */
-            recipeJpaService.createRecipe(Recipe.CreateRecipe(
+            recipeService.createRecipe(Recipe.CreateRecipe(
                 title = "Haselnusskuchen",
                 categoryId = 3,
                 creatorId = 1,
@@ -111,7 +109,7 @@ class EntityConfiguration {
                 shortDescription = "Der einfachste Kuchen, den ich kenne. Nur 3 Zutaten. Das kann jeder!"
             ))
 
-            recipeJpaService.createRecipe(Recipe.CreateRecipe(
+            recipeService.createRecipe(Recipe.CreateRecipe(
                 title = "Roggenmischbrot",
                 categoryId = 3,
                 creatorId = 1,

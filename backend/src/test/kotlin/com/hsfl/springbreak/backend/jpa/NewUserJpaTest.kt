@@ -2,13 +2,10 @@ package com.hsfl.springbreak.backend.jpa
 
 
 import com.hsfl.springbreak.backend.EntityConfiguration
-import com.hsfl.springbreak.backend.repository.UserRepository
-import com.hsfl.springbreak.backend.service.UserJpaService
 import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 
