@@ -7,4 +7,8 @@ interface RecipeRepository : JpaRepository<RecipeEntity, Long> {
     fun findRecipeByTitle(name: String): RecipeEntity?
 
     fun findRecipeEntitiesByCreator_Id(id: Long): List<RecipeEntity?>
+
+    fun findByOrderByScoreDesc(): List<RecipeEntity?>
+
+
 }

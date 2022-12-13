@@ -10,25 +10,17 @@ data class User(
     val password: String,
     val image: Blob?,
     val favorites: MutableList<Recipe>
-    // val rating: List<Recipe>
 ) {
     data class Login(
-        val email: String,
-        val password: String
+        val email: String, val password: String
     )
 
     data class Register(
-        val firstName: String,
-        val lastName: String,
-        val email: String,
-        val password: String
+        val firstName: String, val lastName: String, val email: String, val password: String
     )
 
     data class ChangeProfile(
-        val id: Long,
-        val firstName: String?,
-        val lastName: String?,
-        val password: String?
+        val id: Long, val firstName: String?, val lastName: String?, val password: String?
     )
 
     data class Response(
@@ -41,11 +33,7 @@ data class User(
     )
 
     data class Limited(
-        val id: Long,
-        val firstName: String,
-        val lastName: String,
-        val email: String,
-        val image: Blob?
+        val id: Long, val firstName: String, val lastName: String, val email: String, val image: Blob?
     )
 }
 

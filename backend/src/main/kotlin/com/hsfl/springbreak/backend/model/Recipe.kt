@@ -19,22 +19,18 @@ data class Recipe(
     val score: Double,
     val ratings: List<Rating>,
     val ingredients: List<IngredientRecipe>
-    /*
-    val rating: Rating,
-    val ingredients: List<Ingredient>,
-     */
 ) {
 
     data class CreateRecipe(
-            val title: String,
-            val shortDescription: String?,
-            val price: Double?,
-            val duration: Double?,
-            val difficultyId: Long,
-            val categoryId: Long,
-            val creatorId: Long,
-            val longDescription: String?,
-            val ingredients: List<IngredientRecipe.WithoutRecipe>
+        val title: String,
+        val shortDescription: String?,
+        val price: Double?,
+        val duration: Double?,
+        val difficultyId: Long,
+        val categoryId: Long,
+        val creatorId: Long,
+        val longDescription: String?,
+        val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
     data class ChangeRecipe(
@@ -62,7 +58,8 @@ data class Recipe(
         val image: Blob?,
         val longDescription: String?,
         val views: Int,
-        val ingredients: List<IngredientRecipe.Response>
+        val ingredients: List<IngredientRecipe.Response>,
+        val score: Double
     )
 
 }

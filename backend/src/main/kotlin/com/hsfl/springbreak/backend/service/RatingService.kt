@@ -11,9 +11,9 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class RatingService(val ratingRepository: RatingRepository,
-                    val recipeRepository: RecipeRepository,
-                    val userRepository: UserRepository) {
+class RatingService(
+    val ratingRepository: RatingRepository, val recipeRepository: RecipeRepository, val userRepository: UserRepository
+) {
 
     /**
      * Saves a new rating to database or updates an existing entry.
@@ -32,7 +32,7 @@ class RatingService(val ratingRepository: RatingRepository,
                 ratingProxy.stars = rating.stars
                 ratingRepository.save(ratingProxy)
             }
-            
+
             ApiResponse(data = calcScore(rating.recipeId), success = true)
         } else {
             ApiResponse(error = "Invalid user recipe combination", success = false)
@@ -46,6 +46,12 @@ class RatingService(val ratingRepository: RatingRepository,
         for (rating: RatingEntity in ratings) {
             sum += rating.stars
         }
-        return sum / ratings.size
+
+        val score = sum / ratings.size
+        val recipeProxy = recipeRepository.findById(id).get()
+        recipeProxy.score = score
+        recipeRepository.save(recipeProxy)
+
+        return score
     }
 }

@@ -29,7 +29,6 @@ data class UserEntity(
         password = this.password,
         image = this.image,
         favorites = toRecipeDto(this.favorites)
-        // ratings = this.rating.map { it.toDto() }
     )
 
     private fun toRecipeDto(dtoList: MutableList<RecipeEntity>): MutableList<Recipe> {
@@ -49,7 +48,6 @@ data class UserEntity(
         image = this.image
     )
 
-
     companion object {
         fun fromDto(dto: User): UserEntity = UserEntity(
             id = dto.id,
@@ -59,8 +57,6 @@ data class UserEntity(
             password = dto.password,
             image = dto.image,
             favorites = fromRecipeDto(dto.favorites)
-            //favorites = dto.favorites.map { RecipeEntity.fromDto(it) }
-            // ratings = dto.ratings.map { RecipeEntity.fromDto }
         )
 
         private fun fromRecipeDto(dtoList: MutableList<Recipe>): MutableList<RecipeEntity> {
@@ -78,7 +74,6 @@ data class UserEntity(
             firstName = dto.firstName ?: defaultUser.firstName,
             lastName = dto.lastName ?: defaultUser.lastName,
             favorites = defaultUser.favorites
-            // image = dto.image ?: defaultUser.image
         )
 
         fun fromDto(dto: User.Register): UserEntity = UserEntity(
