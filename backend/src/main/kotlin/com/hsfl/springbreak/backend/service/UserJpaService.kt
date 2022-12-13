@@ -112,9 +112,10 @@ class UserJpaService(val userRepository: UserRepository, val recipeRepository: R
      */
     fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
         if (userRepository.existsById(uId)) {
-            for (favorite: RecipeEntity in userRepository.findById(uId).get().favorites) {
-                if (favorite.id == rId) {
-                    recipeRepository.deleteById(rId)
+            for (favoriteRecipe: RecipeEntity in userRepository.findById(uId).get().favorites) {
+                if (favoriteRecipe.id == rId) {
+                    //recipeRepository.deleteById(rId)
+                    userRepository.findById(uId).get().favorites.remove(favoriteRecipe)
                     return ApiResponse(success = true)
                 }
             }

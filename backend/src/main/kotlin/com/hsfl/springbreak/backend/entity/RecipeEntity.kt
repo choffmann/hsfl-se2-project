@@ -3,29 +3,30 @@ package com.hsfl.springbreak.backend.entity
 import com.hsfl.springbreak.backend.model.Recipe
 import java.sql.Blob
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity(name = "recipe")
 data class RecipeEntity(
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
-    @Column var title: String,
-    @Column var shortDescription: String?,
-    @Column var price: Double?,
-    @Column var duration: Double?,
+        @Id @GeneratedValue(strategy=GenerationType.IDENTITY) val id: Long? = null,
+        @Column var title: String,
+        @Column var shortDescription: String?,
+        @Column var price: Double?,
+        @Column var duration: Double?,
     // @OneToOne(mappedBy = "recipe", cascade = [CascadeType.ALL]) @PrimaryKeyJoinColumn var rating: RatingEntity?,
-    @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
-    @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
-    @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
-    @Column var createTime: LocalDate,
-    @Column @Lob var image: Blob? = null,
-    @Column var longDescription: String?,
-    @Column var views: Int = 0,
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
-    @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
-    /*
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?
-    @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
-     */
+        @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
+        @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
+        @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
+        @Column var createTime: LocalDateTime,
+        @Column @Lob var image: Blob? = null,
+        @Column var longDescription: String?,
+        @Column var views: Int = 0,
+        @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?,
+        @ManyToMany(mappedBy = "favorites") var userFavorites: List<UserEntity>? = listOf()
+        /*
+        @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL]) var ingredients: List<IngredientRecipeEntity>?
+        @ManyToMany(mappedBy = "favoriteRecipe") var userFavorites: List<UserEntity>? = null
+         */
 ) {
 
     fun toDto(): Recipe = Recipe(
@@ -84,7 +85,7 @@ data class RecipeEntity(
              */
         )
 
-        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity, category: CategoryEntity, difficulty: DifficultyEntity, date: LocalDate): RecipeEntity =
+        fun fromDto(newRecipe: Recipe.CreateRecipe, user: UserEntity, category: CategoryEntity, difficulty: DifficultyEntity, date: LocalDateTime): RecipeEntity =
             RecipeEntity(
             title = newRecipe.title,
             shortDescription = newRecipe.shortDescription,

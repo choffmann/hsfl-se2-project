@@ -14,31 +14,36 @@ class UserController(val repository: UserRepository, val userService: UserJpaSer
 
     @PostMapping("user/register")
     fun register(@RequestBody newUser: User.Register): ApiResponse<User> =
-        userService.registerUser(newUser)
+            userService.registerUser(newUser)
 
-    @GetMapping("user/login")
+    @PostMapping("user/login")
     fun login(@RequestBody loginUser: User.Login): ApiResponse<User> =
-        userService.loginUser(loginUser)
+            userService.loginUser(loginUser)
 
     @PutMapping("user/update")
     fun updateUser(@RequestBody userChanges: User.ChangeProfile): ApiResponse<User> =
-        userService.changeProfile(userChanges)
+            userService.changeProfile(userChanges)
 
     @PostMapping("user/image/{id}")
     fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @PathVariable id: Long): ApiResponse<User> =
-        userService.updateProfileImage(file.bytes, id)
+            userService.updateProfileImage(file.bytes, id)
 
     @PostMapping("user/favorite/{rId}/{uId}")
-    fun setFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long) =
-        userService.setFavoriteById(rId, uId)
+    fun setFavoriteById(
+            @PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long) =
+            userService.setFavoriteById(rId, uId)
 
     @GetMapping("user/favorite/{id}")
     fun getFavoritesById(@PathVariable("id") id: Long): ApiResponse<List<Recipe>> =
-        userService.getFavoritesById(id)
+            userService.getFavoritesById(id)
 
-    @DeleteMapping("user/favorite/{rId}/{uId}")
-    fun deleteFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long): ApiResponse<Recipe> =
-        userService.deleteFavoriteById(rId, uId)
-
-
+//    @DeleteMapping("user/favorite/{rId}/{uId}")
+//    fun deleteFavoriteById(@PathVariable("rId") rId: Long, @PathVariable("uId") uId: Long): ApiResponse<Recipe> =
+//            userService.deleteFavoriteById(rId, uId)
+//}
+    @DeleteMapping("user/favorite")
+    fun deleteFavoriteById(
+            @RequestParam(value = "recipeId", required = true) recipeId:Long,
+            @RequestParam(value = "userId", required = true) userId:Long): ApiResponse<Recipe> =
+            userService.deleteFavoriteById(recipeId, userId)
 }

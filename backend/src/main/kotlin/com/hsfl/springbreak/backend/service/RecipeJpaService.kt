@@ -10,7 +10,7 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
 import java.sql.Blob
-import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
@@ -58,7 +58,7 @@ class RecipeJpaService(
         val user = userRepository.findById(recipe.creatorId).get()
         val category = categoryRepository.findById(recipe.categoryId).get()
         val difficulty = difficultyRepository.findById(recipe.difficultyId).get()
-        val createTime = LocalDate.now()
+        val createTime = LocalDateTime.now()
 
         // save new recipe to database
         val savedRecipe = recipeRepository.save(RecipeEntity.fromDto(recipe, user, category, difficulty, createTime))
