@@ -7,12 +7,20 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
+
+/**
+ * Call ingredient-related functions from ingredient-repository.
+ */
 @CrossOrigin("http://localhost:3000")
 @RestController
 class IngredientController(
     val ingredientRepository: IngredientRepository
 ) {
 
+    /**
+     * API-Endpoint for getting a list of all available ingredients.
+     * @return API-Response with a list of all stored ingredients or an error
+     */
     @GetMapping("api/ingredients")
     fun getAllIngredients(): ApiResponse<List<Ingredient>> {
         val ingredientEntities = ingredientRepository.findAll().distinct()

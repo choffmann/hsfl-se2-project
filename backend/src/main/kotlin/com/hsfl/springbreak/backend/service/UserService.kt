@@ -63,7 +63,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             val fileName = file.originalFilename
             val fileType = file.contentType
             val filePath = Paths.get("").toAbsolutePath().toString() +
-                    "/backend/src/main/resources/userProfiles/" + file.originalFilename
+                    "/backend/src/main/resources/userProfiles/$id" + file.originalFilename
 
             file.transferTo(File(filePath))
 
@@ -117,12 +117,13 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
      * @param rId The referenced recipe's id.
      * @param uId The referenced user's id.
      */
-    fun setFavoriteById(rId: Long, uId: Long): ApiResponse<User> {
+    fun setFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(rId) && userRepository.existsById(uId)) {
             val userProxy = userRepository.findById(uId).get()
-            userProxy.favorites.add(recipeRepository.findById(rId).get())
+            val recipeProxy = recipeRepository.findById(rId).get()
+            userProxy.favorites.add(recipeProxy)
             userRepository.save(userProxy)
-            ApiResponse(success = true)
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
             ApiResponse(error = "Invalid user recipe combination", success = false)
         }
@@ -146,16 +147,17 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
      * @param rId The referenced recipe's id.
      * @param uId The referenced user's id.
      */
-    fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
+    fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe.Response> {
         if (userRepository.existsById(uId)) {
             for (favoriteRecipe: RecipeEntity in userRepository.findById(uId).get().favorites) {
                 if (favoriteRecipe.id == rId) {
                     userRepository.findById(uId).get().favorites.remove(favoriteRecipe)
-                    return ApiResponse(success = true)
+                    return ApiResponse(data = favoriteRecipe.toResponse(), success = true)
                 }
             }
+            return ApiResponse(error = "Invalid recipe ID", success = false)
         }
-        return ApiResponse(error = "Invalid user recipe combination", success = false)
+        return ApiResponse(error = "Invalid user ID", success = false)
     }
 
 }
