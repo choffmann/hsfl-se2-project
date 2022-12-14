@@ -5,4 +5,4 @@ build:
   stage: build
   script:
     - chmod +x ./gradlew
-    - gradle --build-cache build -x test
+    - ./gradlew build -x test --stacktrace
