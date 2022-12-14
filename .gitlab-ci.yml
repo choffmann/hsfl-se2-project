@@ -12,8 +12,9 @@ before_script:
   - chmod 700 ~/.ssh
 
 variables:
-  IMAGE_NAME: "se2springbreak"
-  TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+  CONTAINER_NAME: "se2springbreak-app"
 
 build:
   stage: build
@@ -25,6 +26,9 @@ build:
     - rm -rf backend/src/main/resources/static/
     - cp -r frontend/build/distributions backend/src/main/resources/static
     - ./gradlew backend:build -x test --stacktrace
+    - rm -rf public/app
+    - mkdir -p public/app
+    - cp backend/build/libs/backend-0.0.1-SNAPSHOT.jar public/app
 
 publish:
   stage: publish
@@ -36,3 +40,16 @@ publish:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
+
+deploy:
+  stage: deploy
+  tags:
+    - deployment
+  script:
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY"
+      - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
+      - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f $CONTAINER_NAME || true"
+      - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 8080:8080 --name my-app $TAG_COMMIT"
+  environment:
+    name: production
+    url: http://cloud.jgdperl.com:8080
