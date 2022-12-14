@@ -9,6 +9,9 @@ import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.sql.Blob
 import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
@@ -55,26 +58,35 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
     }
 
 
-    fun setProfilePicture(id: Long, file: MultipartFile): ApiResponse<String> {
+    fun setProfilePicture(id: Long, file: MultipartFile): String? {
         return if (userRepository.existsById(id)){
-            val user = userRepository.findById(id).get()
-            user.image = file.bytes
-            userRepository.save(user)
-            ApiResponse(success = true)
-        } else {
-            ApiResponse(error = "False User ID", success = false)
-        }
-    }
+            val fileName = file.originalFilename
+            val fileType = file.contentType
+            val filePath = Paths.get("").toAbsolutePath().toString() +
+                    "/backend/src/main/resources/userProfiles/" + file.originalFilename
 
-    fun getProfilePicture(id: Long): ByteArray? {
-        return if (userRepository.existsById(id)) {
-            userRepository.findById(id).get().image
+            file.transferTo(File(filePath))
+
+            val user = userRepository.findById(id).get()
+            user.image = filePath
+            userRepository.save(user)
+            filePath
         } else {
             null
         }
     }
 
+    fun getProfilePicture(id: Long): ByteArray {
+        return if (userRepository.existsById(id)) {
+            val userProxy = userRepository.findById(id).get()
+            val filePath = userProxy.image
+            Files.readAllBytes(File(filePath).toPath())
+        } else {
+            byteArrayOf()
+        }
+    }
 
+    /*
     /**
      * Read a given file and save it to database as blob-type.
      * @param file The image to be read and set as new profile picture.
@@ -97,6 +109,8 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             ApiResponse(error = "User not found", success = false)
         }
     }
+
+     */
 
     /**
      * Add a new entity to the User-Favorite relation.
