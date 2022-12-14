@@ -10,18 +10,20 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.utils.io.core.*
+import kotlinx.atomicfu.TraceBase.None.append
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.RequestInit
-import web.file.File
 import org.w3c.xhr.FormData
+import web.file.File
 
 
 interface ApiClient {
     suspend fun login(user: User.Login): User.Response
     suspend fun register(user: User.Register): User.Response
     suspend fun updateProfile(user: User.UpdateProfile): User.Response
-    suspend fun updateProfileImage(userId: Int, profileImage: File?): User.ImageResponse
+    suspend fun updateProfileImage(userId: Int, profileImage: File): User.ImageResponse
     suspend fun getAllIngredients(): Ingredient.GetAllResponse
     suspend fun getAllDifficulties(): Difficulty.GetAllResponse
     suspend fun getAllCategories(): Category.GetAllResponse
@@ -72,23 +74,22 @@ class Client : ApiClient {
         }.body()
     }
 
-    override suspend fun updateProfileImage(userId: Int, profileImage: File?): User.ImageResponse {
+    override suspend fun updateProfileImage(userId: Int, profileImage: File): dynamic {
         // Have to use window.fetch. Ktor didn't support uploading File from JS File package for now
         val formData = FormData()
-        profileImage?.let { file ->
+        profileImage.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        val response = window.fetch(
+        val response =  window.fetch(
             input = "$BASE_URL/user/image?id=$userId", init = RequestInit(
                 method = "POST",
                 body = formData
             )
         )
             .await()
-            .text()
-            .catch { return@catch User.ImageResponse(error = it.message, success = false) }
+            .json()
             .await()
-        return response
+        return response.asDynamic()
     }
 
     override suspend fun getAllIngredients(): Ingredient.GetAllResponse {

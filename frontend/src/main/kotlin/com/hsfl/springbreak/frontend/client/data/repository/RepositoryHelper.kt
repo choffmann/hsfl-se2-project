@@ -9,6 +9,7 @@ suspend fun <T> FlowCollector<DataResponse<T>>.repositoryHelper(callback: suspen
         emit(DataResponse.Loading())
         callback().let { response ->
             response.data?.let {
+                //println(it)
                 emit(DataResponse.Success(it))
             } ?: emit(DataResponse.Error(response.error!!))
         }

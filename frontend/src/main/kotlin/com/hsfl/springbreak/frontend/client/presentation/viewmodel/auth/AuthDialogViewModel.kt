@@ -1,8 +1,11 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth
 
+import com.hsfl.springbreak.frontend.client.data.DataResponse
 import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.*
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.MessageViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.SnackbarEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.AuthDialogEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.di.di
@@ -10,6 +13,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import web.file.File
@@ -112,9 +117,9 @@ class AuthDialogViewModel(
             response.handleDataResponse<User>(
                 onSuccess = { user ->
                     UiEventState.onEvent(UiEvent.Idle)
-                    if(profileImage == null) {
+                    if (profileImage == null) {
                         saveUserLocal(user)
-                        UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert")
+                        MessageViewModel.onEvent(SnackbarEvent.Show("Dein Account wurde erfolgreich registriert"))
                         closeRegisterDialog()
                     } else {
                         uploadProfileImage(user.id, profileImage)
@@ -126,12 +131,15 @@ class AuthDialogViewModel(
     }
 
     private fun uploadProfileImage(userId: Int, profileImage: File) = scope.launch {
-        userRepository.uploadProfileImage(userId, profileImage).collect { response ->
-            response.handleDataResponse<User.Image>(
+        userRepository.uploadProfileImage(userId, profileImage).collectLatest { response ->
+            response.handleDataResponse<String>(
                 onSuccess = {
-                    localStorage.setItem("userImage", it.imageUrl)
-                    UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert")
+                    UiEventState.onEvent(UiEvent.Idle)
+                    MessageViewModel.onEvent(SnackbarEvent.Show("Dein Account wurde erfolgreich registriert"))
                     closeRegisterDialog()
+                    val userState: UserState by di.instance()
+                    localStorage.setItem("userImage", it)
+                    userState.onEvent(UserStateEvent.SetUser(userState.userState.value.copy(image = it)))
                 }
             )
         }

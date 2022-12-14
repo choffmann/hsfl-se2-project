@@ -11,7 +11,7 @@ import web.file.File
 interface UserRepository {
     suspend fun login(user: User.Login): Flow<DataResponse<User>>
     suspend fun register(user: User.Register): Flow<DataResponse<User>>
-    suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<User.Image>>
+    suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<String>>
     suspend fun updateUser(user: User.UpdateProfile): Flow<DataResponse<User>>
 }
 
@@ -30,15 +30,12 @@ class UserRepositoryImpl(private val client: Client) : UserRepository {
         }
     }
 
-    override suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<User.Image>> = flow {
-        repositoryHelper {
-            val response: User.ImageResponse = client.updateProfileImage(userId, profileImage)
-            APIResponse.fromResponse(
-                data = User.Image(response.imageUrl ?: ""),
-                success = response.success,
-                error = response.error
-            )
-        }
+    override suspend fun uploadProfileImage(userId: Int, profileImage: File): Flow<DataResponse<String>> = flow {
+        emit(DataResponse.Loading())
+        val image = client.updateProfileImage(userId, profileImage).data as? String
+        image?.let {
+            emit(DataResponse.Success(it))
+        } ?: emit(DataResponse.Error("Fehler beim hochladen des Profilbildes."))
     }
 
     override suspend fun updateUser(user: User.UpdateProfile): Flow<DataResponse<User>> = flow {

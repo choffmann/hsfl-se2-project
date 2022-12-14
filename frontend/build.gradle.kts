@@ -30,12 +30,12 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
                 // Ktor Client
-                implementation("io.ktor:ktor-client-core:2.1.3")
-                implementation("io.ktor:ktor-client-js:2.1.3")
-                implementation("io.ktor:ktor-client-serialization:2.1.3")
-                implementation("io.ktor:ktor-client-logging:2.1.3")
-                implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
+                implementation("io.ktor:ktor-client-core:2.2.1")
+                implementation("io.ktor:ktor-client-js:2.2.1")
+                implementation("io.ktor:ktor-client-serialization:2.2.1")
+                implementation("io.ktor:ktor-client-logging:2.2.1")
+                implementation("io.ktor:ktor-client-content-negotiation:2.2.1")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
 
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-js:1.7.21")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.447")
