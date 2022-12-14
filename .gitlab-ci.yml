@@ -20,33 +20,46 @@ variables:
 build_frontend:
   stage: build
   image: openjdk:17-jdk-slim-buster
-  script:
+  before_script:
     - chmod +x ./gradlew
+  script:
     - ./gradlew frontend:build --stacktrace
-    - rm -rf backend/src/main/resources/static/
-    - cp -r frontend/build/distributions backend/src/main/resources/static
+  cache:
+    key: "$CI_COMMIT_SHA"
+    policy: push
+    paths:
+      - frontend/build
+  artifacts:
+    paths:
+      - frontend/build/distributions/*
 
 build_backend:
   stage: build
   image: openjdk:17-jdk-slim-buster
-  needs:
-    - build_frontend
-  script:
+  before_script:
     - chmod +x ./gradlew
+  script:
+    - rm -rf backend/src/main/resources/static/
+    - cp -r frontend/build/distributions backend/src/main/resources/static
     - ./gradlew backend:build -x test --stacktrace
-    - rm -rf public/app
-    - mkdir -p public/app
     - cp backend/build/libs/backend-0.0.1-SNAPSHOT.jar public/app
+  cache:
+    key: "$CI_COMMIT_SHA"
+    policy: push
+    paths:
+      - backend/build
+  artifacts:
+    paths:
+      - backend/build/libs/*.jar
 
 publish:
   stage: publish
-  needs:
-    - build_backend
   image: docker:latest
+  dependencies:
+    - build_backend
   services:
     - name: docker:dind
       command: ["--tls=false"]
-
   script:
     - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
