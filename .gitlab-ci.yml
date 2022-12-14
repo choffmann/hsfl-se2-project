@@ -1,6 +1,5 @@
 stages:
   - test
-  - build
   - publish
   - deploy
 
@@ -15,9 +14,10 @@ variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
   CONTAINER_NAME: "se2springbreak-app"
+  BUILD_ARTIFACTS_DIR: "artifacts"
 
 build:
-  stage: build
+  stage: publish
   image:
     name: openjdk:17-jdk-slim-buster
   script:
@@ -29,6 +29,13 @@ build:
     - rm -rf public/app
     - mkdir -p public/app
     - cp backend/build/libs/backend-0.0.1-SNAPSHOT.jar public/app
+  artifacts:
+    paths:
+      - $BUILD_ARTIFACTS_DIR/
+  rules:
+    - if: $CI_PIPELINE_SOURCE === 'push'
+      when: manual
+    - when: never
 
 publish:
   stage: publish

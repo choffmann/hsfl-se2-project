@@ -78,7 +78,7 @@ class Client : ApiClient {
         profileImage?.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        val response =  window.fetch(
+        val response = window.fetch(
             input = "$BASE_URL/user/image?id=$userId", init = RequestInit(
                 method = "POST",
                 body = formData
@@ -158,6 +158,6 @@ class Client : ApiClient {
     override suspend fun getMyFavorites(userId: Int): Recipe.ResponseList {
         return client.submitForm(url = "$BASE_URL/user/favorite", formParameters = Parameters.build {
             append("id", userId.toString())
-        }).body()
+        }, encodeInQuery = true).body()
     }
 }

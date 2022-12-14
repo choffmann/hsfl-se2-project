@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 data class Favorite(
     val id: Int,
     val recipe: Recipe
-)
+) {
+
+}

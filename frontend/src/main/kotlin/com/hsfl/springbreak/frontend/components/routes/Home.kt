@@ -3,6 +3,7 @@ package com.hsfl.springbreak.frontend.components.routes
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeRecipeTab
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RecipeState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.HomeViewEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
@@ -101,29 +102,50 @@ var Home = FC<Props> {
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.CheapTab
-            TabView { list = recipeList.map { it.recipe } }
+            TabView {
+                list = recipeList
+                onFavoriteClick = {
+                    viewModel.onEvent(HomeViewEvent.OnFavorite(it))
+                }
+            }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.FastTab
-            TabView { list = recipeList.map { it.recipe } }
+            TabView {
+                list = recipeList
+                onFavoriteClick = {
+                    viewModel.onEvent(HomeViewEvent.OnFavorite(it))
+                }
+            }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.PopularTab
-            TabView { list = recipeList.map { it.recipe } }
+            TabView {
+                list = recipeList
+                onFavoriteClick = {
+                    viewModel.onEvent(HomeViewEvent.OnFavorite(it))
+                }
+            }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.AllTab
-            TabView { list = recipeList.map { it.recipe } }
+            TabView {
+                list = recipeList
+                onFavoriteClick = {
+                    viewModel.onEvent(HomeViewEvent.OnFavorite(it))
+                }
+            }
         }
     }
 }
 
 
 external interface TabViewProps : Props {
-    var list: List<Recipe>
+    var list: List<RecipeState>
+    var onFavoriteClick: (Int) -> Unit
 }
 
 val TabView = FC<TabViewProps> { props ->
@@ -144,17 +166,19 @@ val TabView = FC<TabViewProps> { props ->
             spacing = responsive(2)
             props.list.forEach {
                 RecipeCard {
-                    isMyRecipe = true
-                    id = it.id
-                    title = it.title
+                    isMyRecipe = it.isMyRecipe
+                    isFavorite = it.isMyFavorite
+                    onFavoriteClick = props.onFavoriteClick
+                    id = it.recipe.id
+                    title = it.recipe.title
                     createdDate = "Bla"
-                    creator = "${it.creator.firstName} ${it.creator.lastName}"
-                    imageSrc = it.image ?: ""
-                    shortDescription = it.shortDescription
-                    cost = it.price.toInt().toString()
-                    duration = it.duration.toInt().toString()
-                    difficulty = it.difficulty.name
-                    creatorImg = it.creator.image
+                    creator = "${it.recipe.creator.firstName} ${it.recipe.creator.lastName}"
+                    imageSrc = it.recipe.image ?: ""
+                    shortDescription = it.recipe.shortDescription
+                    cost = it.recipe.price.toInt().toString()
+                    duration = it.recipe.duration.toInt().toString()
+                    difficulty = it.recipe.difficulty.name
+                    creatorImg = it.recipe.creator.image
                 }
             }
         }

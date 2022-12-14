@@ -102,10 +102,7 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
             IconButton {
                 onClick = { props.onFavoriteClick(props.id) }
                 disabled = props.isMyRecipe
-                if (props.isMyRecipe) Tooltip {
-                    title = Typography.create {+"Du kannst dein eigenes Rezept nicht speichern"}
-                    Favorite()
-                } else Tooltip {
+                Tooltip {
                     title = Typography.create {
                         if (props.isFavorite) +"Aus Favoriten entfernen"
                         else +"Zu Favoriten hinzufügen"

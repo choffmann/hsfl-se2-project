@@ -5,8 +5,10 @@ import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
+import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.HomeViewEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.kodein.di.instance
 
 class HomeViewModel(
     private val recipeRepository: RecipeRepository,
@@ -62,7 +65,30 @@ class HomeViewModel(
             response.handleDataResponse<List<Recipe>>(
                 onSuccess = { list ->
                     UiEventState.onEvent(UiEvent.Idle)
-                    //_recipeList.value = list.map
+                    val userState: UserState by di.instance()
+                    _recipeList.value = list.map {
+                        RecipeState(
+                            recipe = it,
+                            isMyRecipe = userState.userState.value.id == it.creator.id,
+                            isMyFavorite = false
+                        )
+                    }
+                    getMyFavorites(userState.userState.value.id)
+                }
+            )
+        }
+    }
+
+    private fun getMyFavorites(userId: Int) = scope.launch {
+        recipeRepository.getMyFavorites(userId).collectLatest { response ->
+            response.handleDataResponse<List<Recipe>>(
+                onSuccess = { list ->
+                    UiEventState.onEvent(UiEvent.Idle)
+                    list.forEach { likedRecipe ->
+                        _recipeList.value.map {
+                            it.isMyFavorite = it.recipe.id == likedRecipe.id
+                        }
+                    }
                 }
             )
         }
@@ -84,8 +110,8 @@ sealed class HomeRecipeTab {
 }
 
 data class RecipeState(
-    val recipe: Recipe,
-    val isMyRecipe: Boolean,
-    val isMyFavorite: Boolean
+    var recipe: Recipe,
+    var isMyRecipe: Boolean,
+    var isMyFavorite: Boolean
 )
 

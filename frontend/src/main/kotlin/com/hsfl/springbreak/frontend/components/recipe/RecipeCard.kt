@@ -15,6 +15,8 @@ val RecipeCard = FC<RecipeCardItemProps> { props ->
     } else {
         RecipeCardItem {
             isMyRecipe = props.isMyRecipe
+            isFavorite = props.isFavorite
+            onFavoriteClick = props.onFavoriteClick
             id = props.id
             title = props.title
             createdDate = props.createdDate
