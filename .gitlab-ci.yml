@@ -1,5 +1,15 @@
 stages:
+  - test
   - build
+  - publish
+  - deploy
+
+before_script:
+  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
 
 build:
   stage: build
@@ -7,4 +17,7 @@ build:
     name: openjdk:17-jdk-slim-buster
   script:
     - chmod +x ./gradlew
-    - ./gradlew build -x test --stacktrace
+    - ./gradlew frontend:build --stacktrace
+    - rm -f "backend/src/main/resources/static/*"
+    - cp "frontend/build/distributions/" "backend/src/main/resources/static/"
+    - ./gradlew backend:build -x test --stacktrace
