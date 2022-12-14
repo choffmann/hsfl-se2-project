@@ -118,6 +118,7 @@ class AuthDialogViewModel(
                         closeRegisterDialog()
                     } else {
                         uploadProfileImage(user.id, profileImage)
+                        saveUserLocal(user)
                     }
                 }
             )
@@ -128,6 +129,7 @@ class AuthDialogViewModel(
         userRepository.uploadProfileImage(userId, profileImage).collect { response ->
             response.handleDataResponse<User.Image>(
                 onSuccess = {
+                    localStorage.setItem("userImage", it.imageUrl)
                     UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert")
                     closeRegisterDialog()
                 }

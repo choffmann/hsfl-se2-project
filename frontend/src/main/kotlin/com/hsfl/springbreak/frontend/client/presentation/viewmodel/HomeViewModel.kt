@@ -22,18 +22,15 @@ class HomeViewModel(
     private val _currentTab = MutableStateFlow<HomeRecipeTab>(HomeRecipeTab.CheapTab)
     val currentTab: StateFlow<HomeRecipeTab> = _currentTab
 
-    private val _recipeList = MutableStateFlow<List<Recipe>>(listOf())
-    val recipeList: StateFlow<List<Recipe>> = _recipeList
+    private val _recipeList = MutableStateFlow<List<RecipeState>>(listOf())
+    val recipeList: StateFlow<List<RecipeState>> = _recipeList
 
     fun onEvent(event: HomeViewEvent) {
         when (event) {
-            HomeViewEvent.OnCheapTab -> fetchRecipesByTabState()
-            HomeViewEvent.OnFastTab -> fetchRecipesByTabState()
-            HomeViewEvent.OnPopularTab -> fetchRecipesByTabState()
-            HomeViewEvent.OnAllTab -> fetchRecipesByTabState()
             LifecycleEvent.OnMount -> fetchRecipesByTabState()
             LifecycleEvent.OnUnMount -> clearStates()
             is HomeViewEvent.OnTabChange -> handleTabChange(event.tab)
+            is HomeViewEvent.OnFavorite -> onFavorite(event.recipeId)
         }
     }
 
@@ -42,13 +39,16 @@ class HomeViewModel(
         _recipeList.value = emptyList()
     }
 
+    private fun onFavorite(recipeId: Int) {
+
+    }
+
     private fun handleTabChange(tab: HomeRecipeTab) {
         _currentTab.value = tab
         fetchRecipesByTabState()
     }
 
     private fun fetchRecipesByTabState() = scope.launch {
-        println("HomeViewModel::fetchRecipesByTabState")
         when (currentTab.value) {
             HomeRecipeTab.AllTab -> recipeRepository.getAllRecipes().saveToState()
             HomeRecipeTab.CheapTab -> recipeRepository.getRecipeCheapOrder().saveToState()
@@ -62,7 +62,7 @@ class HomeViewModel(
             response.handleDataResponse<List<Recipe>>(
                 onSuccess = { list ->
                     UiEventState.onEvent(UiEvent.Idle)
-                    _recipeList.value = list
+                    //_recipeList.value = list.map
                 }
             )
         }
@@ -82,4 +82,10 @@ sealed class HomeRecipeTab {
         AllTab -> 3
     }
 }
+
+data class RecipeState(
+    val recipe: Recipe,
+    val isMyRecipe: Boolean,
+    val isMyFavorite: Boolean
+)
 

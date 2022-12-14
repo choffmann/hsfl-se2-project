@@ -101,22 +101,22 @@ var Home = FC<Props> {
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.CheapTab
-            TabView { list = recipeList }
+            TabView { list = recipeList.map { it.recipe } }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.FastTab
-            TabView { list = recipeList }
+            TabView { list = recipeList.map { it.recipe } }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.PopularTab
-            TabView { list = recipeList }
+            TabView { list = recipeList.map { it.recipe } }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.AllTab
-            TabView { list = recipeList }
+            TabView { list = recipeList.map { it.recipe } }
         }
     }
 }

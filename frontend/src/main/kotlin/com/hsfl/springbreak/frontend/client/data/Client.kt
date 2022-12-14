@@ -32,6 +32,7 @@ interface ApiClient {
     suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse
     suspend fun getRecipeById(recipeId: Int): Recipe.Response
     suspend fun getRecipeByPopularity(): Recipe.ResponseList
+    suspend fun getMyFavorites(userId: Int): Recipe.ResponseList
 }
 
 class Client : ApiClient {
@@ -77,7 +78,7 @@ class Client : ApiClient {
         profileImage?.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        return window.fetch(
+        val response =  window.fetch(
             input = "$BASE_URL/user/image?id=$userId", init = RequestInit(
                 method = "POST",
                 body = formData
@@ -85,11 +86,9 @@ class Client : ApiClient {
         )
             .await()
             .text()
-            .then {
-                return@then User.ImageResponse(imageUrl = it)
-            }
             .catch { return@catch User.ImageResponse(error = it.message, success = false) }
             .await()
+        return response
     }
 
     override suspend fun getAllIngredients(): Ingredient.GetAllResponse {
@@ -154,5 +153,11 @@ class Client : ApiClient {
 
     override suspend fun getRecipeByPopularity(): Recipe.ResponseList {
         return client.get(urlString = "$BASE_URL/recipes/popularity").body()
+    }
+
+    override suspend fun getMyFavorites(userId: Int): Recipe.ResponseList {
+        return client.submitForm(url = "$BASE_URL/user/favorite", formParameters = Parameters.build {
+            append("id", userId.toString())
+        }).body()
     }
 }
