@@ -45,7 +45,6 @@ backend:
     - rm -rf backend/src/main/resources/static/
     - cp -r frontend/build/distributions backend/src/main/resources/static
     - ./gradlew backend:build -x test --stacktrace
-    - cp backend/build/libs/backend-0.0.1-SNAPSHOT.jar public/app
   cache:
     key: "$CI_COMMIT_SHA"
     policy: push

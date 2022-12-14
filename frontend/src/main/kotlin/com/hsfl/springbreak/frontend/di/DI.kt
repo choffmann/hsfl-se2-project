@@ -39,7 +39,7 @@ val di = DI {
     bindSingleton { CategoryListViewModel(instance()) }
     bindSingleton { RootViewModel(instance()) }
     bindSingleton { RecipeDetailViewModel(instance()) }
-    bindSingleton { HomeViewModel(instance()) }
+    bindSingleton { HomeViewModel(instance(), instance(), instance()) }
 
     // States
     bindSingleton { AuthState() }

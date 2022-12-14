@@ -2,7 +2,9 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
 import com.hsfl.springbreak.frontend.client.data.DataResponse
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
+import com.hsfl.springbreak.frontend.client.data.repository.FavoritesRepository
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
@@ -20,6 +22,8 @@ import org.kodein.di.instance
 
 class HomeViewModel(
     private val recipeRepository: RecipeRepository,
+    private val userState: UserState,
+    private val authState: AuthState,
     private val scope: CoroutineScope = MainScope()
 ) {
     private val _currentTab = MutableStateFlow<HomeRecipeTab>(HomeRecipeTab.CheapTab)
@@ -42,7 +46,7 @@ class HomeViewModel(
         _recipeList.value = emptyList()
     }
 
-    private fun onFavorite(recipeId: Int) {
+    private fun onFavorite(recipeId: Int) = scope.launch {
 
     }
 
@@ -65,7 +69,6 @@ class HomeViewModel(
             response.handleDataResponse<List<Recipe>>(
                 onSuccess = { list ->
                     UiEventState.onEvent(UiEvent.Idle)
-                    val userState: UserState by di.instance()
                     _recipeList.value = list.map {
                         RecipeState(
                             recipe = it,
@@ -73,7 +76,9 @@ class HomeViewModel(
                             isMyFavorite = false
                         )
                     }
-                    getMyFavorites(userState.userState.value.id)
+                    // Only get favorites when user is logged in
+                    if (authState.authorized.value)
+                        getMyFavorites(userState.userState.value.id)
                 }
             )
         }

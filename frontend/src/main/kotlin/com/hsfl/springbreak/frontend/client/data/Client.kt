@@ -11,6 +11,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
+import kotlinx.atomicfu.TraceBase
 import kotlinx.atomicfu.TraceBase.None.append
 import kotlinx.browser.window
 import kotlinx.coroutines.await
@@ -35,6 +36,8 @@ interface ApiClient {
     suspend fun getRecipeById(recipeId: Int): Recipe.Response
     suspend fun getRecipeByPopularity(): Recipe.ResponseList
     suspend fun getMyFavorites(userId: Int): Recipe.ResponseList
+    suspend fun setFavorite(userId: Int, recipeId: Int): Recipe.Response
+    suspend fun deleteFavorite(userId: Int, recipeId: Int): Recipe.Response
 }
 
 class Client : ApiClient {
@@ -80,7 +83,7 @@ class Client : ApiClient {
         profileImage.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        val response =  window.fetch(
+        val response = window.fetch(
             input = "$BASE_URL/user/image?id=$userId", init = RequestInit(
                 method = "POST",
                 body = formData
@@ -160,5 +163,13 @@ class Client : ApiClient {
         return client.submitForm(url = "$BASE_URL/user/favorite", formParameters = Parameters.build {
             append("id", userId.toString())
         }, encodeInQuery = true).body()
+    }
+
+    override suspend fun setFavorite(userId: Int, recipeId: Int): Recipe.Response {
+        return client.post(urlString = "$BASE_URL/user/favorite?rid=$recipeId&uId=$userId").body()
+    }
+
+    override suspend fun deleteFavorite(userId: Int, recipeId: Int): Recipe.Response {
+        return client.delete(urlString = "$BASE_URL/user/favorite?rid=$recipeId&uId=$userId").body()
     }
 }
