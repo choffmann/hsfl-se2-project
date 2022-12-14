@@ -11,6 +11,10 @@ before_script:
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
 
+variables:
+  IMAGE_NAME: "se2springbreak"
+  TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+
 build:
   stage: build
   image:
@@ -18,6 +22,17 @@ build:
   script:
     - chmod +x ./gradlew
     - ./gradlew frontend:build --stacktrace
-    - rm -f "backend/src/main/resources/static/*"
-    - cp "frontend/build/distributions/" "backend/src/main/resources/static/"
+    - rm -rf backend/src/main/resources/static/
+    - cp -r frontend/build/distributions backend/src/main/resources/static
     - ./gradlew backend:build -x test --stacktrace
+
+publish:
+  stage: publish
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker push $TAG_COMMIT
+    - docker push $TAG_LATEST
