@@ -17,6 +17,7 @@ variables:
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
   CONTAINER_NAME: "se2springbreak-app"
   BUILD_ARTIFACTS_DIR: "artifacts"
+  DOCKER_TLS_CERTDIR: ""
 
 frontend:
   stage: build_frontend
@@ -41,9 +42,9 @@ backend:
     - frontend
   before_script:
     - chmod +x ./gradlew
-  script:
     - rm -rf backend/src/main/resources/static/
     - cp -r frontend/build/distributions backend/src/main/resources/static
+  script:
     - ./gradlew backend:build -x test --stacktrace
   cache:
     key: "$CI_COMMIT_SHA"
