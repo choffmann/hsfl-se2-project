@@ -3,6 +3,8 @@ stages:
 
 build:
   stage: build
+  image:
+    name: openjdk:17-jdk-slim-buster
   script:
     - chmod +x ./gradlew
     - ./gradlew build -x test --stacktrace
