@@ -28,7 +28,7 @@ frontend:
     - ./gradlew frontend:build --stacktrace
   cache:
     key: "$CI_COMMIT_SHA"
-    policy: push
+    policy: pull-push
     paths:
       - frontend/build
   artifacts:
@@ -48,7 +48,7 @@ backend:
     - ./gradlew backend:build -x test --stacktrace
   cache:
     key: "$CI_COMMIT_SHA"
-    policy: push
+    policy: pull-push
     paths:
       - backend/build
   artifacts:
