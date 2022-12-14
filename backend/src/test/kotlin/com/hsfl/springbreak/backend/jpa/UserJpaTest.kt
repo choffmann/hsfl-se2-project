@@ -1,6 +1,7 @@
 package com.hsfl.springbreak.backend.jpa
 
 import com.hsfl.springbreak.backend.entity.UserEntity
+import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.UserRepository
 import com.hsfl.springbreak.backend.service.UserService
 import org.junit.jupiter.api.Assertions.*
@@ -18,47 +19,47 @@ import javax.transaction.Transactional
 class UserJpaTest {
     @Autowired
     private lateinit var repository: UserRepository
-    
+
     @Autowired
     private lateinit var service: UserService
 
     val demoUsers = listOf(
-        UserEntity(
-            firstName = "James",
-            lastName = "Sullivan",
-            email = "james.sullivan@moster-inc.com",
-            password = "geheim"
-        ),
-        UserEntity(
-            firstName = "Mike",
-            lastName = "Glotzkowski",
-            email = "mike.glotzkowski@moster-inc.com",
-            password = "geheim"
-        ),
-        UserEntity(
-            firstName = "Randall",
-            lastName = "Boggs",
-            email = "randall.boggs@moster-inc.com",
-            password = "geheim"
-        ),
-        UserEntity(
-            firstName = "Henry",
-            lastName = "Waternoose",
-            email = "henry.waternoose@moster-inc.com",
-            password = "geheim"
-        ),
-        UserEntity(
-            firstName = "George",
-            lastName = "Sanderson",
-            email = "george.sanderson@moster-inc.com",
-            password = "geheim"
-        ),
-        UserEntity(
-            firstName = "Thaddeus",
-            lastName = "Bile",
-            email = "thaddeus.bile@moster-inc.com",
-            password = "geheim"
-        )
+            UserEntity(
+                    firstName = "James",
+                    lastName = "Sullivan",
+                    email = "james.sullivan@moster-inc.com",
+                    password = "geheim"
+            ),
+            UserEntity(
+                    firstName = "Mike",
+                    lastName = "Glotzkowski",
+                    email = "mike.glotzkowski@moster-inc.com",
+                    password = "geheim"
+            ),
+            UserEntity(
+                    firstName = "Randall",
+                    lastName = "Boggs",
+                    email = "randall.boggs@moster-inc.com",
+                    password = "geheim"
+            ),
+            UserEntity(
+                    firstName = "Henry",
+                    lastName = "Waternoose",
+                    email = "henry.waternoose@moster-inc.com",
+                    password = "geheim"
+            ),
+            UserEntity(
+                    firstName = "George",
+                    lastName = "Sanderson",
+                    email = "george.sanderson@moster-inc.com",
+                    password = "geheim"
+            ),
+            UserEntity(
+                    firstName = "Thaddeus",
+                    lastName = "Bile",
+                    email = "thaddeus.bile@moster-inc.com",
+                    password = "geheim"
+            )
     )
 
     @BeforeEach
@@ -66,11 +67,11 @@ class UserJpaTest {
         repository.saveAll(demoUsers)
     }
 
-    @Test
-    fun `find all users`() {
-        val users = repository.findAll()
-        assertIterableEquals(users, demoUsers)
-    }
+//    @Test
+//    fun `find all users`() {
+//        val users = repository.findAll()
+//        assertIterableEquals(users, demoUsers)
+//    }
 
     @Test
     fun `find user by mail`() {
@@ -83,7 +84,7 @@ class UserJpaTest {
         val user = repository.findByEmail("mail@not-exist.com")
         assertNull(user)
     }
-    
+
     @Test
     fun updateUserImage() {
         val path = Paths.get("").toAbsolutePath().toString()
@@ -92,4 +93,82 @@ class UserJpaTest {
 
         assertEquals(true, test.success)
     }
+
+    @Test
+    fun testRegister() {
+        val user = User.Register(
+                firstName = "Max", lastName = "Mustermann", email = "max.mustermann@moster-inc.com",
+                password = "hallo"
+        )
+        val apiResponse = service.registerUser(user)
+        assertTrue(apiResponse.success)
+    }
+    @Test
+    fun testLogin() {
+        val user1 = User.Login(
+                email = "thaddeus.bile@moster-inc.com", password = "geheim"
+        )
+        val apiResponse1 = service.loginUser(user1)
+        assertTrue(apiResponse1.success)
+    }
+
+    @Test
+    fun testLoginFailed() {
+        val user = User.Login(
+                email = "thaddeus.bile@moster-inc.com", password = "ma000"
+        )
+        val apiResponse = service.loginUser(user)
+        assertFalse(apiResponse.success)
+    }
+
+    @Test
+    fun testchangeProfile() {
+        val user1 = User.ChangeProfile(
+               id= 1,  firstName = "hermin", lastName = "mosa", password = ""
+        )
+        val apiResponse = service.changeProfile(user1)
+        assertTrue(apiResponse.success)
+    }
+    @Test
+    fun testChangeProfileFailed() {
+        val user1 = User.ChangeProfile(
+                id= 100,  firstName = "hermin", lastName = "mosa", password = ""
+        )
+        val apiResponse = service.changeProfile(user1)
+        assertFalse(apiResponse.success)
+    }
+    @Test
+    fun testSetFavoriteById() {
+        var userId : Long= demoUsers[1].id!!
+        var recipeId: Long = 2
+        val apiResponse = service.setFavoriteById(recipeId, userId)
+        assertTrue(apiResponse.success)
+    }
+
+    @Test
+    fun testSetFavoriteByIdFailed() {
+        var userId : Long= demoUsers[5].id!!
+        var recipeId: Long = 20
+        val apiResponse = service.setFavoriteById(recipeId, userId)
+        assertFalse(apiResponse.success)
+    }
+    @Test
+    fun deleteFavoriteById() {
+        var userId : Long= demoUsers[1].id!!
+        var recipeId: Long = 2
+        val apiResponse = service.setFavoriteById(recipeId, userId)
+
+        val apiResponse1 = service.deleteFavoriteById(recipeId,userId)
+        assertTrue(apiResponse1.success)
+    }
+
+    @Test
+    fun deleteFavoriteByIdFailed() {
+        var userId : Long= demoUsers[4].id!!
+        var recipeId: Long = 2
+
+        val apiResponse1 = service.deleteFavoriteById(recipeId,userId)
+        assertFalse(apiResponse1.success)
+    }
 }
+

@@ -5,7 +5,9 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.UserRepository
 import com.hsfl.springbreak.backend.service.UserService
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -23,17 +25,24 @@ class UserController(val repository: UserRepository, val userService: UserServic
     fun updateUser(@RequestBody userChanges: User.ChangeProfile): ApiResponse<User> =
         userService.changeProfile(userChanges)
 
-    @PostMapping("api/user/image", consumes =  [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long): ApiResponse<String> =
-        userService.setProfilePicture(id, file)
+    @PostMapping("api/user/image")
+    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long): ApiResponse<String> {
+        val filePath = userService.setProfilePicture(id, file)
+        return ApiResponse(data = "http//localhost:8080/api/user/image/$id.png")
+    }
+
         /*
         fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam id: Long): ApiResponse<User> =
         userService.updateProfileImage(file.bytes, id)
         */
 
-    @GetMapping("api/user/image", produces = [MediaType.IMAGE_PNG_VALUE])
-    fun getImageById(@RequestParam("id") id: Long): ByteArray =
-        userService.getProfilePicture(id) ?: byteArrayOf()
+    @GetMapping("api/user/image/{id}.png")
+    fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray> {
+        val imageData = userService.getProfilePicture(id)
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.valueOf("image/png"))
+            .body(imageData)
+    }
 
 
     @PostMapping("api/user/favorite")
