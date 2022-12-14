@@ -1,5 +1,6 @@
 stages:
-  - build
+  - build_frontend
+  - build_backend
   - test
   - publish
   - deploy
@@ -17,8 +18,8 @@ variables:
   CONTAINER_NAME: "se2springbreak-app"
   BUILD_ARTIFACTS_DIR: "artifacts"
 
-build_frontend:
-  stage: build
+frontend:
+  stage: build_frontend
   image: openjdk:17-jdk-slim-buster
   before_script:
     - chmod +x ./gradlew
@@ -33,9 +34,11 @@ build_frontend:
     paths:
       - frontend/build/distributions/*
 
-build_backend:
-  stage: build
+backend:
+  stage: build_backend
   image: openjdk:17-jdk-slim-buster
+  dependencies:
+    - frontend
   before_script:
     - chmod +x ./gradlew
   script:
@@ -56,7 +59,7 @@ publish:
   stage: publish
   image: docker:latest
   dependencies:
-    - build_backend
+    - backend
   services:
     - name: docker:dind
       command: ["--tls=false"]
