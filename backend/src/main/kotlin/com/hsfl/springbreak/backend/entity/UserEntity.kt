@@ -2,9 +2,12 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
+import java.io.File
+import java.nio.file.Paths
 import java.sql.Blob
 import javax.persistence.*
 
+val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/backend/src/main/resources/defaultPic.png"
 @Entity(name = "users")
 data class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,
@@ -12,7 +15,8 @@ data class UserEntity(
     @Column val lastName: String,
     @Column val email: String,
     @Column val password: String,
-    @Column @Lob var image: Blob? = null,
+    //@Column @Lob var image: ByteArray? = null,
+    @Column @Lob var image: ByteArray? = File(defaultImagePath).readBytes(),
     @ManyToMany @JoinTable(
         name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],

@@ -8,6 +8,7 @@ import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.sql.Blob
 import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
@@ -53,6 +54,27 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
 
     }
 
+
+    fun setProfilePicture(id: Long, file: MultipartFile): ApiResponse<String> {
+        return if (userRepository.existsById(id)){
+            val user = userRepository.findById(id).get()
+            user.image = file.bytes
+            userRepository.save(user)
+            ApiResponse(success = true)
+        } else {
+            ApiResponse(error = "False User ID", success = false)
+        }
+    }
+
+    fun getProfilePicture(id: Long): ByteArray? {
+        return if (userRepository.existsById(id)) {
+            userRepository.findById(id).get().image
+        } else {
+            null
+        }
+    }
+
+
     /**
      * Read a given file and save it to database as blob-type.
      * @param file The image to be read and set as new profile picture.
@@ -67,7 +89,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             val blob: Blob = SerialBlob(file)
 
             // save image to user
-            userProxy.image = blob
+            userProxy.image = file
             userRepository.save(userProxy)
 
             ApiResponse(data = userProxy.toDto(), success = true)
