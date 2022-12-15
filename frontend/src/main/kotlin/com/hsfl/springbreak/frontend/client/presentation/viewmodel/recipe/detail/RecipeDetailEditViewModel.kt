@@ -2,7 +2,6 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detai
 
 import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Difficulty
-import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.data.repository.CategoryRepository
 import com.hsfl.springbreak.frontend.client.data.repository.DifficultyRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
@@ -26,9 +25,6 @@ class RecipeDetailEditViewModel(
 
     private val _difficultyList = MutableStateFlow(listOf<Difficulty>())
     val difficultyList: StateFlow<List<Difficulty>> = _difficultyList
-
-    private val _ingredientsList = MutableStateFlow(listOf<Ingredient>())
-    val ingredientsList: StateFlow<List<Ingredient>> = _ingredientsList
 
     fun onEvent(event: RecipeDetailEditEvent) {
         when (event) {

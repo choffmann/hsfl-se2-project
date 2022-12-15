@@ -40,6 +40,8 @@ external interface RecipeDetailEditProps : Props {
 
 val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
     val viewModel: RecipeDetailEditViewModel by di.instance()
+    val ingredientsViewModel: CreateRecipeIngredientsVM by di.instance()
+    val ingredientsTableViewModel: IngredientsTableVM by di.instance()
     val categoryListState = viewModel.categoryList.collectAsState()
     val difficultyListState = viewModel.difficultyList.collectAsState()
     var selectedImage: File? by useState(null)
@@ -55,7 +57,10 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)
-        cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
+        cleanup {
+            viewModel.onEvent(LifecycleEvent.OnUnMount)
+            ingredientsTableViewModel.onEvent(LifecycleEvent.OnUnMount)
+        }
     }
 
     Box {
@@ -135,7 +140,7 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                 difficulty = recipeDifficultyState
                 difficultyList = difficultyListState
                 onDifficultyChange = { recipeDifficultyState = it }
-                category = category
+                category = recipeCategoryState
                 categoryList = categoryListState
                 onCategoryChange = { recipeCategoryState = it }
                 duration = recipeDurationState
@@ -155,7 +160,6 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
             editMode = true
             ingredientsList = props.recipe.ingredients
             onNewIngredient = {
-                val ingredientsViewModel: CreateRecipeIngredientsVM by di.instance()
                 ingredientsViewModel.onEvent(CreateRecipeIngredientsEvent.OnAddIngredient)
             }
         }
@@ -172,7 +176,7 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
         sx { marginTop = 8.px }
         RecipeActionEdit {
             onSave = {
-                val ingredientsViewModel: IngredientsTableVM by di.instance()
+
                 val recipe = Recipe.Update(
                     id = props.recipe.id,
                     title = recipeTitleState,
@@ -182,13 +186,17 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                     difficultyId = recipeDifficultyState.toString().toInt(),
                     categoryId = recipeCategoryState.toString().toInt(),
                     longDescription = recipeDescriptionState,
-                    ingredients = ingredientsViewModel.ingredientsList.value.map {
+                    ingredients = ingredientsTableViewModel.ingredientsList.value.map {
                         Ingredient.Create(name = it.item.name, unit = it.item.unit, amount = it.item.amount)
                     }
                 )
                 props.onSave(recipe, selectedImage)
+                viewModel.onEvent(LifecycleEvent.OnUnMount)
             }
-            onCancel = props.onCancel
+            onCancel = {
+                viewModel.onEvent(LifecycleEvent.OnUnMount)
+                props.onCancel()
+            }
         }
     }
 }
