@@ -72,6 +72,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             // Save the image to the userprofile folder
             file.transferTo(File(filePath))
 
+            // Get the user entity and safe the local path in the image attribute
             val user = userRepository.findById(id).get()
             user.image = filePath
             userRepository.save(user)
@@ -79,7 +80,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             // Return the URL Path where the image can be fetched
             ApiResponse(data = "http://localhost:8080/api/user/image/$id.png", success = true)
         } else {
-            null
+            ApiResponse(error = "Invalid user ID", success = false)
         }
     }
 

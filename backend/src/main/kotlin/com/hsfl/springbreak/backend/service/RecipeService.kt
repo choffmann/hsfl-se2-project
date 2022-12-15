@@ -9,6 +9,7 @@ import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
+import java.nio.file.Paths
 import java.sql.Blob
 import java.time.LocalDateTime
 import javax.sql.rowset.serial.SerialBlob
@@ -147,6 +148,10 @@ class RecipeService(
     /*
     fun setRecipeImage(file: ByteArray, id: Long): String {
         return if (recipeRepository.existsById(id)) {
+            val filePath = Paths.get("").toAbsolutePath().toString() +
+                    "/backend/src/main/resources/recipeProfiles/$id" + file.originalFilename
+
+
             // fetch recipe from database
             val recipeProxy = recipeRepository.findById(id).get()
 
