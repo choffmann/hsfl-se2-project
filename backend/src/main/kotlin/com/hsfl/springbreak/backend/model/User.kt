@@ -8,7 +8,7 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val image: ByteArray?,
+    val image: String?,
     val favorites: MutableList<Recipe>
 ) {
     data class Login(
@@ -29,7 +29,7 @@ data class User(
         val lastName: String,
         val email: String,
         val password: String,
-        val image: ByteArray?
+        val image: String?
     )
 
     data class Limited(

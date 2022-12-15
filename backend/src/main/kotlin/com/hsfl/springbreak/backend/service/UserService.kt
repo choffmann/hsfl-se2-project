@@ -9,6 +9,9 @@ import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.sql.Blob
 import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
@@ -55,26 +58,35 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
     }
 
 
-    fun setProfilePicture(id: Long, file: MultipartFile): ApiResponse<String> {
+    fun setProfilePicture(id: Long, file: MultipartFile): String? {
         return if (userRepository.existsById(id)){
-            val user = userRepository.findById(id).get()
-            user.image = file.bytes
-            userRepository.save(user)
-            ApiResponse(success = true)
-        } else {
-            ApiResponse(error = "False User ID", success = false)
-        }
-    }
+            val fileName = file.originalFilename
+            val fileType = file.contentType
+            val filePath = Paths.get("").toAbsolutePath().toString() +
+                    "/backend/src/main/resources/userProfiles/$id" + file.originalFilename
 
-    fun getProfilePicture(id: Long): ByteArray? {
-        return if (userRepository.existsById(id)) {
-            userRepository.findById(id).get().image
+            file.transferTo(File(filePath))
+
+            val user = userRepository.findById(id).get()
+            user.image = filePath
+            userRepository.save(user)
+            filePath
         } else {
             null
         }
     }
 
+    fun getProfilePicture(id: Long): ByteArray {
+        return if (userRepository.existsById(id)) {
+            val userProxy = userRepository.findById(id).get()
+            val filePath = userProxy.image
+            Files.readAllBytes(File(filePath).toPath())
+        } else {
+            byteArrayOf()
+        }
+    }
 
+    /*
     /**
      * Read a given file and save it to database as blob-type.
      * @param file The image to be read and set as new profile picture.
@@ -98,17 +110,20 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
         }
     }
 
+     */
+
     /**
      * Add a new entity to the User-Favorite relation.
      * @param rId The referenced recipe's id.
      * @param uId The referenced user's id.
      */
-    fun setFavoriteById(rId: Long, uId: Long): ApiResponse<User> {
+    fun setFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe.Response> {
         return if (recipeRepository.existsById(rId) && userRepository.existsById(uId)) {
             val userProxy = userRepository.findById(uId).get()
-            userProxy.favorites.add(recipeRepository.findById(rId).get())
+            val recipeProxy = recipeRepository.findById(rId).get()
+            userProxy.favorites.add(recipeProxy)
             userRepository.save(userProxy)
-            ApiResponse(success = true)
+            ApiResponse(data = recipeProxy.toResponse(), success = true)
         } else {
             ApiResponse(error = "Invalid user recipe combination", success = false)
         }
@@ -132,16 +147,17 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
      * @param rId The referenced recipe's id.
      * @param uId The referenced user's id.
      */
-    fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe> {
+    fun deleteFavoriteById(rId: Long, uId: Long): ApiResponse<Recipe.Response> {
         if (userRepository.existsById(uId)) {
             for (favoriteRecipe: RecipeEntity in userRepository.findById(uId).get().favorites) {
                 if (favoriteRecipe.id == rId) {
                     userRepository.findById(uId).get().favorites.remove(favoriteRecipe)
-                    return ApiResponse(success = true)
+                    return ApiResponse(data = favoriteRecipe.toResponse(), success = true)
                 }
             }
+            return ApiResponse(error = "Invalid recipe ID", success = false)
         }
-        return ApiResponse(error = "Invalid user recipe combination", success = false)
+        return ApiResponse(error = "Invalid user ID", success = false)
     }
 
 }
