@@ -3,6 +3,9 @@ package com.hsfl.springbreak.backend.model
 import java.sql.Blob
 import java.time.LocalDateTime
 
+/**
+ * DTO of recipe-entity
+ */
 data class Recipe(
     val id: Long,
     val title: String,
@@ -21,6 +24,11 @@ data class Recipe(
     val ingredients: List<IngredientRecipe>
 ) {
 
+    /**
+     * DTO which is used for the data transfer at the
+     * creating post request. It only contains the attributes
+     * that can be set by a user.
+     */
     data class CreateRecipe(
             val title: String,
             val shortDescription: String?,
@@ -33,6 +41,11 @@ data class Recipe(
             val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
+    /**
+     * DTO which is used for the data transfer at the
+     * updating recipe put request. It only contains the attributes
+     * that can be set by a user and the corresponding recipe ID.
+     */
     data class ChangeRecipe(
         val recipeId: Long,
         val title: String,
@@ -45,6 +58,9 @@ data class Recipe(
         val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
+    /**
+     * DTO for transferring the recipe information to the user.
+     */
     data class Response(
         val id: Long,
         val title: String,

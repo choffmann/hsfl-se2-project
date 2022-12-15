@@ -17,7 +17,6 @@ class EntityConfiguration {
 
     @Bean
     fun databaseInitializer(
-        favoriteRepository: FavoriteRepository,
         ingredientRepository: IngredientRepository,
         ratingRepository: RatingRepository,
         recipeRepository: RecipeRepository,
