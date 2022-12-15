@@ -78,7 +78,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
             userRepository.save(user)
 
             // Return the URL Path where the image can be fetched
-            ApiResponse(data = "http://localhost:8080/api/user/image/$id.png", success = true)
+            ApiResponse(data = "http://cloud.jgdperl.com:8080/api/user/image/$id.png", success = true)
         } else {
             ApiResponse(error = "Invalid user ID", success = false)
         }

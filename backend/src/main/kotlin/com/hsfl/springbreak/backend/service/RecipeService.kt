@@ -163,7 +163,7 @@ class RecipeService(
             recipeRepository.save(recipe)
 
             // Return the URL Path where the image can be fetched
-            ApiResponse(data = "http://localhost:8080/api/recipe/image/$id.png", success = true)
+            ApiResponse(data = "http://cloud.jgdperl.com:8080/api/recipe/image/$id.png", success = true)
         } else {
             ApiResponse(error = "Invalid recipe ID", success = false)
         }

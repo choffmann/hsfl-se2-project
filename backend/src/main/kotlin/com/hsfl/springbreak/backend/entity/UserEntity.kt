@@ -26,7 +26,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = this.image?.let { "http://localhost:8080/api/user/image/${this.id}.png" },
+        image = this.image?.let { "http://cloud.jgdperl.com:8080/api/user/image/${this.id}.png" },
         favorites = toRecipeDto(this.favorites)
     )
 
@@ -44,7 +44,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = this.image?.let { "http://localhost:8080/api/user/image/${this.id}.png" }
+        image = this.image?.let { "http://cloud.jgdperl.com:8080/api/user/image/${this.id}.png" }
     )
 
     companion object {
