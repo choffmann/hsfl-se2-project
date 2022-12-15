@@ -44,7 +44,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = "http://localhost:8080/api/user/image/${this.id}.png"
+        image = this.image?.let { "http://localhost:8080/api/user/image/${this.id}.png" }
     )
 
     companion object {

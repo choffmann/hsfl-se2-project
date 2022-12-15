@@ -35,8 +35,8 @@ class DifficultyJpaTest {
         fun saveCategoryInDB() {
             repository.saveAll( DifficultyList)
         }
-    
-    @Description("Test get all difficulties in database")
+
+
         @Test
         @Description("Test get all difficulties in database")
         fun retrieveDifficulties() {
