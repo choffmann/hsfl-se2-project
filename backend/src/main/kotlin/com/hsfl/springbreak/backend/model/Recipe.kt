@@ -1,10 +1,9 @@
 package com.hsfl.springbreak.backend.model
 
-import java.sql.Blob
 import java.time.LocalDateTime
 
 /**
- * DTO of recipe-entity
+ * DTO of recipe-entity.
  */
 data class Recipe(
     val id: Long,
@@ -30,15 +29,15 @@ data class Recipe(
      * that can be set by a user.
      */
     data class CreateRecipe(
-            val title: String,
-            val shortDescription: String?,
-            val price: Double?,
-            val duration: Int?,
-            val difficultyId: Long,
-            var categoryId: Long,
-            val creatorId: Long,
-            val longDescription: String?,
-            val ingredients: List<IngredientRecipe.WithoutRecipe>
+        val title: String,
+        val shortDescription: String?,
+        val price: Double?,
+        val duration: Int?,
+        val difficultyId: Long,
+        var categoryId: Long,
+        val creatorId: Long,
+        val longDescription: String?,
+        val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
     /**

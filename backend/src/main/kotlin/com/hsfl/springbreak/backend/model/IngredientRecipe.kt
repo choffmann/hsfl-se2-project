@@ -1,14 +1,14 @@
 package com.hsfl.springbreak.backend.model
 
 /**
- * Combination of the recipe- and ingredient-ID
+ * Combination of the recipe- and ingredient-ID.
  */
 data class IngredientRecipeId(
     val recipeId: Long, val ingredientId: Long
 )
 
 /**
- * DTO of ingredient-recipe-entity
+ * DTO of ingredient-recipe-entity.
  */
 data class IngredientRecipe(
     val id: IngredientRecipeId, val unit: String, val amount: Int

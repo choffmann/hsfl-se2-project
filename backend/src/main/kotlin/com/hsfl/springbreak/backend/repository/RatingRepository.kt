@@ -4,7 +4,6 @@ import com.hsfl.springbreak.backend.entity.RatingEntity
 import org.springframework.data.repository.CrudRepository
 import javax.transaction.Transactional
 
-
 @Transactional(Transactional.TxType.MANDATORY)
 interface RatingRepository : CrudRepository<RatingEntity, Long> {
     fun findAllByRecipeId(id: Long): List<RatingEntity>

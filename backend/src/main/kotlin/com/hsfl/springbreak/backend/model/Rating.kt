@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.backend.model
 
 /**
- * DTO of rating-entity
+ * DTO of rating-entity.
  */
 data class Rating(
     val id: Long, val stars: Double, val recipe: Recipe, val user: User
