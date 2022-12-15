@@ -43,8 +43,9 @@ class CategoryJpaTest {
         repository.saveAll(categoryEntities)
     }
 
-    @Description("Test get all categories in database")
+
     @Test
+    @Description("Test get all categories in database")
     fun retrieveCategories() {
         val apiResponse = controller.getEntries()
         assertTrue(apiResponse.success)

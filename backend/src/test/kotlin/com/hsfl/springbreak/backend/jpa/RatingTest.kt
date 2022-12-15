@@ -69,8 +69,10 @@ class RatingTest {
         userId = controllerUser.register(user).data?.id ?: 0;
     }
 
-    // Test When recipeId and userId exist, then the user can rate the recipe once.
+
+
     @Test
+    @Description("Test When recipeId and userId exist, then the user can rate the recipe once.")
     fun setRating() {
         var rating = Rating.SendRating(
               stars =1.5,

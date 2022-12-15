@@ -62,7 +62,7 @@ class UserJpaTest {
                     password = "geheim"
             )
     )
-
+    @Description("Add users in database")
     @BeforeEach
     fun `fill db with demo data`() {
         repository.saveAll(demoUsers)
