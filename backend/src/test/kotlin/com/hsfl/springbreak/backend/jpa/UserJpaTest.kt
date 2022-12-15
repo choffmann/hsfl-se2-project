@@ -86,7 +86,6 @@ class UserJpaTest {
         assertNull(user)
     }
 
-
     @Test
     @Description("Test register a person")
     fun testRegister() {
@@ -137,24 +136,24 @@ class UserJpaTest {
     @Test
     @Description("Test when the user adds a recipe to his favorite list")
     fun testSetFavoriteById() {
-        var userId : Long= demoUsers[1].id!!
-        var recipeId: Long = 2
+        val userId : Long= demoUsers[1].id!!
+        val recipeId: Long = 2
         val apiResponse = service.setFavoriteById(recipeId, userId)
         assertTrue(apiResponse.success)
     }
 
     @Test
     fun testSetFavoriteByIdFailed() {
-        var userId : Long= demoUsers[5].id!!
-        var recipeId: Long = 20
+        val userId : Long= demoUsers[5].id!!
+        val recipeId: Long = 20
         val apiResponse = service.setFavoriteById(recipeId, userId)
         assertFalse(apiResponse.success)
     }
     @Test
     @Description("Test when the user removes a recipe to his favorite list")
     fun deleteFavoriteById() {
-        var userId : Long= demoUsers[1].id!!
-        var recipeId: Long = 2
+        val userId : Long= demoUsers[1].id!!
+        val recipeId: Long = 2
         val apiResponse = service.setFavoriteById(recipeId, userId)
 
         val apiResponse1 = service.deleteFavoriteById(recipeId,userId)
@@ -163,8 +162,8 @@ class UserJpaTest {
 
     @Test
     fun deleteFavoriteByIdFailed() {
-        var userId : Long= demoUsers[4].id!!
-        var recipeId: Long = 2
+        val userId : Long= demoUsers[4].id!!
+        val recipeId: Long = 2
 
         val apiResponse1 = service.deleteFavoriteById(recipeId,userId)
         assertFalse(apiResponse1.success)
