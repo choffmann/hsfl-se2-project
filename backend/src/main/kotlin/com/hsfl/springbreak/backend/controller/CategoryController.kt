@@ -27,6 +27,7 @@ class CategoryController(val categoryRepository: CategoryRepository) {
         } else {
             ApiResponse(error = "No categories available", success = false)
         }
-
     }
+
+
 }
