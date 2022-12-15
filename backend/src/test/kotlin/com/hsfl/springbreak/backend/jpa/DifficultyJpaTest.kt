@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Description
 import javax.transaction.Transactional
 
 
@@ -28,14 +29,18 @@ class DifficultyJpaTest {
                 )
 
         )
+
+
+    @Description("Add  Difficulties to database")
         @BeforeEach
         fun saveCategoryInDB() {
             repository.saveAll( DifficultyList)
         }
-
+    
+    @Description("Test get all difficulties in database")
         @Test
-        fun retrieveCategories() {
-            val apiResponse = controller.retrieveDifficulties()
+        fun retrieveDifficulties() {
+            val apiResponse = controller.getEntries()
             TestCase.assertTrue(apiResponse.success)
             TestCase.assertEquals(4, apiResponse.data?.size ?: -1)
         }

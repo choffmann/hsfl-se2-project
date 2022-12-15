@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Description
 import javax.transaction.Transactional
 
 
@@ -48,13 +49,16 @@ class IngredientJpaTest{
             )
     )
 
+
+    @Description("Add Recipe to database")
     @BeforeEach
     fun saveData() {
         recipeId = controllerRecipe.createRecipe(recipe).data?.id ?: 0;
     }
 
+    // Test get All Ingredients
     @Test
-    fun tester() {
+    fun getCorrectAllIngredients() {
 
        val apiResponse = controllerIngredient.getAllIngredients()
         assertTrue(apiResponse.success)
@@ -63,7 +67,5 @@ class IngredientJpaTest{
         apiResponse .data?.let { assertEquals("Apfel", it[0].name) }
         apiResponse .data?.let { assertEquals("Öl", it[33].name) }
     }
-
-
 
 }

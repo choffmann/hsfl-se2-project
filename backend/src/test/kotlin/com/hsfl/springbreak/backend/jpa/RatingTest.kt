@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Description
 import javax.transaction.Transactional
 
 
@@ -60,12 +61,15 @@ class RatingTest {
             password = "geheim"
     )
 
+
+    @Description("Add Recipe and User to database")
     @BeforeEach
     fun saveData() {
         recipeId = controllerRecipe.createRecipe(recipe).data?.id ?: 0;
         userId = controllerUser.register(user).data?.id ?: 0;
     }
 
+    // Test When recipeId and userId exist, then the user can rate the recipe once.
     @Test
     fun setRating() {
         var rating = Rating.SendRating(

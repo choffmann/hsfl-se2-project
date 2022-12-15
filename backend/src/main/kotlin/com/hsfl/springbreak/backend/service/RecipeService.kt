@@ -9,6 +9,7 @@ import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
 import org.springframework.stereotype.Service
+import java.nio.file.Paths
 import java.sql.Blob
 import java.time.LocalDateTime
 import javax.sql.rowset.serial.SerialBlob
@@ -139,12 +140,18 @@ class RecipeService(
     }
 
     /**
-     * Updates a recipes image and returns the recipe.
+     * TODO
+     * Sets or updates a recipes image and returns the recipe.
      * @param file The file to be saved as new image.
-     * @param id The image of the corresponding recipe.
+     * @param id The id of the corresponding recipe.
      */
-    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe.Response> {
+    /*
+    fun setRecipeImage(file: ByteArray, id: Long): String {
         return if (recipeRepository.existsById(id)) {
+            val filePath = Paths.get("").toAbsolutePath().toString() +
+                    "/backend/src/main/resources/recipeProfiles/$id" + file.originalFilename
+
+
             // fetch recipe from database
             val recipeProxy = recipeRepository.findById(id).get()
 
@@ -161,6 +168,8 @@ class RecipeService(
         }
 
     }
+
+     */
 
     /**
      * Return a list of all recipes.

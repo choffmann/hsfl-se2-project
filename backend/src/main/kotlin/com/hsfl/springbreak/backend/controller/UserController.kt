@@ -43,26 +43,24 @@ class UserController(val repository: UserRepository, val userService: UserServic
     fun updateUser(@RequestBody userChanges: User.ChangeProfile): ApiResponse<User> =
         userService.changeProfile(userChanges)
 
-    //TODO: Testen
+    /**
+     * API-Endpoint for setting a profile image.
+     * @param file The image to be saved to database.
+     * @param id The user id corresponding to the uploaded file.
+     */
     @PostMapping("api/user/image")
-    fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long): ApiResponse<String> {
-        val filePath = userService.setProfilePicture(id, file)
-        return ApiResponse(data = "http://localhost:8080/api/user/image/$id.png")
-    }
+    fun uploadProfileImage(
+        @RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long
+    ): ApiResponse<String> = userService.setProfilePicture(id, file)
 
-        /*
-        fun uploadProfileImage(@RequestParam("image") file: MultipartFile, @RequestParam id: Long): ApiResponse<User> =
-        userService.updateProfileImage(file.bytes, id)
-        */
-
-    //TODO: Testen
+    /**
+     * API-Endpoint for returning a profile image.
+     * @param id The users id whose profile image shall be returned.
+     */
     @GetMapping("api/user/image/{id}.png")
-    fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray> {
-        val imageData = userService.getProfilePicture(id)
-        return ResponseEntity.status(HttpStatus.OK)
-            .contentType(MediaType.valueOf("image/png"))
-            .body(imageData)
-    }
+    fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray>? =
+       userService.getProfilePicture(id)
+
 
     /**
      * API-Endpoint for setting a recipe to user's favorite list.
@@ -90,6 +88,7 @@ class UserController(val repository: UserRepository, val userService: UserServic
      * @return API-Response with the deleted Recipe-DTO or an error
      */
     @DeleteMapping("api/user/favorite")
-    fun deleteFavoriteById(@RequestParam("rId") rId: Long, @RequestParam("uId") uId: Long): ApiResponse<Recipe.Response> =
-        userService.deleteFavoriteById(rId, uId)
+    fun deleteFavoriteById(
+        @RequestParam("rId") rId: Long, @RequestParam("uId") uId: Long
+    ): ApiResponse<Recipe.Response> = userService.deleteFavoriteById(rId, uId)
 }
