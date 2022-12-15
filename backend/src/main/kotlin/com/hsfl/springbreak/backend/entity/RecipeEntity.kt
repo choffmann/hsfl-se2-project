@@ -1,7 +1,6 @@
 package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
-import java.sql.Blob
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -34,12 +33,12 @@ data class RecipeEntity(
         category = this.category.toDto(),
         creator = this.creator.toDto(),
         createTime = this.createTime,
-        image = this.image,
+        image = this.image?.let { "http://localhost:8080/api/recipe/image/${this.id}.png" },
         longDescription = this.longDescription,
         views = this.views,
         score = this.score,
         ratings = this.ratings!!.map { it.toDto() },
-        ingredients = this.ingredients!!.map { it.toDto() } // TODO: Hier nur die ID zurückgeben
+        ingredients = this.ingredients!!.map { it.toDto() }
     )
 
     fun toResponse(): Recipe.Response = Recipe.Response(
@@ -52,7 +51,7 @@ data class RecipeEntity(
         category = this.category.toDto(),
         creator = this.creator.toResponse(),
         createTime = this.createTime,
-        image = this.image,
+        image = this.image?.let { "http://localhost:8080/api/recipe/image/${this.id}.png" },
         longDescription = this.longDescription,
         views = this.views,
         ingredients = this.ingredients!!.map { it.toResponse() },
@@ -77,21 +76,21 @@ data class RecipeEntity(
         )
 
         fun fromDto(
-            newRecipe: Recipe.CreateRecipe,
+            recipe: Recipe.CreateRecipe,
             user: UserEntity,
             category: CategoryEntity,
             difficulty: DifficultyEntity,
             date: LocalDateTime
         ): RecipeEntity = RecipeEntity(
-            title = newRecipe.title,
-            shortDescription = newRecipe.shortDescription,
-            price = newRecipe.price,
-            duration = newRecipe.duration,
+            title = recipe.title,
+            shortDescription = recipe.shortDescription,
+            price = recipe.price,
+            duration = recipe.duration,
             difficulty = difficulty,
             category = category,
             creator = user,
             createTime = date,
-            longDescription = newRecipe.longDescription,
+            longDescription = recipe.longDescription,
             ingredients = null,
             views = 0
         )

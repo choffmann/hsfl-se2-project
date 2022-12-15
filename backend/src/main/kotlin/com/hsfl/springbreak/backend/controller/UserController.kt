@@ -57,7 +57,7 @@ class UserController(val repository: UserRepository, val userService: UserServic
      */
     @GetMapping("api/user/image/{id}.png")
     fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray>? =
-       userService.getImageById(id)
+        userService.getImageById(id)
 
 
     /**

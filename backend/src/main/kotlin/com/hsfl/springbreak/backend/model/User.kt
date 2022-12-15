@@ -1,7 +1,7 @@
 package com.hsfl.springbreak.backend.model
 
 /**
- * DTO of user-entity
+ * DTO of user-entity.
  */
 data class User(
     val id: Long,
@@ -13,7 +13,7 @@ data class User(
     val favorites: MutableList<Recipe>
 ) {
     /**
-     * DTO which is used for the login request by the user. It only contains
+     * DTO which is used for the login request by the user. It only contains.
      * the email and the password values.
      */
     data class Login(
@@ -21,7 +21,7 @@ data class User(
     )
 
     /**
-     * DTO which is used for the register request by the user. It only contains
+     * DTO which is used for the register request by the user. It only contains.
      * the user's firstname, lastname, email and the password.
      */
     data class Register(
