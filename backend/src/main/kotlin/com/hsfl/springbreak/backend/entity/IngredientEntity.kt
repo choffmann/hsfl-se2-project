@@ -9,10 +9,19 @@ data class IngredientEntity(
     @Column val name: String,
 ) {
 
+    /**
+     * Converts the current Ingredient-Entity to a Ingredient-DTO.
+     * @return Ingredient-DTO
+     */
     fun toDto(): Ingredient = Ingredient(
         id = this.id!!, name = this.name
     )
 
+    /**
+     * Converts a Ingredient-DTO to an Ingredient-Entity.
+     * @param dto Ingredient-DTO
+     * @return Ingredient-Entity
+     */
     companion object {
         fun fromDto(dto: Ingredient): IngredientEntity = IngredientEntity(
             id = dto.id,
