@@ -54,7 +54,7 @@ alter user spring set search_path to public;
 Ein Dump mit Demo Datensätzen steht unter dem Ordner `dump/db.dump` bereit
 
 ## Backend starten
-Wenn die Datenbank mit Docker gestartet ist, kann die App mit folgenden Shell Script gebaut und ausgeführt werden
+Wenn die Datenbank gestartet ist, kann die App mit folgenden Shell Script gebaut und ausgeführt werden
 ```bash
 ./gradlew frontend:build --stacktrace
 rm -rf backend/src/main/resources/static/
