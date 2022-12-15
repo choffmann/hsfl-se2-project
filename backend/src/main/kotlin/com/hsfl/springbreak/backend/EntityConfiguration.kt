@@ -17,7 +17,6 @@ class EntityConfiguration {
 
     @Bean
     fun databaseInitializer(
-        favoriteRepository: FavoriteRepository,
         ingredientRepository: IngredientRepository,
         ratingRepository: RatingRepository,
         recipeRepository: RecipeRepository,
@@ -93,7 +92,7 @@ class EntityConfiguration {
                 categoryId = 3,
                 creatorId = 1,
                 difficultyId = 1,
-                duration = 10.00,
+                duration = 10,
                 ingredients = listOf(
                     IngredientRecipe.WithoutRecipe(
                         "Zucker", "Gramm", 200
@@ -111,7 +110,7 @@ class EntityConfiguration {
                 categoryId = 3,
                 creatorId = 1,
                 difficultyId = 1,
-                duration = 10.00,
+                duration = 10,
                 ingredients = listOf(
                     IngredientRecipe.WithoutRecipe(
                         "Sauerteig", "Gramm", 150

@@ -3,6 +3,7 @@ package com.hsfl.springbreak.backend.controller
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.service.RecipeService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.transaction.Transactional
@@ -66,17 +67,23 @@ class RecipeController(val recipeService: RecipeService) {
 
 
     /**
-     * API-Endpoint for saving an image related to a recipe to database.
-     * @param file The image-file to be saved to database.
-     * @param rId The recipe-id related to the uploaded image.
+     * API-Endpoint for setting a profile image.
+     * @param file The image to be saved to database.
+     * @param id The user id corresponding to the uploaded file.
      */
-    /*
-    @PutMapping("api/recipes/image")
-    fun setRecipeImage(@RequestParam("image") file: MultipartFile, @RequestParam("rId") rId: Long): ApiResponse<String> =
-        recipeService.setRecipeImage()
-        ApiResponse(data = "http://localhost:8080/api/recipes/image/$rId.png")
-        
+    @PostMapping("api/recipe/image")
+    fun setImage(
+        @RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long
+    ): ApiResponse<String> = recipeService.setImage(id, file)
+
+    /**
+     * API-Endpoint for returning a profile image.
+     * @param id The users id whose profile image shall be returned.
      */
+    @GetMapping("api/recipe/image/{id}.png")
+    fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray>? =
+        recipeService.getImageById(id)
+
 
     /**
      * API-Endpoint for deleting a recipe by its ID.
