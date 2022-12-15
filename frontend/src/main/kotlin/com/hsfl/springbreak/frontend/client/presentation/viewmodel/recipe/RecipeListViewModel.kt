@@ -114,7 +114,7 @@ class RecipeListViewModel(
     private fun onFavorite(id: Int) = scope.launch {
         // Only get favorites when user is logged in
         if (!authState.authorized.value) {
-            UiEventState.onEvent(UiEvent.ShowMessage("Du musst dich zuerst anmelden um ein Rezept zu speichern."))
+            UiEventState.onEvent(UiEvent.ShowMessage("Bitte melde dich an um ein Rezept zu speichern."))
         } else if (recipeList.value.filter { it.isFavorite }.find { it.recipe.id == id } != null) {
             deleteFavorite(id)
         } else {

@@ -172,7 +172,7 @@ class RecipeDetailViewModel(
 
     private fun onFavorite() = scope.launch {
         if (!authState.authorized.value) {
-            UiEventState.onEvent(UiEvent.ShowMessage("Du musst dich zuerst anmelden um ein Rezept zu speichern."))
+            UiEventState.onEvent(UiEvent.ShowMessage("Bitte melde dich an um ein Rezept zu speichern."))
         } else if (isFavorite.value) {
             deleteFavorite()
         } else {
