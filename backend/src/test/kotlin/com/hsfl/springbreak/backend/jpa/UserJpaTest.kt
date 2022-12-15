@@ -86,14 +86,6 @@ class UserJpaTest {
         assertNull(user)
     }
 
-    @Test
-    fun updateUserImage() {
-        val path = Paths.get("").toAbsolutePath().toString()
-        val file = File("$path\\src\\test\\kotlin\\com\\hsfl\\springbreak\\backend\\jpa\\resources\\testImage.jpg").inputStream().readBytes()
-        val test = service.updateProfileImage(file, 1)
-
-        assertEquals(true, test.success)
-    }
 
     @Test
     @Description("Test register a person")

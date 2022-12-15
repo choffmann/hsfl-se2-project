@@ -41,7 +41,7 @@ class RatingTest {
                     title = "Schockomuffins",
                     shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
                     price = 5.00,
-                    duration = 10.00,
+                    duration = 10,
                     difficultyId = 2,
                     categoryId =  1,
                     creatorId = 1,
