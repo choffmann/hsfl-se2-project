@@ -6,12 +6,12 @@ import com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth.AuthDial
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.*
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeCardViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailViewModel
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list.CategoryListViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list.FavoritesListViewModel
+import org.kodein.di.*
 
 val di = DI {
     // Client
@@ -42,7 +42,9 @@ val di = DI {
     bindSingleton { RootViewModel(instance(), instance()) }
     bindSingleton { RecipeDetailViewModel(instance()) }
     bindSingleton { HomeViewModel(instance(), instance(), instance()) }
-    bindSingleton { RecipeCardViewModel(instance(), instance(), instance()) }
+    bindSingleton { FavoritesListViewModel(instance(), instance()) }
+
+    bindSingleton { RecipeListViewModel(instance(), instance(), instance(), instance(), instance()) }
 
     // States
     bindSingleton { AuthState() }

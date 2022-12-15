@@ -29,8 +29,8 @@ class HomeViewModel(
     private val _currentTab = MutableStateFlow<HomeRecipeTab>(HomeRecipeTab.CheapTab)
     val currentTab: StateFlow<HomeRecipeTab> = _currentTab
 
-    private val _recipeList = MutableStateFlow<List<RecipeState>>(listOf())
-    val recipeList: StateFlow<List<RecipeState>> = _recipeList
+    private val _recipeList = MutableStateFlow<List<Recipe>>(listOf())
+    val recipeList: StateFlow<List<Recipe>> = _recipeList
 
     fun onEvent(event: HomeViewEvent) {
         when (event) {
@@ -44,7 +44,6 @@ class HomeViewModel(
         _currentTab.value = HomeRecipeTab.CheapTab
         _recipeList.value = emptyList()
     }
-
 
     private fun handleTabChange(tab: HomeRecipeTab) {
         _currentTab.value = tab
@@ -63,33 +62,9 @@ class HomeViewModel(
     private suspend fun Flow<DataResponse<List<Recipe>>>.saveToState() {
         this.collectLatest { response ->
             response.handleDataResponse<List<Recipe>>(
-                onSuccess = { list ->
+                onSuccess = {
                     UiEventState.onEvent(UiEvent.Idle)
-                    _recipeList.value = list.map {
-                        RecipeState(
-                            recipe = it,
-                            isMyRecipe = userState.userState.value.id == it.creator.id,
-                            isMyFavorite = false
-                        )
-                    }
-                    // Only get favorites when user is logged in
-                    if (authState.authorized.value)
-                        getMyFavorites(userState.userState.value.id)
-                }
-            )
-        }
-    }
-
-    private fun getMyFavorites(userId: Int) = scope.launch {
-        recipeRepository.getMyFavorites(userId).collectLatest { response ->
-            response.handleDataResponse<List<Recipe>>(
-                onSuccess = { list ->
-                    UiEventState.onEvent(UiEvent.Idle)
-                    list.forEach { likedRecipe ->
-                        _recipeList.value.map {
-                            it.isMyFavorite = it.recipe.id == likedRecipe.id
-                        }
-                    }
+                    _recipeList.value = it
                 }
             )
         }
@@ -109,10 +84,3 @@ sealed class HomeRecipeTab {
         AllTab -> 3
     }
 }
-
-data class RecipeState(
-    var recipe: Recipe,
-    var isMyRecipe: Boolean,
-    var isMyFavorite: Boolean
-)
-

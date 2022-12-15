@@ -1,8 +1,7 @@
 package com.hsfl.springbreak.frontend.components.routes
 
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.CategoryListViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CategoryListEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list.CategoryListViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di

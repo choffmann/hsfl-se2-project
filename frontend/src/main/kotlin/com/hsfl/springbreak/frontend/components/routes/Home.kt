@@ -2,9 +2,9 @@ package com.hsfl.springbreak.frontend.components.routes
 
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeRecipeTab
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.HomeViewModel
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RecipeState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.HomeViewEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListType
 import com.hsfl.springbreak.frontend.components.recipe.RecipeCard
 import com.hsfl.springbreak.frontend.components.recipe.RecipeList
 import com.hsfl.springbreak.frontend.di.di
@@ -102,22 +102,22 @@ var Home = FC<Props> {
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.CheapTab
-            RecipeList { list = recipeList }
+            RecipeList { listType = RecipeListType.HomeList.CheapTab }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.FastTab
-            RecipeList { list = recipeList }
+            RecipeList { listType = RecipeListType.HomeList.FastTab }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.PopularTab
-            RecipeList { list = recipeList }
+            RecipeList { listType = RecipeListType.HomeList.PopularTab }
         }
         TabPanel {
             value = currentTab
             index = HomeRecipeTab.AllTab
-            RecipeList { list = recipeList }
+            RecipeList { listType = RecipeListType.HomeList.AllTab }
         }
     }
 }

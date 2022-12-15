@@ -14,13 +14,11 @@ object UiEventState {
         when (event) {
             is UiEvent.ShowLoading -> _uiState.value = UiEvent.ShowLoading
             is UiEvent.ShowError -> {
-                // TODO: Don't call ErrorViewModel.onEvent here
                 _uiState.value = UiEvent.ShowError(event.error)
                 MessageViewModel.onEvent(SnackbarEvent.Show(event.error))
             }
             is UiEvent.Idle -> _uiState.value = UiEvent.Idle
             is UiEvent.ShowMessage -> {
-                // TODO: Don't call MessageViewModel.onEvent here
                 _uiState.value = UiEvent.ShowMessage(event.msg)
                 MessageViewModel.onEvent(SnackbarEvent.Show(event.msg))
             }

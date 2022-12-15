@@ -161,15 +161,15 @@ class Client : ApiClient {
 
     override suspend fun getMyFavorites(userId: Int): Recipe.ResponseList {
         return client.submitForm(url = "$BASE_URL/user/favorite", formParameters = Parameters.build {
-            append("id", userId.toString())
+            append("uId", userId.toString())
         }, encodeInQuery = true).body()
     }
 
     override suspend fun setFavorite(userId: Int, recipeId: Int): Recipe.Response {
-        return client.post(urlString = "$BASE_URL/user/favorite?rid=$recipeId&uId=$userId").body()
+        return client.post(urlString = "$BASE_URL/user/favorite?rId=$recipeId&uId=$userId").body()
     }
 
     override suspend fun deleteFavorite(userId: Int, recipeId: Int): Recipe.Response {
-        return client.delete(urlString = "$BASE_URL/user/favorite?rid=$recipeId&uId=$userId").body()
+        return client.delete(urlString = "$BASE_URL/user/favorite?rId=$recipeId&uId=$userId").body()
     }
 }

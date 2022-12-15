@@ -7,9 +7,10 @@ import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListType
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.notfound.NotFound404
-import com.hsfl.springbreak.frontend.components.recipe.CategoryDetailList
+import com.hsfl.springbreak.frontend.components.recipe.RecipeList
 import com.hsfl.springbreak.frontend.components.routes.*
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -66,7 +67,6 @@ private val App = FC<AppProps> { props ->
     HashRouter {
         Header {
             Routes {
-                // TODO: Private routes
                 Route {
                     index = true
                     path = "/"
@@ -78,7 +78,7 @@ private val App = FC<AppProps> { props ->
                 }
                 Route {
                     path = "/favorite"
-                    element = ProtectedRoute.create { Favorites() }
+                    element = ProtectedRoute.create { RecipeList { listType = RecipeListType.FavoriteList } }
                 }
                 Route {
                     path = "/categories"
@@ -105,7 +105,7 @@ private val App = FC<AppProps> { props ->
                 props.categoryList.map {
                     Route {
                         path = "category/${it.id}"
-                        element = CategoryDetailList.create { id = it.id }
+                        element = RecipeList.create { listType = RecipeListType.CategoryList(it.id) }
                     }
                 }
                 Route {

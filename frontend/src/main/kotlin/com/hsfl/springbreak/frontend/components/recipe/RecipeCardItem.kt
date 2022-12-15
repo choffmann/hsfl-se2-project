@@ -1,9 +1,5 @@
 package com.hsfl.springbreak.frontend.components.recipe
 
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeCardEvent
-import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeCardViewModel
-import com.hsfl.springbreak.frontend.di.di
-import com.hsfl.springbreak.frontend.utils.collectAsState
 import com.hsfl.springbreak.frontend.utils.color
 import csstype.Color
 import csstype.FontWeight
@@ -13,7 +9,6 @@ import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
-import org.kodein.di.instance
 import react.*
 import react.dom.html.ReactHTML.img
 
@@ -38,18 +33,6 @@ external interface RecipeCardItemProps : Props {
 }
 
 val RecipeCardItem = FC<RecipeCardItemProps> { props ->
-    val viewModel: RecipeCardViewModel by di.instance()
-    val isFavorite = viewModel.isFavorite.collectAsState()
-    val isMyRecipe = viewModel.isMyRecipe.collectAsState()
-
-    useEffect(Unit) {
-        viewModel.onEvent(RecipeCardEvent.OnLaunch(
-            id = props.id,
-            isFavorite = props.isFavorite,
-            isMyRecipe = props.isMyRecipe
-        ))
-    }
-
     // Returned the first letters from a name (James Sullivan => JS)
     val userNameInLetter: (String) -> String = {
         val x = it.split(" ")
@@ -116,16 +99,16 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
         CardActions {
             disableSpacing = true
             IconButton {
-                onClick = { viewModel.onEvent(RecipeCardEvent.OnFavorite) }
-                disabled = isMyRecipe
+                onClick = { props.onFavoriteClick(props.id) }
+                disabled = props.isMyRecipe && !props.isFavorite
                 Tooltip {
                     title = Typography.create {
-                        if (isFavorite) +"Aus Favoriten entfernen"
+                        if (props.isFavorite) +"Aus Favoriten entfernen"
                         else +"Zu Favoriten hinzufügen"
                     }
                     Favorite {
                         sx {
-                            if (isFavorite) color = Color("red")
+                            if (props.isFavorite) color = Color("red")
                         }
                     }
                 }

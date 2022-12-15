@@ -1,6 +1,8 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.events
 
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListType
+
 sealed interface RecipeCardEvent {
-    object OnFavorite: RecipeCardEvent
-    data class OnLaunch(val id: Int, val isFavorite: Boolean, val isMyRecipe: Boolean): RecipeCardEvent
+    data class OnFavorite(val id: Int): RecipeCardEvent
+    data class OnLaunch(val type: RecipeListType): RecipeCardEvent
 }

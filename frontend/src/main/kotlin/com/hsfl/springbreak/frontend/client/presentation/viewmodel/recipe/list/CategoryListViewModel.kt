@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.client.presentation.viewmodel
+package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list
 
 import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
@@ -27,8 +27,8 @@ class CategoryListViewModel(
     private val _categoryList = MutableStateFlow(listOf<Category>())
     val categoryList: StateFlow<List<Category>> = _categoryList
 
-    private val _recipeList = MutableStateFlow(listOf<RecipeState>())
-    val recipeList: StateFlow<List<RecipeState>> = _recipeList
+    private val _recipeList = MutableStateFlow(listOf<Recipe>())
+    val recipeList: StateFlow<List<Recipe>> = _recipeList
 
     fun onEvent(event: CategoryListEvent) {
         when (event) {
@@ -45,20 +45,11 @@ class CategoryListViewModel(
     private fun getRecipeToCategory(categoryId: Int) = scope.launch {
         categoryRepository.getRecipesByCategory(categoryId).collectLatest { response ->
             response.handleDataResponse<List<Recipe>>(
-                onSuccess = { list ->
+                onSuccess = {
                     UiEventState.onEvent(UiEvent.Idle)
-                    _recipeList.value = list.map {
-                        RecipeState(
-                            recipe = it,
-                            isMyRecipe = userState.userState.value.id == it.creator.id,
-                            isMyFavorite = false
-                        )
-                    }
+                    _recipeList.value = it
                 }
             )
-            // Only get favorites when user is logged in
-            if (authState.authorized.value)
-                getMyFavorites(userState.userState.value.id)
         }
     }
 
@@ -68,21 +59,6 @@ class CategoryListViewModel(
                 onSuccess = { list ->
                     UiEventState.onEvent(UiEvent.Idle)
                     _categoryList.value = list
-                }
-            )
-        }
-    }
-
-    private fun getMyFavorites(userId: Int) = scope.launch {
-        recipeRepository.getMyFavorites(userId).collectLatest { response ->
-            response.handleDataResponse<List<Recipe>>(
-                onSuccess = { list ->
-                    UiEventState.onEvent(UiEvent.Idle)
-                    list.forEach { likedRecipe ->
-                        _recipeList.value.map {
-                            it.isMyFavorite = it.recipe.id == likedRecipe.id
-                        }
-                    }
                 }
             )
         }
