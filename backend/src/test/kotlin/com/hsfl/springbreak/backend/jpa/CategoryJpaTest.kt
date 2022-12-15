@@ -21,7 +21,7 @@ class CategoryJpaTest {
     @Autowired
     private lateinit var controller: CategoryController
 
-    val CategoryList = listOf(
+    val categoryEntities = listOf(
             CategoryEntity(
                     name ="ve"
             ),
@@ -38,12 +38,12 @@ class CategoryJpaTest {
     )
     @BeforeEach
     fun saveCategoryInDB() {
-        repository.saveAll(CategoryList)
+        repository.saveAll(categoryEntities)
     }
 
     @Test
     fun retrieveCategories() {
-        val apiResponse = controller.retrieveCategories()
+        val apiResponse = controller.getEntries()
         assertTrue(apiResponse.success)
         assertEquals(17, apiResponse.data?.size ?: -1)
     }

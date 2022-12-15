@@ -19,7 +19,7 @@ class IngredientController(
 
     /**
      * API-Endpoint for getting a list of all available ingredients.
-     * @return API-Response with a list of all stored ingredients or an error
+     * @return API-Response with a list of all stored ingredients or an error.
      */
     @GetMapping("api/ingredients")
     fun getAllIngredients(): ApiResponse<List<Ingredient>> {

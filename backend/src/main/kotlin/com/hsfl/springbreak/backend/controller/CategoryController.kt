@@ -16,10 +16,10 @@ class CategoryController(val categoryRepository: CategoryRepository) {
 
     /**
      * API-Endpoint for getting a list of all available categories.
-     * @return API-Response with a list of all stored categories or an error
+     * @return API-Response with a list of all stored categories or an error.
      */
     @GetMapping("api/categories")
-    fun retrieveDifficulties(): ApiResponse<List<Category>> {
+    fun getEntries(): ApiResponse<List<Category>> {
         val categoryEntities = categoryRepository.findAll().distinct()
         return if (categoryEntities.isNotEmpty()) {
             val categories = categoryEntities.map { it.toDto() }

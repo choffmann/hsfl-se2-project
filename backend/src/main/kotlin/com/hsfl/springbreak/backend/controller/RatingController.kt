@@ -17,8 +17,8 @@ class RatingController(val ratingService: RatingService) {
 
     /**
      * API endpoint for setting a recipe rating.
-     * @param rating The Rating-DTO from the request body
-     * @return API-Response with the current recipe's score or an error
+     * @param rating The Rating-DTO from the request body.
+     * @return API-Response with the current recipe's score or an error.
      */
     @PostMapping("api/rating")
     fun setRating(@RequestBody rating: Rating.SendRating): ApiResponse<Double> = ratingService.setRating(rating)

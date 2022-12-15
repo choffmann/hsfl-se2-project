@@ -2,12 +2,8 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
-import java.io.File
-import java.nio.file.Paths
-import java.sql.Blob
 import javax.persistence.*
 
-val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/src/main/resources/defaultPic.png"
 @Entity(name = "users")
 data class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,
@@ -21,7 +17,7 @@ data class UserEntity(
         name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],
         inverseJoinColumns = [JoinColumn(name = "recipe_id")]
-    ) val favorites: MutableList<RecipeEntity> = mutableListOf<RecipeEntity>()
+    ) val favorites: MutableList<RecipeEntity> = mutableListOf()
 
 ) {
 

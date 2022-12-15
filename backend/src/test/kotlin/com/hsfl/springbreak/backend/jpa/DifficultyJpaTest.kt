@@ -34,8 +34,8 @@ class DifficultyJpaTest {
         }
 
         @Test
-        fun retrieveCategories() {
-            val apiResponse = controller.retrieveDifficulties()
+        fun retrieveDifficulties() {
+            val apiResponse = controller.getEntries()
             TestCase.assertTrue(apiResponse.success)
             TestCase.assertEquals(4, apiResponse.data?.size ?: -1)
         }

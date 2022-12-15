@@ -16,10 +16,10 @@ class DifficultyController(val difficultyRepository: DifficultyRepository) {
 
     /**
      * API-Endpoint for getting a list of all available difficulties.
-     * @return API-Response with a list of all stored difficulties or an error
+     * @return API-Response with a list of all stored difficulties or an error.
      */
     @GetMapping("api/difficulties")
-    fun retrieveDifficulties(): ApiResponse<List<Difficulty>> {
+    fun getEntries(): ApiResponse<List<Difficulty>> {
         val difficultyEntities = difficultyRepository.findAll().distinct()
         return if (difficultyEntities.isNotEmpty()) {
             val ingredients = difficultyEntities.map { it.toDto() }

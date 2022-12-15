@@ -7,13 +7,14 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.RecipeRepository
 import com.hsfl.springbreak.backend.repository.UserRepository
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.Blob
-import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
 @Service
@@ -57,61 +58,48 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
 
     }
 
+    /**
+     * Saves a profile image to server and return the URL to the image.
+     * @param file The image to be saved to database.
+     * @param id The user id corresponding to the uploaded file.
+     */
+    fun setProfilePicture(id: Long, file: MultipartFile): ApiResponse<String> {
+        return if (userRepository.existsById(id)) {
 
-    fun setProfilePicture(id: Long, file: MultipartFile): String? {
-        return if (userRepository.existsById(id)){
-            val filePath = Paths.get("").toAbsolutePath().toString() +
-                    "/backend/src/main/resources/userProfiles/$id" + file.originalFilename
+            // Creating the path where the image should be saved
+            val filePath = Paths.get("").toAbsolutePath().toString() + "/backend/src/main/resources/userProfiles/$id"
 
+            // Save the image to the userprofile folder
             file.transferTo(File(filePath))
 
             val user = userRepository.findById(id).get()
             user.image = filePath
             userRepository.save(user)
-            filePath
+
+            // Return the URL Path where the image can be fetched
+            ApiResponse(data = "http://localhost:8080/api/user/image/$id.png", success = true)
         } else {
             null
         }
     }
 
-    fun getProfilePicture(id: Long): ByteArray {
-        val defaultPath = Paths.get("").toAbsolutePath().toString() +
-                "/backend/src/main/resources/userProfiles/defaultPic.png"
+    /**
+     * Returns a ByteArray o
+     * @param id The user's id whose profile image shall be returned.
+     */
+    fun getProfilePicture(id: Long): ResponseEntity<ByteArray>? {
         return if (userRepository.existsById(id)) {
             val userProxy = userRepository.findById(id).get()
-            userProxy.image?.let {
-                Files.readAllBytes(File(it).toPath())
-            } ?: Files.readAllBytes(File(defaultPath).toPath())
+            if(userProxy.image != null) {
+                val byteArray = Files.readAllBytes(File(userProxy.image!!).toPath())
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(byteArray)
+            } else {
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
+            }
         } else {
-            byteArrayOf()
+            ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
         }
     }
-
-    /*
-    /**
-     * Read a given file and save it to database as blob-type.
-     * @param file The image to be read and set as new profile picture.
-     * @param userId The user to whom the image shall be related.
-     */
-    fun updateProfileImage(file: ByteArray, userId: Long): ApiResponse<User> {
-        return if (userRepository.existsById(userId)) {
-            // fetch user from database
-            val userProxy = userRepository.findById(userId).get()
-
-            // convert file to blob
-            val blob: Blob = SerialBlob(file)
-
-            // save image to user
-            userProxy.image = file
-            userRepository.save(userProxy)
-
-            ApiResponse(data = userProxy.toDto(), success = true)
-        } else {
-            ApiResponse(error = "User not found", success = false)
-        }
-    }
-
-     */
 
     /**
      * Add a new entity to the User-Favorite relation.

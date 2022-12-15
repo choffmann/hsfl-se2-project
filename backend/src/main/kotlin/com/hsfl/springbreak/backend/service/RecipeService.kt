@@ -139,11 +139,13 @@ class RecipeService(
     }
 
     /**
-     * Updates a recipes image and returns the recipe.
+     * TODO
+     * Sets or updates a recipes image and returns the recipe.
      * @param file The file to be saved as new image.
-     * @param id The image of the corresponding recipe.
+     * @param id The id of the corresponding recipe.
      */
-    fun updateRecipeImage(file: ByteArray, id: Long): ApiResponse<Recipe.Response> {
+    /*
+    fun setRecipeImage(file: ByteArray, id: Long): String {
         return if (recipeRepository.existsById(id)) {
             // fetch recipe from database
             val recipeProxy = recipeRepository.findById(id).get()
@@ -161,6 +163,8 @@ class RecipeService(
         }
 
     }
+
+     */
 
     /**
      * Return a list of all recipes.
