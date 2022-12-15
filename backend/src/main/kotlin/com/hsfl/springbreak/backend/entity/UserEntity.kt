@@ -72,7 +72,8 @@ data class UserEntity(
             password = dto.password ?: defaultUser.password,
             firstName = dto.firstName ?: defaultUser.firstName,
             lastName = dto.lastName ?: defaultUser.lastName,
-            favorites = defaultUser.favorites
+            favorites = defaultUser.favorites,
+            image = defaultUser.image
         )
 
         fun fromDto(dto: User.Register): UserEntity = UserEntity(

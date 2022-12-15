@@ -9,11 +9,13 @@ import mui.material.*
 import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.router.useNavigate
 import react.useEffect
 
 val ShowMyRecipes = FC<Props> {
     val viewModel: ProfileRecipeListTableVM by di.instance()
     val recipeList = viewModel.recipeList.collectAsState()
+    val navigator = useNavigate()
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)
@@ -37,10 +39,15 @@ val ShowMyRecipes = FC<Props> {
                         +"Es sind noch keine Rezepte vorhanden"
                     }
                 } else recipeList.map {
-                    TableCell { +it.title }
-                    TableCell { +it.category.name }
-                    TableCell { +it.difficulty.name }
-                    TableCell { +it.views.toString() }
+                    TableRow {
+                        onClick = {_ ->
+                            navigator("/recipe/${it.id}")
+                        }
+                        TableCell { +it.title }
+                        TableCell { +it.category.name }
+                        TableCell { +it.difficulty.name }
+                        TableCell { +it.views.toString() }
+                    }
                 }
             }
         }

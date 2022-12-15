@@ -40,10 +40,22 @@ class CreateRecipeViewModel(
     val recipePrice: StateFlow<FormTextFieldState<Double>> = dataVM.recipePrice
     val recipeDuration: StateFlow<FormTextFieldState<Int>> = dataVM.recipeDuration
     val recipeDifficulty: StateFlow<Difficulty> = dataVM.selectedDifficulty
-    val recipeImage: StateFlow<File?> = imageVM.recipeImage
+    val recipeImage = MutableStateFlow<File?>(null)
     private val recipeCategory: StateFlow<Category> = dataVM.selectedCategory
     private val ingredientsList: StateFlow<List<IngredientsTableRow>> = tableVM.ingredientsList
     private val descriptionText: StateFlow<String> = descriptionVM.descriptionText
+
+    private lateinit var selectedFile: File
+
+    init {
+        scope.launch {
+            imageVM.recipeImage.collectLatest {
+                it?.let { file ->
+                    recipeImage.value = file
+                }
+            }
+        }
+    }
 
     fun onEvent(event: CreateRecipeEvent) {
         when (event) {
@@ -53,7 +65,9 @@ class CreateRecipeViewModel(
             is CreateRecipeEvent.OnFinished -> createRecipe()
             is CreateRecipeEvent.OnCloseAbort -> closeAbortDialog()
             is CreateRecipeEvent.OnConfirmAbort -> clearStates()
-            LifecycleEvent.OnMount -> { /* Nothing to do here */ }
+            LifecycleEvent.OnMount -> { /* Nothing to do here */
+            }
+
             LifecycleEvent.OnUnMount -> clearStates()
         }
     }

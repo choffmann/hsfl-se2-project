@@ -13,7 +13,7 @@ class CreateRecipeImageVM {
     fun onEvent(event: CreateRecipeImageEvent) {
         when (event) {
             is CreateRecipeImageEvent.SelectedFile -> _recipeImage.value = event.file
-            LifecycleEvent.OnMount -> TODO()
+            LifecycleEvent.OnMount -> {}
             LifecycleEvent.OnUnMount -> clearStates()
         }
     }

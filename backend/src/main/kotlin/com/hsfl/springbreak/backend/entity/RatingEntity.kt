@@ -9,7 +9,7 @@ data class RatingEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,
     @Column var stars: Double,
     @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "recipe_id") val recipe: RecipeEntity,
-    @ManyToOne(cascade = [CascadeType.ALL]) @JoinColumn(name = "user_id") val user: UserEntity
+    @ManyToOne @JoinColumn(name = "user_id") val user: UserEntity
 ) {
 
     fun toDto(): Rating = Rating(

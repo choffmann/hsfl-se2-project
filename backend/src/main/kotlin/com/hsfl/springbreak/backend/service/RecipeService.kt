@@ -178,12 +178,12 @@ class RecipeService(
             val recipeProxy = recipeRepository.findById(id).get()
             if(recipeProxy.image != null) {
                 val byteArray = Files.readAllBytes(File(recipeProxy.image!!).toPath())
-                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(byteArray)
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("recipe/png")).body(byteArray)
             } else {
-                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("recipe/png")).body(null)
             }
         } else {
-            ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
+            ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("recipe/png")).body(null)
         }
     }
 
