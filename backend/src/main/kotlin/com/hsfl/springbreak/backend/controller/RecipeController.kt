@@ -3,6 +3,7 @@ package com.hsfl.springbreak.backend.controller
 import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.service.RecipeService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.transaction.Transactional

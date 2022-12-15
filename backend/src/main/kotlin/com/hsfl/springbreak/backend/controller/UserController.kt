@@ -5,8 +5,6 @@ import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
 import com.hsfl.springbreak.backend.repository.UserRepository
 import com.hsfl.springbreak.backend.service.UserService
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -49,9 +47,9 @@ class UserController(val repository: UserRepository, val userService: UserServic
      * @param id The user id corresponding to the uploaded file.
      */
     @PostMapping("api/user/image")
-    fun uploadProfileImage(
+    fun setImage(
         @RequestParam("image") file: MultipartFile, @RequestParam("id") id: Long
-    ): ApiResponse<String> = userService.setProfilePicture(id, file)
+    ): ApiResponse<String> = userService.setImage(id, file)
 
     /**
      * API-Endpoint for returning a profile image.
@@ -59,7 +57,7 @@ class UserController(val repository: UserRepository, val userService: UserServic
      */
     @GetMapping("api/user/image/{id}.png")
     fun getImageById(@PathVariable("id") id: Long): ResponseEntity<ByteArray>? =
-       userService.getProfilePicture(id)
+       userService.getImageById(id)
 
 
     /**

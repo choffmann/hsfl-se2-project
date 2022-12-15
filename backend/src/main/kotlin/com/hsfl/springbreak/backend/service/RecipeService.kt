@@ -8,11 +8,15 @@ import com.hsfl.springbreak.backend.model.ApiResponse
 import com.hsfl.springbreak.backend.model.IngredientRecipe
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.repository.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.nio.file.Files
 import java.nio.file.Paths
-import java.sql.Blob
 import java.time.LocalDateTime
-import javax.sql.rowset.serial.SerialBlob
 import javax.transaction.Transactional
 
 @Service

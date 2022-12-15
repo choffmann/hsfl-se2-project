@@ -63,7 +63,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
      * @param file The image to be saved to database.
      * @param id The user id corresponding to the uploaded file.
      */
-    fun setProfilePicture(id: Long, file: MultipartFile): ApiResponse<String> {
+    fun setImage(id: Long, file: MultipartFile): ApiResponse<String> {
         return if (userRepository.existsById(id)) {
 
             // Creating the path where the image should be saved
@@ -88,7 +88,7 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
      * Returns a ByteArray o
      * @param id The user's id whose profile image shall be returned.
      */
-    fun getProfilePicture(id: Long): ResponseEntity<ByteArray>? {
+    fun getImageById(id: Long): ResponseEntity<ByteArray>? {
         return if (userRepository.existsById(id)) {
             val userProxy = userRepository.findById(id).get()
             if(userProxy.image != null) {
