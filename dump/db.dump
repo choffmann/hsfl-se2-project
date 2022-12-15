@@ -1,0 +1,791 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.0 (Debian 15.0-1.pgdg110+1)
+-- Dumped by pg_dump version 15.0 (Debian 15.0-1.pgdg110+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO pg_database_owner;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: category; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.category (
+    id bigint NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.category OWNER TO spring;
+
+--
+-- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.category_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.category_id_seq OWNER TO spring;
+
+--
+-- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.category_id_seq OWNED BY public.category.id;
+
+
+--
+-- Name: difficulty; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.difficulty (
+    id bigint NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.difficulty OWNER TO spring;
+
+--
+-- Name: difficulty_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.difficulty_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.difficulty_id_seq OWNER TO spring;
+
+--
+-- Name: difficulty_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.difficulty_id_seq OWNED BY public.difficulty.id;
+
+
+--
+-- Name: favorite; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.favorite (
+    recipe_id bigint NOT NULL,
+    users_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.favorite OWNER TO spring;
+
+--
+-- Name: hibernate_sequence; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.hibernate_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.hibernate_sequence OWNER TO spring;
+
+--
+-- Name: ingredient; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.ingredient (
+    id bigint NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.ingredient OWNER TO spring;
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.ingredient_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ingredient_id_seq OWNER TO spring;
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.ingredient_id_seq OWNED BY public.ingredient.id;
+
+
+--
+-- Name: ingredient_recipe_entity; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.ingredient_recipe_entity (
+    ingredient_id bigint NOT NULL,
+    recipe_id bigint NOT NULL,
+    amount integer,
+    unit character varying(255)
+);
+
+
+ALTER TABLE public.ingredient_recipe_entity OWNER TO spring;
+
+--
+-- Name: rating; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.rating (
+    id bigint NOT NULL,
+    stars double precision,
+    recipe_id bigint,
+    user_id bigint
+);
+
+
+ALTER TABLE public.rating OWNER TO spring;
+
+--
+-- Name: rating_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.rating_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rating_id_seq OWNER TO spring;
+
+--
+-- Name: rating_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.rating_id_seq OWNED BY public.rating.id;
+
+
+--
+-- Name: recipe; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.recipe (
+    id bigint NOT NULL,
+    create_time timestamp without time zone,
+    duration integer,
+    image oid,
+    long_description text,
+    price double precision,
+    score double precision,
+    short_description text,
+    title character varying(255),
+    views integer,
+    category_id bigint,
+    users_id bigint,
+    difficulty_id bigint
+);
+
+
+ALTER TABLE public.recipe OWNER TO spring;
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.recipe_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipe_id_seq OWNER TO spring;
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.recipe_id_seq OWNED BY public.recipe.id;
+
+
+--
+-- Name: user_favorite; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.user_favorite (
+    users_id bigint NOT NULL,
+    recipe_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.user_favorite OWNER TO spring;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: spring
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email character varying(255),
+    first_name character varying(255),
+    image character varying(255),
+    last_name character varying(255),
+    password character varying(255)
+);
+
+
+ALTER TABLE public.users OWNER TO spring;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: spring
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO spring;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: spring
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: category id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.category ALTER COLUMN id SET DEFAULT nextval('public.category_id_seq'::regclass);
+
+
+--
+-- Name: difficulty id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.difficulty ALTER COLUMN id SET DEFAULT nextval('public.difficulty_id_seq'::regclass);
+
+
+--
+-- Name: ingredient id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.ingredient ALTER COLUMN id SET DEFAULT nextval('public.ingredient_id_seq'::regclass);
+
+
+--
+-- Name: rating id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.rating ALTER COLUMN id SET DEFAULT nextval('public.rating_id_seq'::regclass);
+
+
+--
+-- Name: recipe id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.recipe ALTER COLUMN id SET DEFAULT nextval('public.recipe_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.category (id, name) FROM stdin;
+1	Brot
+2	Eis
+3	Gebäck
+4	Kuchen
+5	Pasta & Nudeln
+6	Pizza
+7	Reis
+8	Rind
+9	Salat
+10	Schwein
+11	Suppen
+12	Vegetarisch
+13	Vegan
+14	Fisch
+\.
+
+
+--
+-- Data for Name: difficulty; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.difficulty (id, name) FROM stdin;
+1	Leicht
+2	Mittel
+3	Schwer
+\.
+
+
+--
+-- Data for Name: favorite; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.favorite (recipe_id, users_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ingredient; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.ingredient (id, name) FROM stdin;
+1	Apfel
+2	Banane
+3	Birne
+4	Brombeeren
+5	Butter
+6	Chilli
+7	Currypulver
+8	Haferflocken
+9	Heidelbeeren
+10	Leinensamen
+11	Mehl
+12	Milch
+13	Nudeln
+14	Orangen
+15	Paprika
+16	Paprikapulver
+17	Petersilie
+18	Pfeffer
+19	Reis
+20	Salz
+21	Schlagsahne
+22	Speisestärke
+23	Rosinen
+24	Zimt
+25	Zucker
+26	Sauerteig
+27	Roggenmehl Type 1150
+28	Weizenvollkornmehl
+29	Weizenmehl
+30	Trockenhefe
+31	Backmalz
+32	Brotgewürzmischung aus Kümmel, Anis und Fenchel
+33	Wasser
+34	Suppenhun
+35	Zwiebel(n)
+36	Knoblauchzehe(n)
+37	Ingwer
+38	Möhre
+39	Gewürznelke(n)
+40	Safran
+41	Chiliflocken
+42	Loorberblätter
+43	Frühlingszwiebel(n)
+44	Basmatireis
+45	Schweinenacken
+46	Schweinebauch
+47	Kümmelpulver
+48	Bacalao
+49	Olivenöl
+50	Gambas
+51	Schalotte
+52	Knoblauch
+53	Weißwein
+54	Chilischote(n)
+55	Schweinefilet
+56	Wirsing
+57	Backpflaumen
+58	Bacon
+59	Schweinekotelett(s)
+60	Zitrone
+61	Oregano
+62	Kartoffel
+63	Parmesan
+64	Knoblauchgranulat
+65	Parikapulver
+66	Kräuter, Italienische
+67	Sahne
+\.
+
+
+--
+-- Data for Name: ingredient_recipe_entity; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.ingredient_recipe_entity (ingredient_id, recipe_id, amount, unit) FROM stdin;
+26	2	150	Gramm
+27	2	150	Gramm
+28	2	200	Gramm
+29	2	100	Gramm
+20	2	1	TL
+25	2	1	TL
+30	2	1	Pck.
+31	2	5	Gramm
+32	2	1	TL
+33	2	340	ml
+25	1	200	Gramm
+34	3	1	Stück
+35	3	1	Stück
+36	3	1	Stück
+37	3	1	Knolle
+38	3	1	Stück
+39	3	2	Stück
+40	3	1	Tüte
+20	3	1	TL
+41	3	1	TL
+42	3	2	Stück
+43	3	1	Bund
+44	3	200	Gramm
+7	3	1	TL
+45	4	1	Kg
+46	4	1	Kg
+20	4	3	TL
+47	4	1	TL
+18	4	1	TL
+35	4	3	Stück
+48	5	600	Gramm
+49	5	150	ml
+36	5	4	Stück
+6	5	1	TL
+50	6	1	Kg
+51	6	1	Stück
+52	6	40	Gramm
+49	6	100	ml
+53	6	100	ml
+54	6	2	Stück
+20	6	1	TL
+18	6	1	TL
+17	6	2	Zweige
+55	7	1	Stück
+56	7	1	Stück
+21	7	125	ml
+5	7	1	EL
+57	8	1	Pck.
+58	8	1	Pck.
+59	9	4	Stück
+49	9	6	EL
+60	9	1	Stück
+61	9	1	EL
+52	9	2	Zehen
+62	10	3	Stück
+49	10	4	EL
+63	10	50	Gramm
+64	10	2	TL
+65	10	2	TL
+66	10	2	TL
+20	10	1	TL
+18	10	1	TL
+\.
+
+
+--
+-- Data for Name: rating; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.rating (id, stars, recipe_id, user_id) FROM stdin;
+1	4.5	2	1
+2	4	1	1
+3	5	3	4
+4	3.5	2	4
+5	5	1	4
+6	3.5	4	4
+7	3	1	6
+8	2.5	7	6
+9	4.5	5	6
+10	4	8	6
+11	5	6	6
+12	5	10	9
+\.
+
+
+--
+-- Data for Name: recipe; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.recipe (id, create_time, duration, image, long_description, price, score, short_description, title, views, category_id, users_id, difficulty_id) FROM stdin;
+1	2022-12-15 21:21:13.961523	10	70302	Die Eier mit dem Zucker schaumig rühren. Die gemahlenen Haselnüsse zufügen, durchrühren. Nur noch in eine Kasten- oder andere beliebige Form füllen und bei ca. 170°C ca. 40 Minuten backen. Der Kuchen ist supersaftig!\n\nGeht auch mit Mandeln, dann ist er aber etwas trockener. Wer will, glasiert ihn noch.	8	4	Der einfachste Kuchen, den ich kenne. Nur 3 Zutaten. Das kann jeder!	Haselnusskuchen	5	3	1	1
+2	2022-12-15 21:21:14.007669	10	70315	Sauerteig, Weizen- und Roggenmehl, Salz, Zucker, Hefe, Brotgewürz und Backmalz in eine Rührschüssel geben. Das Wasser hinzufügen und den Teig von einer Rührmaschine ein paar Minuten auf kleinster Stufe kneten lassen. Den Teig an einem warmen Ort 4 Stunden gehen lassen, bis sich das Volumen sichtbar vergrößert hat.\n\nDen Teig in eine große, eingefettete Kaiserkuchenbackform geben und den Ofen auf 240 Grad vorheizen. Das Brot nochmals gehen lassen, bis der Ofen auf Temperatur ist.\n\nDas Brot 30 Minuten backen, dann die Temperatur auf 150 Grad stellen und weitere 20 - 30 Minuten backen.	4	4	Mit Sauerteig und Weizenmehl.	Roggenmischbrot	6	3	1	1
+8	2022-12-15 21:56:38.732411	20	70320	Möglichst große Backpflaumen mit je einer Scheibe Bacon umwickeln, mit Zahnstocher feststecken.\nAuf einem Blech im Backofen bei ca. 250 Grad 10-15 min knusprig backen.\nSchmeckt heiß und kalt!	4	4		Herzhafter Backpflaumen - Snack mit Bacon	2	10	6	1
+4	2022-12-15 21:42:47.328488	30	70328	Das Fleisch frühzeitig, ca. 1 Stunde vor der Zubereitung, aus dem Kühlschrank nehmen.\n\nDen Ofen auf größtmögliche Hitze vorheizen (bei mir sind das 250°C).\n\nDen Halsgrat (er ist nur ohne Schwarte erhältlich) und möglichst fettarmes Wammerl (mit Schwarte) kräftig mit den Gewürzen einreiben und mit den grob geschnittenen Zwiebeln mit der Schwarte nach unten (noch nicht eingeschnitten) auf die Zwiebeln in einen großen Bräter legen (so kann die Schwarte nicht am Bräter ankleben) .\n\nNun bei der großen Temperatur braten, bis die Zwiebeln braune Spitzen haben und schon fast verbrennen. Da muss man gut aufpassen - zu wenig, und die Sauce wird nur eine fade Brühe - zu dunkel, und die Sauce wird bitter.\nMein Tipp: wenn man sieht, dass die Spitzen der Zwiebeln braun werden, nochmal gut abwarten bis etwas mehr als die Spitzen und der Boden richtig schön karamellisieren. Also mutig warten, aber nicht übertreiben dabei.\n\nZum richtigen Zeitpunkt den Bräter herausholen, den Braten umdrehen und nun kann man die Schwarte mit einem scharfen Messer butterweich einritzen. Dabei nicht ins Fleisch schneiden.\n\nDann Wasser angießen, bis die Zwiebeln von Flüssigkeit bedeckt sind und ein Fingerbreit mehr. Man kann auch Brühe oder Bier nehmen, aber dann weicht es von dem typisch bayrischen Braten, den es in vielen Tafernwirtschaften gibt, ab.\n\nMit einem Pinsel (z. B. Silikonpinsel) den Bräterrand "abwaschen" damit alle Röststoffe, die dort hingespritzt sind, in den Bratensaft gelangen.\n\nNun den Bräter zudecken und bei 175°C bis gut zur Hälfte der Garzeit weiter garen. So bleibt das Fleisch saftig und wird weich.\n\nNach etwa 1 Stunde den Deckel abnehmen, damit die Schwarte knusprig werden kann. Dafür muss man die Temperatur auf ca. 200°C stellen. Dabei in regelmäßigen Abständen Flüssigkeit angießen und immer mal über die Kruste löffeln und mit dem Pinsel und Bratensaft die Röststoffe von den Seitenwänden des Bräters ablösen.\n\nWenn das Fleisch zart und gar ist, alles heraus nehmen. Je nach Ofen und Fleischgröße bzw.-form ist das in der Regel nach insgesamt 2 Stunden der Fall. Lieber etwas länger braten, als zu kurz und das Fleisch ist innen noch nicht richtig gar geworden.\n\nDen Schweinebauch auf einen flachen feuerfesten Behälter (z. B. Deckel vom Bräter) geben und wieder in den Ofen geben. Jetzt kann man noch mit dem Grill oder bei hoher Temperatur bei der Kruste nachhelfen, falls sie noch nicht gelungen ist. Aber Vorsicht - dass kann schnell mal zu braun werden. Den Halsgrat inzwischen warm halten.\n\nWährenddessen die Sauce durch ein Sieb in einen Topf gießen, abschmecken und binden. Sollte die Sauce zu salzig sein, kann man noch Wasser angießen.\n\nAls Beilagen empfehle ich Kartoffelknödel, Sauerkraut, grünen Salat und frisches Weißbier - und nicht nur das bayrische Herz macht einen Hupfer.\n\nBei dieser einfachen Zubereitungsmethode mit ganz wenig Würzzutaten ist es ganz besonders wichtig, dass man eine sehr gute Fleischqualität hat.	12	3.5	landestypische Rezeptur mit ganz wenig Zutaten	Oberbayrischer Schweinsbraten	4	10	4	2
+7	2022-12-15 21:53:53.799549	25	70304	Schweinefilet kalt abbrausen, trocken tupfen und von Fett und Sehnen befreien. Kräftig mit Salz und Pfeffer würzen. Das Pflanzenfett in einer Pfanne heiß werden lassen und das Fleisch darin von allen Seiten ca. 5 Minuten knusprig braun braten lassen.\n\nDen Wirsing putzen und in kleine Stücke schneiden. In kochendem Salzwasser ca. 5 Minuten blanchieren. Anschließend in einem Topf mit etwas Butter anschwitzen, Sahne angießen. Sahne einreduzieren. Mit Pfeffer, Salz und Muskat abschmecken.\n\nDazu passen Kartoffeln oder Püree.\n\nMan kann auch einen ganzen Wirsing zubereiten und den Rest wunderbar einfrieren.	10	2.5	Bestes Schweinefilet	Schweinefilet mit Wirsing	1	10	6	2
+6	2022-12-15 21:50:58.051495	30	70311	Eine feuerfeste Tonschale (ca. 25 – 30 cm) vor der Benutzung 1 Std. wässern (alles wird sehr heiß zubereitet und die Schale kann so nicht reißen). Das Olivenöl ganz heiß werden lassen, Knoblauch und Schalotte kurz darin anbraten, bis beides glasig ist, herausnehmen und beiseitestellen.\n\nDie abgetupften trockenen Gambas im Olivenöl ca. 4 min. weiter braten und dabei öfter die Tonschale schwenken, sodass die Gambaflüssigkeit emulgiert aussieht (wird milchig). Salz, Pfeffer, und die Chilis hinzugeben und eine weitere Minute mitgaren.\n\nHitze erhöhen, sodass alles sprudelt, dann mit dem Weißwein ablöschen, sodass die Gambas zur Hälfte in der Flüssigkeit liegen. Die Petersilie und den beiseitegestellten Knoblauch mit der Schalotte dazugeben.\n\nAlles kommt ganz heiß mit der Tonschale auf den Tisch. Frisches warmes Weißbrot, oder Baguette zum Tunken dazu reichen.\n\nWir nehmen erntefrischen Knoblauch und geben den klein geschnittenen Lauch mit der Petersilie als Letztes dazu.\n\nGetränketipp: Kühler, trockener spanischer Weißwein oder auch ein roter spanischer Joven mit 14 - 16°C passen sehr gut.	18	5	Tapas-Rezept das sehr lecker ist!	Gambas Pil Pil	1	14	5	1
+5	2022-12-15 21:48:30.396707	20	70307	Den Bacalao 24-36 Stunden wässern und dabei mehrmals das Wasser (anfangs etwa alle 4 Std, später ca. alle 6 Std.) wechseln. Vor dem Kochen den Bacalao schuppen, noch einmal waschen und auf Küchenpapier abtropfen lassen und trocken tupfen. Knoblauchzehen schälen und längs halbieren.\n\nÖl in einer flachen Pfanne erhitzen und darin die Knoblauchzehen und die Chilischoten anbraten. Wenn sie gebräunt sind, mit einem Schaumlöffel herausnehmen und beiseitelegen. Den Bacalao mit der Hautseite nach unten in die Pfanne legen, ohne das Öl zu wechseln. Den Topf ein wenig anheben und immer wieder, so etwa 10 - 15 Minuten lang, hin und her schwenken. Durch diese Bewegung wird der Fisch mit heißem Öl überspült und der Haut die Gelatine entzogen. Diese bindet die Soße, die sich bildet. Wenn die Soße eine leichte Bindung hat, ist das Gericht fertig.\n\nMit den gebräunten Knoblauchzehen und den gehackten Chilischoten bestreuen. Kurz auf dem Feuer lassen und dabei weiter bewegen. Sehr heiß servieren.\n\nIch koche mit Gas und nehme bei diesem Gericht einen Tontopf.\n\nDazu passt Baguette. Als Vorspeise reicht es für 6 Personen. Als Hauptgericht für 3 - 4 Personen.	16	4.5	Bacalao - Stockfisch - Kabeljau, pikant	Bacalao al Pil Pil	1	14	5	1
+9	2022-12-15 21:58:59.282699	20	70312	Schweinekoteletts sind in Griechenland ebenso beliebt wie gegrillte Lammkoteletts. Statt Oregano, wie in diesem Rezept, kann man auch 5 frische Salbeiblätter verwenden.\n\nDie Koteletts waschen und trocken tupfen. Das Olivenöl mit dem Zitronensaft und Pfeffer verschlagen. Den Oregano unter die Zitronen-Öl-Sauce mischen. Die Knoblauchzehen schälen und mit der Knoblauchpresse auspressen. Den Knoblauch in die Sauce geben. Die Koteletts mit der Sauce bestreichen und 1 Stunde im Kühlschrank marinieren lassen.\n\nDann die Koteletts trocken tupfen und die Ränder alle 2 cm einschneiden, damit die Koteletts beim Grillen gerade bleiben. Die Koteletts auf dem heißen Grill von jeder Seite etwa 8 Minuten garen. Die Koteletts salzen und heiß servieren.	13	0	Chirinés kotolétes skáras	Gegrillte Schweinekoteletts	0	10	6	1
+3	2022-12-15 21:38:30.550948	30	70317	Das Huhn säubern, in einem Schnellkochtopf mit Wasser bedecken und zum Kochen bringen. Die Möhre einmal längs durchscheiden, die Zwiebel halbieren, die Ingwerknolle ungeschält in Scheiben schneiden. Alle Zutaten bis hin zu den Lorbeerblättern dazutun. Auf mittlerer Stufe eine Stunde kochen.\n\nIn der Zwischenzeit die restlichen Möhren und die Frühlingszwiebeln in schräge Stücke schneiden.\n\nDen Reis in einem separaten Topf nach Vorschrift garen.\n\nNach Ende der Garzeit das Huhn herausnehmen, die Brühe abseihen, dabei die Ingwerscheiben über der Brühe ausdrücken. Falls gewünscht, kann das Hühnerfleisch von den Knochen gelöst und der Brühe wieder zugegeben werden. Das Gemüse zugeben, die Brühe mit 1 Liter Wasser auffüllen und nochmals 20 min. leise köcheln lassen (ohne Druck!).\nMit Currypulver, Sojasauce, Pfeffer und Muskatnuss abschmecken.\n\nDen Reis direkt auf die Teller geben und mit der Hühnerbrühe aufgießen.\n\nDiese Suppe ist die Wunschkost für meinen Sohn, wenn er erkältet ist, ich habe zur Not auch schon auf ein frisches Hähnchen zurückgegriffen, weil ich kein Suppenhuhn bekommen habe. Wer keinen Reis mag, kann auch vorgekochte Fadennudeln oder auch Glasnudeln als Einlage nehmen.	6	5	meine Geheimwaffe gegen Erkältungen!	Goldgelbe Hühnersuppe	4	11	4	2
+10	2022-12-15 22:03:04.435039	50	70324	Die Kartoffeln in Spalten schneiden und in einer Schüssel mit Parmesan und Olivenöl vermischen. Die Gewürze in einer separaten Schüssel vermengen und dann zu den Kartoffeln geben. Noch einmal kräftig durchmischen, die Kartoffelecken dann auf einem mit Backpapier ausgelegten Backblech verteilen und bei 200 °C Ober-/Unterhitze für ca. 40 Minuten backen.\n\nHinweis: Heißhunger auf eine deftige Beilage oder einfach nur Appetit auf einen leckeren Snack? Diese Kartoffelecken sind genau das richtige für alle, die es gerne deftig mögen und etwas Neues ausprobieren wollen. Dazu schmeckt Sour Cream mit ein paar frischen Kräutern wirklich köstlich, alternativ könnt ihr die Wedges natürlich auch als Beilage zu einem leckeren Steak oder gebratenem Fisch servieren. Eurer Kreativität sind keine Grenzen gesetzt.	6	5	deftige Beilage oder leckerer Snack	Parmesan-Knoblauch-Kartoffelecken	2	12	7	1
+\.
+
+
+--
+-- Data for Name: user_favorite; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.user_favorite (users_id, recipe_id) FROM stdin;
+9	10
+9	2
+9	3
+10	2
+10	8
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: spring
+--
+
+COPY public.users (id, email, first_name, image, last_name, password) FROM stdin;
+2	panzer@web.de	Hektor	\N	Panzer	secret
+3	cedrik.hoffmann@jgdperl.com	Cedrik	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/3	Hoffmann	geheim
+1	root@admin.com	Eva	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/1	Grün	geheim
+4	hans.jürgensen@mail.de	Hans	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/4	Jürgensen	1
+5	Cha.Li@mail.vu	Cha	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/5	Li	secret
+6	jürgen.weintras@mail.com	Jürgen	\N	Weintras	12345
+7	h.l@web.de	Heidi	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/7	Liebelei	1234
+8	m.s@mail.de	Maximilian	\N	Steinberg	1234
+9	m.s@mail.de	Maximilian	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/9	Steinberg	123
+10	m.s@mail.de	Max	/home/choffmann/Dokumente/FH Flensburg/Software Engineering 2/software-engineering-2-project/backend/src/main/resources/userProfiles/10	Steinberg	123
+\.
+
+
+--
+-- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.category_id_seq', 13, true);
+
+
+--
+-- Name: difficulty_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.difficulty_id_seq', 3, true);
+
+
+--
+-- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.hibernate_sequence', 1, false);
+
+
+--
+-- Name: ingredient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.ingredient_id_seq', 67, true);
+
+
+--
+-- Name: rating_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.rating_id_seq', 12, true);
+
+
+--
+-- Name: recipe_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.recipe_id_seq', 12, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: spring
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 10, true);
+
+
+--
+-- Name: category category_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.category
+    ADD CONSTRAINT category_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: difficulty difficulty_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.difficulty
+    ADD CONSTRAINT difficulty_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: favorite favorite_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.favorite
+    ADD CONSTRAINT favorite_pkey PRIMARY KEY (recipe_id, users_id);
+
+
+--
+-- Name: ingredient ingredient_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.ingredient
+    ADD CONSTRAINT ingredient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingredient_recipe_entity ingredient_recipe_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.ingredient_recipe_entity
+    ADD CONSTRAINT ingredient_recipe_entity_pkey PRIMARY KEY (ingredient_id, recipe_id);
+
+
+--
+-- Name: rating rating_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.rating
+    ADD CONSTRAINT rating_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipe recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT recipe_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_favorite fk2tebouqqmejapn8bxjd686iuh; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.user_favorite
+    ADD CONSTRAINT fk2tebouqqmejapn8bxjd686iuh FOREIGN KEY (users_id) REFERENCES public.users(id);
+
+
+--
+-- Name: rating fk6x7y7iu3omnr3wcg93jkfdorb; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.rating
+    ADD CONSTRAINT fk6x7y7iu3omnr3wcg93jkfdorb FOREIGN KEY (recipe_id) REFERENCES public.recipe(id);
+
+
+--
+-- Name: user_favorite fk79nhd5pvsx584jqaq7toksxc; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.user_favorite
+    ADD CONSTRAINT fk79nhd5pvsx584jqaq7toksxc FOREIGN KEY (recipe_id) REFERENCES public.recipe(id);
+
+
+--
+-- Name: ingredient_recipe_entity fkcrqo7ofye9duhoselt2vvh9mv; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.ingredient_recipe_entity
+    ADD CONSTRAINT fkcrqo7ofye9duhoselt2vvh9mv FOREIGN KEY (recipe_id) REFERENCES public.recipe(id);
+
+
+--
+-- Name: ingredient_recipe_entity fke2kbx6a0552cwaoya9sjjpgye; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.ingredient_recipe_entity
+    ADD CONSTRAINT fke2kbx6a0552cwaoya9sjjpgye FOREIGN KEY (ingredient_id) REFERENCES public.ingredient(id);
+
+
+--
+-- Name: rating fkf68lgbsbxl310n0jifwpfqgfh; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.rating
+    ADD CONSTRAINT fkf68lgbsbxl310n0jifwpfqgfh FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: recipe fkfp4j43pxa1om17i8d0w3lf4lw; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT fkfp4j43pxa1om17i8d0w3lf4lw FOREIGN KEY (difficulty_id) REFERENCES public.difficulty(id);
+
+
+--
+-- Name: recipe fkihd42t0y6d7c0m8pehgo6sn2c; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT fkihd42t0y6d7c0m8pehgo6sn2c FOREIGN KEY (users_id) REFERENCES public.users(id);
+
+
+--
+-- Name: recipe fkrufhnv33hpfxstx9x108553kj; Type: FK CONSTRAINT; Schema: public; Owner: spring
+--
+
+ALTER TABLE ONLY public.recipe
+    ADD CONSTRAINT fkrufhnv33hpfxstx9x108553kj FOREIGN KEY (category_id) REFERENCES public.category(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
