@@ -16,7 +16,7 @@ data class UserEntity(
     @Column val email: String,
     @Column val password: String,
     //@Column @Lob var image: ByteArray? = null,
-    @Column @Lob var image: ByteArray? = File(defaultImagePath).readBytes(),
+    @Column var image: String? = null,
     @ManyToMany @JoinTable(
         name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],
