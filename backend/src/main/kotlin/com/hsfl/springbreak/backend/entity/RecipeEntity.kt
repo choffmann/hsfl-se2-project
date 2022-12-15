@@ -16,7 +16,7 @@ data class RecipeEntity(
     @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
     @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
     @Column var createTime: LocalDateTime,
-    @Column @Lob var image: Blob? = null,
+    @Column @Lob var image: String? = null,
     @Column(columnDefinition = "TEXT") var longDescription: String?,
     @Column var views: Int = 0,
     @Column var score: Double = 0.00,

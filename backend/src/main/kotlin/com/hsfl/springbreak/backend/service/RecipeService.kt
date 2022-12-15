@@ -140,36 +140,48 @@ class RecipeService(
     }
 
     /**
-     * TODO
-     * Sets or updates a recipes image and returns the recipe.
-     * @param file The file to be saved as new image.
-     * @param id The id of the corresponding recipe.
+     * Saves a recipe image to server and return the URL to the image.
+     * @param file The image to be saved to database.
+     * @param id The user id corresponding to the uploaded file.
      */
-    /*
-    fun setRecipeImage(file: ByteArray, id: Long): String {
+    fun setImage(id: Long, file: MultipartFile): ApiResponse<String> {
         return if (recipeRepository.existsById(id)) {
-            val filePath = Paths.get("").toAbsolutePath().toString() +
-                    "/backend/src/main/resources/recipeProfiles/$id" + file.originalFilename
 
+            // Creating the path where the image should be saved
+            val filePath = Paths.get("").toAbsolutePath().toString() + "/backend/src/main/resources/recipe/$id"
 
-            // fetch recipe from database
-            val recipeProxy = recipeRepository.findById(id).get()
+            // Save the image to the userprofile folder
+            file.transferTo(File(filePath))
 
-            // convert file to blob
-            val blob: Blob = SerialBlob(file)
+            // Get the user entity and safe the local path in the image attribute
+            val recipe = recipeRepository.findById(id).get()
+            recipe.image = filePath
+            recipeRepository.save(recipe)
 
-            // save image to user
-            recipeProxy.image = blob
-            recipeRepository.save(recipeProxy)
-
-            ApiResponse(data = recipeProxy.toResponse(), success = true)
+            // Return the URL Path where the image can be fetched
+            ApiResponse(data = "http://localhost:8080/api/recipe/image/$id.png", success = true)
         } else {
-            ApiResponse(error = "No recipe with id: $id", success = false)
+            ApiResponse(error = "Invalid recipe ID", success = false)
         }
-
     }
 
+    /**
+     * Returns a ByteArray o
+     * @param id The user's id whose profile image shall be returned.
      */
+    fun getImageById(id: Long): ResponseEntity<ByteArray>? {
+        return if (recipeRepository.existsById(id)) {
+            val recipeProxy = recipeRepository.findById(id).get()
+            if(recipeProxy.image != null) {
+                val byteArray = Files.readAllBytes(File(recipeProxy.image!!).toPath())
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(byteArray)
+            } else {
+                ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
+            }
+        } else {
+            ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(null)
+        }
+    }
 
     /**
      * Return a list of all recipes.
