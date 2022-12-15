@@ -56,7 +56,7 @@ class IngredientJpaTest{
         recipeId = controllerRecipe.createRecipe(recipe).data?.id ?: 0;
     }
 
-    // Test get All Ingredients
+    @Description("Test get All ingredients")
     @Test
     fun getCorrectAllIngredients() {
 

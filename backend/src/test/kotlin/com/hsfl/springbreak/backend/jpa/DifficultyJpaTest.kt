@@ -30,15 +30,15 @@ class DifficultyJpaTest {
 
         )
 
-
-    @Description("Add  Difficulties to database")
+        @Description("Add  Difficulties to database")
         @BeforeEach
         fun saveCategoryInDB() {
             repository.saveAll( DifficultyList)
         }
-    
-    @Description("Test get all difficulties in database")
+
+
         @Test
+        @Description("Test get all difficulties in database")
         fun retrieveDifficulties() {
             val apiResponse = controller.getEntries()
             TestCase.assertTrue(apiResponse.success)
