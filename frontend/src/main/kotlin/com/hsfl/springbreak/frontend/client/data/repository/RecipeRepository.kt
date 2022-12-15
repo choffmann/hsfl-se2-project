@@ -19,6 +19,7 @@ interface RecipeRepository {
     suspend fun getRecipeFastOrder(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipePopularOrder(): Flow<DataResponse<List<Recipe>>>
     suspend fun getMyFavorites(userId: Int): Flow<DataResponse<List<Recipe>>>
+    suspend fun getMyRecipes(userId: Int): Flow<DataResponse<List<Recipe>>>
 }
 
 class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
@@ -89,6 +90,13 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
         repositoryHelper {
             val response: Recipe.ResponseList = client.getMyFavorites(userId)
             APIResponse.fromResponse(response.error, response.data, response.success)
+        }
+    }
+
+    override suspend fun getMyRecipes(userId: Int): Flow<DataResponse<List<Recipe>>> = flow {
+        repositoryHelper {
+            val response: Recipe.ResponseList = client.getAllRecipes()
+            APIResponse.fromResponse(response.error, response.data.filter { it.creator.id == userId }, response.success)
         }
     }
 }

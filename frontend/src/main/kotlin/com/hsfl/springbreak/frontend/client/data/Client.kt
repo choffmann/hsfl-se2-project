@@ -10,9 +10,6 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.utils.io.core.*
-import kotlinx.atomicfu.TraceBase
-import kotlinx.atomicfu.TraceBase.None.append
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.RequestInit
@@ -151,7 +148,7 @@ class Client : ApiClient {
 
     override suspend fun getRecipeById(recipeId: Int): Recipe.Response {
         return client.submitForm(url = "$BASE_URL/recipes", formParameters = Parameters.build {
-            append("rid", recipeId.toString())
+            append("rId", recipeId.toString())
         }, encodeInQuery = true).body()
     }
 

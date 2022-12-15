@@ -6,7 +6,7 @@ import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.Recipe
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListType
 import com.hsfl.springbreak.frontend.components.notfound.EmptyCategory
 import com.hsfl.springbreak.frontend.components.notfound.EmptyFavorite
-import com.hsfl.springbreak.frontend.context.UiStateContext
+import com.hsfl.springbreak.frontend.components.notfound.EmptyOwnRecipe
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import csstype.Display
@@ -20,8 +20,6 @@ import mui.system.sx
 import org.kodein.di.instance
 import react.FC
 import react.Props
-import react.router.useNavigate
-import react.useContext
 import react.useEffect
 
 external interface RecipeListProps : Props {
@@ -29,8 +27,6 @@ external interface RecipeListProps : Props {
 }
 
 val RecipeList = FC<RecipeListProps> { props ->
-    val uiState = useContext(UiStateContext)
-    val navigator = useNavigate()
     val viewModel: RecipeListViewModel by di.instance()
     val recipeList = viewModel.recipeList.collectAsState()
     viewModel.randomState.collectAsState()
@@ -48,6 +44,7 @@ val RecipeList = FC<RecipeListProps> { props ->
         when (props.listType) {
             is RecipeListType.CategoryList -> EmptyCategory()
             RecipeListType.FavoriteList -> EmptyFavorite()
+            RecipeListType.MyRecipeList -> EmptyOwnRecipe()
             RecipeListType.HomeList.AllTab -> {}
             RecipeListType.HomeList.CheapTab -> {}
             RecipeListType.HomeList.FastTab -> {}

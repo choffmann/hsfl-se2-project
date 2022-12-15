@@ -55,7 +55,7 @@ class RecipeListViewModel(
     }
 
     private fun onInit(listType: RecipeListType) {
-        if (authState.authorized.value || listType is RecipeListType.HomeList) {
+        if (authState.authorized.value || listType is RecipeListType.HomeList || listType is RecipeListType.CategoryList) {
             scope.launch {
                 when (listType) {
                     is RecipeListType.CategoryList -> categoryRepository.getRecipesByCategory(listType.id).saveToState()
@@ -66,6 +66,7 @@ class RecipeListViewModel(
                     RecipeListType.HomeList.CheapTab -> recipeRepository.getRecipeCheapOrder().saveToState()
                     RecipeListType.HomeList.FastTab -> recipeRepository.getRecipeFastOrder().saveToState()
                     RecipeListType.HomeList.PopularTab -> recipeRepository.getRecipePopularOrder().saveToState()
+                    RecipeListType.MyRecipeList -> recipeRepository.getMyFavorites(userState.userState.value.id).saveToState()
                 }
             }
         } else {
@@ -151,6 +152,7 @@ class RecipeListViewModel(
 sealed class RecipeListType {
     data class CategoryList(val id: Int) : RecipeListType()
     object FavoriteList : RecipeListType()
+    object MyRecipeList: RecipeListType()
     sealed class HomeList : RecipeListType() {
         object CheapTab : HomeList()
         object FastTab : HomeList()
