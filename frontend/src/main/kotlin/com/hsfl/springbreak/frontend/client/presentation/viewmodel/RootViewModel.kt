@@ -1,7 +1,9 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel
 
+import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.data.model.User
+import com.hsfl.springbreak.frontend.client.data.repository.CategoryRepository
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
@@ -18,16 +20,21 @@ import web.storage.localStorage
 
 class RootViewModel(
     private val recipeRepository: RecipeRepository,
+    private val categoryRepository: CategoryRepository,
     private val scope: CoroutineScope = MainScope()
 ) {
 
     private val _recipeList = MutableStateFlow<MutableList<Recipe>>(mutableListOf())
     val recipeList: StateFlow<List<Recipe>> = _recipeList
 
+    private val _categoryList = MutableStateFlow<MutableList<Category>>(mutableListOf())
+    val categoryList: StateFlow<List<Category>> = _categoryList
+
     fun onEvent(event: RootEvent) {
         when (event) {
             LifecycleEvent.OnMount -> {
                 fetchRecipeList()
+                fetchCategoryList()
                 checkIsLoggedIn()
             }
             LifecycleEvent.OnUnMount -> clearStates()
@@ -37,6 +44,7 @@ class RootViewModel(
 
     private fun clearStates() {
         _recipeList.value = mutableListOf()
+        _categoryList.value = mutableListOf()
     }
 
     private fun fetchRecipeList() = scope.launch {
@@ -45,6 +53,17 @@ class RootViewModel(
                 onSuccess = {
                     UiEventState.onEvent(UiEvent.Idle)
                     _recipeList.value = it.toMutableList()
+                }
+            )
+        }
+    }
+
+    private fun fetchCategoryList() = scope.launch {
+        categoryRepository.getAllCategories().collectLatest { response ->
+            response.handleDataResponse<List<Category>>(
+                onSuccess = { list ->
+                    UiEventState.onEvent(UiEvent.Idle)
+                    _categoryList.value = list.toMutableList()
                 }
             )
         }

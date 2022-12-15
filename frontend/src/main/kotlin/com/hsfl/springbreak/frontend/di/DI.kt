@@ -38,8 +38,8 @@ val di = DI {
     bindSingleton { CreateRecipeImageVM() }
     bindSingleton { IngredientEditDialogVM(instance()) }
     bindSingleton { ProfileViewModel(instance(), instance()) }
-    bindSingleton { CategoryListViewModel(instance()) }
-    bindSingleton { RootViewModel(instance()) }
+    bindSingleton { CategoryListViewModel(instance(), instance(), instance(), instance()) }
+    bindSingleton { RootViewModel(instance(), instance()) }
     bindSingleton { RecipeDetailViewModel(instance()) }
     bindSingleton { HomeViewModel(instance(), instance(), instance()) }
     bindSingleton { RecipeCardViewModel(instance(), instance(), instance()) }

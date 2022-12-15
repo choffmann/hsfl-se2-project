@@ -1,12 +1,15 @@
 package com.hsfl.springbreak.frontend
 
 import browser.document
+import com.hsfl.springbreak.frontend.client.data.model.Category
 import com.hsfl.springbreak.frontend.client.data.model.Recipe
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.components.Header
+import com.hsfl.springbreak.frontend.components.notfound.NotFound404
+import com.hsfl.springbreak.frontend.components.recipe.CategoryDetailList
 import com.hsfl.springbreak.frontend.components.routes.*
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -31,6 +34,7 @@ private val Root = FC<Props> {
     val uiState = UiEventState.uiState.collectAsState()
     val authorized = authorizedState.authorized.collectAsState()
     val recipeListState = viewModel.recipeList.collectAsState()
+    val categoryListState = viewModel.categoryList.collectAsState()
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)
@@ -41,6 +45,7 @@ private val Root = FC<Props> {
         UiStateContext.Provider(value = uiState) {
             App {
                 recipeList = recipeListState
+                categoryList = categoryListState
             }
         }
     }
@@ -48,6 +53,7 @@ private val Root = FC<Props> {
 
 external interface AppProps : Props {
     var recipeList: List<Recipe>
+    var categoryList: List<Category>
 }
 
 private val App = FC<AppProps> { props ->
@@ -90,14 +96,16 @@ private val App = FC<AppProps> { props ->
                     path = "/user"
                     element = ProtectedRoute.create { MyUser() }
                 }
-                /*Route {
-                    path = "recipe/1"
-                    element = ProtectedRoute.create { RecipeDetail() }
-                }*/
                 props.recipeList.map {
                     Route {
                         path = "recipe/${it.id}"
                         element = RecipeDetail.create { recipeId = it.id }
+                    }
+                }
+                props.categoryList.map {
+                    Route {
+                        path = "category/${it.id}"
+                        element = CategoryDetailList.create { id = it.id }
                     }
                 }
                 Route {

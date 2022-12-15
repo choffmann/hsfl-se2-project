@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.components.routes
 
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.CategoryListViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.CategoryListEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.context.UiStateContext
 import com.hsfl.springbreak.frontend.di.di
@@ -11,6 +12,7 @@ import mui.material.*
 import org.kodein.di.instance
 import react.FC
 import react.Props
+import react.router.useNavigate
 import react.useContext
 import react.useEffect
 
@@ -19,6 +21,7 @@ val RecipeCategories = FC<Props> {
     val categoryList = viewModel.categoryList.collectAsState()
     val uiState = useContext(UiStateContext)
     val isLoading = uiState is UiEvent.ShowLoading
+    val navigator = useNavigate()
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)
@@ -42,6 +45,10 @@ val RecipeCategories = FC<Props> {
             }
         } else categoryList.map { category ->
             ListItemButton {
+                onClick = {
+                    //viewModel.onEvent(CategoryListEvent.OnCategoryClick(category.id))
+                    navigator("/category/${category.id}")
+                }
                 ListItemText { +category.name }
                 ListItemIcon {
                     ChevronRight()

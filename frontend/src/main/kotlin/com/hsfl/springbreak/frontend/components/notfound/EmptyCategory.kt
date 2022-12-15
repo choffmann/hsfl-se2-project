@@ -1,17 +1,21 @@
-package com.hsfl.springbreak.frontend.components.routes
+package com.hsfl.springbreak.frontend.components.notfound
 
 import csstype.*
 import emotion.react.css
-import mui.material.*
+import mui.material.Box
+import mui.material.Button
+import mui.material.ButtonVariant
+import mui.material.Typography
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
 import react.Props
-import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML
 import react.router.dom.NavLink
+import react.router.useNavigate
 
-val NotFound404 = FC<Props> {
-
+val EmptyCategory = FC<Props> {
+    val navigator = useNavigate()
     Box {
         sx {
             display = Display.flex
@@ -19,7 +23,7 @@ val NotFound404 = FC<Props> {
             alignItems = AlignItems.center
             flexDirection = FlexDirection.column
         }
-        img {
+        ReactHTML.img {
             css {
                 borderRadius = 8.px
                 boxShadow = BoxShadow(
@@ -30,7 +34,7 @@ val NotFound404 = FC<Props> {
                 )
             }
             src =
-                "https://media4.giphy.com/media/3o7aTskHEUdgCQAXde/giphy.gif?cid=ecf05e47wwyf5uolme13n99gngiql42tw8xziz1own58ywn3&rid=giphy.gif&ct=g"
+                "https://media3.giphy.com/media/6a67zVJ0wMMOzg3YKA/giphy.gif?cid=ecf05e475f37kkppep3n1w1i4mpsocg5fuuc10l1q06zz2iq&rid=giphy.gif&ct=g"
         }
         Typography {
             sx {
@@ -38,23 +42,17 @@ val NotFound404 = FC<Props> {
                 fontWeight = FontWeight.bold
             }
             variant = TypographyVariant.h4
-            +"Ooops."
+            +"Ohhhhh :("
         }
         Typography {
             variant = TypographyVariant.body1
-            +"Deine Anfrage konnten wir leider nicht bearbeiten."
+            +"Diese Kategorie hat noch keine Rezepte."
         }
-        NavLink {
-            css {
-                textDecoration = None.none
-                color = Color.currentcolor
-            }
-            to = "/"
-            Button {
-                variant = ButtonVariant.outlined
-                sx { margin = 16.px }
-                +"Zurück zur Startseite"
-            }
+        Button {
+            onClick = { navigator("/categories") }
+            variant = ButtonVariant.outlined
+            sx { margin = 16.px }
+            +"Zurück zur Übersicht"
         }
     }
 }

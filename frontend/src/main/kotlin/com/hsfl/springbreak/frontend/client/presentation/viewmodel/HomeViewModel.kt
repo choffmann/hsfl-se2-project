@@ -37,7 +37,6 @@ class HomeViewModel(
             LifecycleEvent.OnMount -> fetchRecipesByTabState()
             LifecycleEvent.OnUnMount -> clearStates()
             is HomeViewEvent.OnTabChange -> handleTabChange(event.tab)
-            is HomeViewEvent.OnFavorite -> onFavorite(event.recipeId)
         }
     }
 
@@ -46,9 +45,6 @@ class HomeViewModel(
         _recipeList.value = emptyList()
     }
 
-    private fun onFavorite(recipeId: Int) = scope.launch {
-
-    }
 
     private fun handleTabChange(tab: HomeRecipeTab) {
         _currentTab.value = tab
