@@ -59,6 +59,7 @@ val RecipeDetail = FC<RecipeDetailProps> { props ->
             onFavoriteClick = {
                 viewModel.onEvent(RecipeDetailEvent.OnFavorite)
             }
+            onScoreChange = { viewModel.onEvent(RecipeDetailEvent.OnScoreChanged(it)) }
             onLikeClick = {}
             onDislikeClick = {}
             onEditClick = {
@@ -365,6 +366,7 @@ private external interface RecipeDetailViewProps : Props {
     var onDislikeClick: () -> Unit
     var onEditClick: () -> Unit
     var onDeleteClick: () -> Unit
+    var onScoreChange: (Double) -> Unit
 }
 
 private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
@@ -412,11 +414,11 @@ private val RecipeDetailView = FC<RecipeDetailViewProps> { props ->
             RecipeAction {
                 myRecipe = props.isMyRecipe
                 isFavorite = props.isFavorite
+                score = props.recipe.score
                 onDeleteClick = props.onDeleteClick
-                onLikeClick = props.onLikeClick
-                onDislikeClick = props.onDislikeClick
                 onFavoriteClick = props.onFavoriteClick
                 onEditClick = props.onEditClick
+                onScoreChange = props.onScoreChange
             }
         }
 
@@ -532,11 +534,11 @@ private val RecipeTitle = FC<RecipeTitleProps> { props ->
 private external interface RecipeActionProps : Props {
     var myRecipe: Boolean
     var isFavorite: Boolean
+    var score: Double
     var onFavoriteClick: () -> Unit
-    var onLikeClick: () -> Unit
-    var onDislikeClick: () -> Unit
     var onEditClick: () -> Unit
     var onDeleteClick: () -> Unit
+    var onScoreChange: (Double) -> Unit
 }
 
 private val RecipeAction = FC<RecipeActionProps> { props ->
@@ -547,8 +549,9 @@ private val RecipeAction = FC<RecipeActionProps> { props ->
             justifyContent = JustifyContent.flexStart
         }
         Rating {
-            value = 2.5
+            value = props.score
             precision = 0.5
+            onChange = { _, newValue -> props.onScoreChange(newValue?.toDouble() ?: 0.0) }
         }
         if (props.isFavorite) {
             Tooltip {

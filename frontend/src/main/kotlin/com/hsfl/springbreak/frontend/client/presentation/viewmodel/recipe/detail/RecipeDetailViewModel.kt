@@ -2,6 +2,7 @@ package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detai
 
 import com.hsfl.springbreak.frontend.client.data.model.*
 import com.hsfl.springbreak.frontend.client.data.repository.FavoritesRepository
+import com.hsfl.springbreak.frontend.client.data.repository.RatingRepository
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
@@ -23,6 +24,7 @@ import org.kodein.di.instance
 class RecipeDetailViewModel(
     private val recipeRepository: RecipeRepository,
     private val favoritesRepository: FavoritesRepository,
+    private val ratingRepository: RatingRepository,
     private val userState: UserState,
     private val authState: AuthState,
     private val scope: CoroutineScope = MainScope()
@@ -98,7 +100,7 @@ class RecipeDetailViewModel(
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> = _isFavorite
 
-    private val _recipe = MutableStateFlow<Recipe>(emptyRecipe)
+    private val _recipe = MutableStateFlow(emptyRecipe)
     val recipe: StateFlow<Recipe> = _recipe
 
     fun onEvent(event: RecipeDetailEvent) {
@@ -115,6 +117,23 @@ class RecipeDetailViewModel(
                 // Only fetch favorite when user is logged in
                 if (authState.authorized.value) fetchIsFavorite()
             }
+
+            is RecipeDetailEvent.OnScoreChanged -> {
+                if (authState.authorized.value) sendRating(event.score)
+                else UiEventState.onEvent(UiEvent.ShowMessage("Bitte melde dich an um dieses Rezept zu bewerten"))
+            }
+        }
+    }
+
+    private fun sendRating(stars: Double) = scope.launch {
+        val rating = Recipe.Rating(stars = stars, recipeId = recipe.value.id, userId = userState.userState.value.id)
+        ratingRepository.sendRating(rating).collectLatest { response ->
+            response.handleDataResponse<Double>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.ShowMessage("Deine Bewertung wurde erfolgreich versendet"))
+                    _recipe.value = recipe.value.copy(score = it)
+                }
+            )
         }
     }
 

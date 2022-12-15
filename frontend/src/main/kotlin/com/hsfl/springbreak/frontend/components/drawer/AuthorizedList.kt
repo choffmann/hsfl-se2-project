@@ -40,8 +40,8 @@ val AuthorizedList = FC<Props> {
                 navigator("/user")
             }
             ListItemAvatar {
+                println("AuthorizedList::userImage::${user.image}")
                 Avatar {
-                    //src = user.image
                     user.image?.let {
                         src = it
                     } ?: +"${user.firstName[0]}${user.lastName[0]}"

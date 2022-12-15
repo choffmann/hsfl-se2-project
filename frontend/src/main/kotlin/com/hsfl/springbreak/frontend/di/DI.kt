@@ -24,6 +24,7 @@ val di = DI {
     bindSingleton<RecipeRepository> { RecipeRepositoryImpl(instance()) }
     bindSingleton<CategoryRepository> { CategoryRepositoryImpl(instance()) }
     bindSingleton<FavoritesRepository> { FavoritesRepositoryImpl(instance()) }
+    bindSingleton<RatingRepository> { RatingRepositoryImpl(instance()) }
 
     // ViewModels
     bindSingleton { DebugViewModel(instance()) }
@@ -40,11 +41,10 @@ val di = DI {
     bindSingleton { ProfileViewModel(instance(), instance()) }
     bindSingleton { CategoryListViewModel(instance(), instance(), instance(), instance()) }
     bindSingleton { RootViewModel(instance(), instance()) }
-    bindSingleton { RecipeDetailViewModel(instance(), instance(), instance(), instance()) }
+    bindSingleton { RecipeDetailViewModel(instance(), instance(), instance(), instance(), instance()) }
     bindSingleton { HomeViewModel(instance(), instance(), instance()) }
     bindSingleton { FavoritesListViewModel(instance(), instance()) }
     bindSingleton { ProfileRecipeListTableVM(instance(), instance()) }
-
     bindSingleton { RecipeListViewModel(instance(), instance(), instance(), instance(), instance()) }
 
     // States

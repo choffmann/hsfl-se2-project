@@ -9,7 +9,7 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val image: String? = null,
+    var image: String? = null,
     val favorites: List<Favorite> = emptyList()
 ) {
     @Serializable

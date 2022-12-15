@@ -12,7 +12,7 @@ interface RecipeRepository {
     suspend fun createRecipe(recipe: Recipe.Create): Flow<DataResponse<Recipe>>
     suspend fun updateRecipe(recipe: Recipe.Update): Flow<DataResponse<Recipe>>
     suspend fun deleteRecipe(recipeId: Long): Flow<DataResponse<Recipe>>
-    suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>>
+    suspend fun uploadImage(recipeId: Int, recipeImage: File): Flow<DataResponse<String>>
     suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>>
     suspend fun getRecipeCheapOrder(): Flow<DataResponse<List<Recipe>>>
@@ -44,11 +44,12 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
         }
     }
 
-    override suspend fun uploadImage(recipeId: Int, recipeImage: File?): Flow<DataResponse<Recipe.Image>> = flow {
-        repositoryHelper {
-            val response: Recipe.ImageResponse = client.updateRecipeImage(recipeId, recipeImage)
-            APIResponse.fromResponse(response.error, Recipe.Image(response.imageUrl ?: ""), response.success)
-        }
+    override suspend fun uploadImage(recipeId: Int, recipeImage: File): Flow<DataResponse<String>> = flow {
+        emit(DataResponse.Loading())
+        val image = client.updateProfileImage(recipeId, recipeImage).data as? String
+        image?.let {
+            emit(DataResponse.Success(it))
+        } ?: emit(DataResponse.Error("Fehler beim hochladen vom Rezept Bild."))
     }
 
     override suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>> = flow {

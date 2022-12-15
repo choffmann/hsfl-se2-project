@@ -1,6 +1,5 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.auth
 
-import com.hsfl.springbreak.frontend.client.data.DataResponse
 import com.hsfl.springbreak.frontend.client.data.model.User
 import com.hsfl.springbreak.frontend.client.data.repository.UserRepository
 import com.hsfl.springbreak.frontend.client.presentation.state.*
@@ -13,7 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
@@ -122,7 +120,7 @@ class AuthDialogViewModel(
                         MessageViewModel.onEvent(SnackbarEvent.Show("Dein Account wurde erfolgreich registriert"))
                         closeRegisterDialog()
                     } else {
-                        uploadProfileImage(user.id, profileImage)
+                        uploadProfileImage(user, profileImage)
                         saveUserLocal(user)
                     }
                 }
@@ -130,8 +128,8 @@ class AuthDialogViewModel(
         }
     }
 
-    private fun uploadProfileImage(userId: Int, profileImage: File) = scope.launch {
-        userRepository.uploadProfileImage(userId, profileImage).collectLatest { response ->
+    private fun uploadProfileImage(user: User, profileImage: File) = scope.launch {
+        userRepository.uploadProfileImage(user.id, profileImage).collectLatest { response ->
             response.handleDataResponse<String>(
                 onSuccess = {
                     UiEventState.onEvent(UiEvent.Idle)
@@ -139,7 +137,8 @@ class AuthDialogViewModel(
                     closeRegisterDialog()
                     val userState: UserState by di.instance()
                     localStorage.setItem("userImage", it)
-                    userState.onEvent(UserStateEvent.SetUser(userState.userState.value.copy(image = it)))
+                    user.image = it
+                    userState.onEvent(UserStateEvent.SetUser(user))
                 }
             )
         }

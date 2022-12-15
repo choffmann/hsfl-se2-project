@@ -61,14 +61,23 @@ data class Recipe(
     )
 
     @Serializable
-    data class Image(
-        val imageUrl: String
+    data class ImageResponse(
+        val error: String? = null,
+        val data: String? = null,
+        val success: Boolean = false
     )
 
     @Serializable
-    data class ImageResponse(
+    data class Rating(
+        val stars: Double,
+        val recipeId: Int,
+        val userId: Int
+    )
+
+    @Serializable
+    data class RatingResponse(
         val error: String? = null,
-        val imageUrl: String? = null,
+        val data: Double? = null,
         val success: Boolean = false
     )
 }

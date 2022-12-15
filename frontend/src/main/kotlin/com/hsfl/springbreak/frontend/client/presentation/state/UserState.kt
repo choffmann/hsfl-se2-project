@@ -18,7 +18,6 @@ class UserState {
                 email = event.value.email ?: userState.value.email,
                 password = event.value.password ?: userState.value.password
             )
-
             is UserStateEvent.SetUser -> _userState.value = event.user
         }
     }

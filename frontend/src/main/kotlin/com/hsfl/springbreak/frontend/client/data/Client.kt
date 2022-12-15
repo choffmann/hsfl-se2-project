@@ -29,12 +29,13 @@ interface ApiClient {
     suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response
     suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response
     suspend fun deleteRecipe(recipeId: Long): Recipe.Response
-    suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse
+    suspend fun updateRecipeImage(recipeId: Int, recipeImage: File): Recipe.ImageResponse
     suspend fun getRecipeById(recipeId: Int): Recipe.Response
     suspend fun getRecipeByPopularity(): Recipe.ResponseList
     suspend fun getMyFavorites(userId: Int): Recipe.ResponseList
     suspend fun setFavorite(userId: Int, recipeId: Int): Recipe.Response
     suspend fun deleteFavorite(userId: Int, recipeId: Int): Recipe.Response
+    suspend fun sendRating(rating: Recipe.Rating): Recipe.RatingResponse
 }
 
 class Client : ApiClient {
@@ -128,24 +129,22 @@ class Client : ApiClient {
         return client.delete(urlString = "$BASE_URL/recipes$recipeId").body()
     }
 
-    override suspend fun updateRecipeImage(recipeId: Int, recipeImage: File?): Recipe.ImageResponse {
+    override suspend fun updateRecipeImage(recipeId: Int, recipeImage: File): dynamic {
+        // Have to use window.fetch. Ktor didn't support uploading File from JS File package for now
         val formData = FormData()
-        recipeImage?.let { file ->
+        recipeImage.let { file ->
             formData.append("image", file.slice(), file.name)
         }
-        return window.fetch(
-            input = "$BASE_URL/recipes/image/$recipeId", init = RequestInit(
+        val response = window.fetch(
+            input = "$BASE_URL/user/image?id=$recipeId", init = RequestInit(
                 method = "POST",
                 body = formData
             )
         )
             .await()
-            .text()
-            .then {
-                return@then Recipe.ImageResponse(imageUrl = it)
-            }
-            .catch { return@catch Recipe.ImageResponse(error = it.message, success = false) }
+            .json()
             .await()
+        return response.asDynamic()
     }
 
     override suspend fun getRecipeById(recipeId: Int): Recipe.Response {
@@ -170,5 +169,12 @@ class Client : ApiClient {
 
     override suspend fun deleteFavorite(userId: Int, recipeId: Int): Recipe.Response {
         return client.delete(urlString = "$BASE_URL/user/favorite?rId=$recipeId&uId=$userId").body()
+    }
+
+    override suspend fun sendRating(rating: Recipe.Rating): Recipe.RatingResponse {
+        return client.post("$BASE_URL/rating") {
+            contentType(ContentType.Application.Json)
+            setBody(rating)
+        }.body()
     }
 }

@@ -63,7 +63,7 @@ class ProfileViewModel(
     }
 
     private fun setFlowsToUser() = MainScope().launch {
-        userState.userState.collect {
+        userState.userState.collectLatest {
             _firstNameState.value = it.firstName
             _lastNameState.value = it.lastName
             _emailState.value = it.email

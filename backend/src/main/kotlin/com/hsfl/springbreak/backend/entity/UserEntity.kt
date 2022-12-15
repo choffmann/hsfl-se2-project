@@ -2,9 +2,7 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
-import java.io.File
 import java.nio.file.Paths
-import java.sql.Blob
 import javax.persistence.*
 
 val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/src/main/resources/defaultPic.png"
@@ -31,7 +29,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = "http://localhost:8080/api/user/image/${this.id}/.png",
+        image = "http://localhost:8080/api/user/image/${this.id}.png",
         favorites = toRecipeDto(this.favorites)
     )
 
@@ -49,7 +47,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = "http://localhost:8080/api/user/image/${this.id}/.png"
+        image = "http://localhost:8080/api/user/image/${this.id}.png"
     )
 
     companion object {
