@@ -11,7 +11,7 @@ data class RecipeEntity(
     @Column var title: String,
     @Column(columnDefinition = "TEXT") var shortDescription: String?,
     @Column var price: Double?,
-    @Column var duration: Double?,
+    @Column var duration: Int?,
     @ManyToOne @JoinColumn(name = "difficulty_id") var difficulty: DifficultyEntity,
     @ManyToOne @JoinColumn(name = "category_id") var category: CategoryEntity,
     @ManyToOne @JoinColumn(name = "users_id") var creator: UserEntity,
