@@ -7,7 +7,7 @@ import java.nio.file.Paths
 import java.sql.Blob
 import javax.persistence.*
 
-val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/backend/src/main/resources/defaultPic.png"
+val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/src/main/resources/defaultPic.png"
 @Entity(name = "users")
 data class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,

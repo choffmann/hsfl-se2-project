@@ -15,7 +15,7 @@ class CategoryController(val categoryRepository: CategoryRepository) {
      * Returns a list of all categories.
      */
     @GetMapping("api/categories")
-    fun retrieveDifficulties(): ApiResponse<List<Category>> {
+    fun retrieveCategories(): ApiResponse<List<Category>> {
         return ApiResponse(data = categoryRepository.findAll().map { it.toDto() }, success = true)
     }
 }
