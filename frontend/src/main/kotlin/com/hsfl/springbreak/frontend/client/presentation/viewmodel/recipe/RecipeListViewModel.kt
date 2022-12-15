@@ -66,7 +66,7 @@ class RecipeListViewModel(
                     RecipeListType.HomeList.CheapTab -> recipeRepository.getRecipeCheapOrder().saveToState()
                     RecipeListType.HomeList.FastTab -> recipeRepository.getRecipeFastOrder().saveToState()
                     RecipeListType.HomeList.PopularTab -> recipeRepository.getRecipePopularOrder().saveToState()
-                    RecipeListType.MyRecipeList -> recipeRepository.getMyFavorites(userState.userState.value.id).saveToState()
+                    RecipeListType.MyRecipeList -> recipeRepository.getMyRecipes(userState.userState.value.id).saveToState()
                 }
             }
         } else {

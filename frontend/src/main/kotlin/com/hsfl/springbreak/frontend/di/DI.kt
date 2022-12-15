@@ -43,6 +43,7 @@ val di = DI {
     bindSingleton { RecipeDetailViewModel(instance()) }
     bindSingleton { HomeViewModel(instance(), instance(), instance()) }
     bindSingleton { FavoritesListViewModel(instance(), instance()) }
+    bindSingleton { ProfileRecipeListTableVM(instance(), instance()) }
 
     bindSingleton { RecipeListViewModel(instance(), instance(), instance(), instance(), instance()) }
 

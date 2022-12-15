@@ -67,8 +67,8 @@ val MyUser = FC<Props> {
     Divider()
     Box {
         sx {
-            marginRight = 64.px
-            marginLeft = 64.px
+            marginRight = 8.px
+            marginLeft = 8.px
         }
         ShowMyRecipes()
     }
