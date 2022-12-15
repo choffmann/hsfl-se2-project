@@ -1,106 +1,173 @@
 package com.hsfl.springbreak.backend.jpa
 
 import com.hsfl.springbreak.backend.controller.RecipeController
-import com.hsfl.springbreak.backend.model.IngredientRecipe
-import com.hsfl.springbreak.backend.model.Recipe
-import org.junit.jupiter.api.Assertions.assertEquals
+import com.hsfl.springbreak.backend.model.*
+import com.hsfl.springbreak.backend.service.RecipeService
+import junit.framework.TestCase.*
+import org.junit.Assert.assertNotEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Description
-import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
 import javax.transaction.Transactional
+
 
 @Transactional
 @SpringBootTest
-class RecipeJpaTest {
+class RecipeTest {
+    @Autowired
+    private lateinit var service: RecipeService
 
     @Autowired
     private lateinit var controller: RecipeController
-    private var userId: Long = 1
+
     private var recipeId: Long = 0
-    private var testRecipe = Recipe.CreateRecipe(
-        title = "Schockomuffins",
-        shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
-        price = 5.00,
-        duration = 10.00,
-        categoryId = 2,
-        creatorId = 2,
-        createTime = LocalDate.now(),
-        difficultyId = 2,
-        image = "null",
-        longDescription = "null",
-        ingredients = listOf(
-            IngredientRecipe.WithoutRecipe(
-                ingredientName = "Milch",
-                unit = "liter",
-                amount = 400
+    val recipe = listOf(
+            Recipe.CreateRecipe(
+            title = "Schockomuffins",
+            shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
+            price = 5.00,
+            duration = 10.00,
+            difficultyId = 2,
+            categoryId =  1,
+            creatorId = 1,
+            longDescription = "null",
+            ingredients = listOf(
+                    IngredientRecipe.WithoutRecipe(
+                            ingredientName = "Milch",
+                            unit = "liter",
+                            amount = 400
+                    )
+                )
+            ),
+             Recipe.CreateRecipe(
+             title = "Käsemakkaroni",
+            shortDescription = "Die genialsten Käsemakkaroni.",
+            price = 10.00,
+            duration = 15.00,
+            difficultyId = 2,
+            categoryId =  3,
+            creatorId = 2,
+            longDescription = "Salzwasser zum Kochen bringen und die Makkaroni nach Packungsanleitung kochen, lieber etwas kürzer als zu lange, dann abgießen.\n" +
+                    "Inzwischen die Petersilie waschen, trocken schleudern und hacken, (1 Paket TK-Petersilie geht natürlich auch). Den Knoblauch abziehen und fein hacken.",
+            ingredients = listOf(
+                    IngredientRecipe.WithoutRecipe(
+                            ingredientName = "Sahne",
+                            unit = "gramm",
+                            amount = 200
+                    ),
+                    IngredientRecipe.WithoutRecipe(
+                            ingredientName = "Makkaroni, kurze",
+                            unit = "gramm",
+                            amount = 250
+                    )
             )
-        )
+    )
     )
 
     @BeforeEach
-    @Description("Add testRecipe to database")
+    @Description("Add Recipe to database")
     fun postRecipe() {
-        recipeId = controller.createRecipe(testRecipe).data?.id ?: 0
+       recipeId = controller.createRecipe(recipe[0]).data?.id ?: 0;
+        var recipeId2 = controller.createRecipe(recipe[1]).data?.id ?: 0;
     }
-
-//    @Test
-//    @Description("Test adding recipe as favorite")
-//    fun testAddFavorite() {
-//        controller.setFavoriteById(recipeId, userId)
-//    }
-
     @Test
-    @Description("Test correct RecipeController.findRecipeById(id) with existing id")
+    fun createRecipe() {
+        val apiResponse = service.createRecipe(recipe[0])
+        Assertions.assertTrue(apiResponse.success)
+    }
+    @Test
     fun testCorrectGetRecipe() {
-        val apiResponse = controller.getRecipeById(recipeId)
-        assertEquals(true, apiResponse.success)
-    }
+        val apiResponse = service.getRecipeById(recipeId)
+        Assertions.assertTrue(apiResponse.success)
 
+    }
     @Test
-    @Description("Test faulty RecipeController.findRecipeById(id) with non-existing id")
-    fun testFaultyGetRecipe() {
-        val apiResponse = controller.getRecipeById(recipeId + 1)
-        assertEquals(false, apiResponse.success)
-    }
+    fun testFailedGetRecipe() {
+        val apiResponse = service.getRecipeById(recipeId + 10)
+        Assertions.assertFalse(apiResponse.success)
 
-    /*
+    }
+    @Test
+    fun getRecipeByName() {
+        val apiResponse = service.getRecipeByName(recipe[0].title)
+        Assertions.assertTrue(apiResponse.success)
+
+    }
     @Test
     @Description("")
     fun testCorrectPutRecipe() {
-        val testRecipe2 = testRecipe
-        testRecipe2.title = "new title"
+        var recipe2 =Recipe.ChangeRecipe(
+                recipeId=recipeId,
+                title = "new title",
+                shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
+                price = 5.00,
+                duration = 10.00,
+                difficultyId = 2,
+                categoryId =  1,
+                longDescription = "null",
+                ingredients = listOf(
+                        IngredientRecipe.WithoutRecipe(
+                                ingredientName = "Milch",
+                                unit = "liter",
+                                amount = 400
+                        )
+                )
+        )
 
-        val apiResponse = controller.updateRecipe(id, testRecipe2.toDto())
-        assertEquals(true, apiResponse.success)
+        val apiResponse = service.updateRecipe(recipe2)
+        assertTrue( apiResponse.success)
         assertEquals("new title", apiResponse.data?.title ?: "")
     }
-
     @Test
     @Description("")
     fun testFaultyPutRecipe() {
-        val apiResponse = controller.updateRecipe(id + 1, testRecipe.toDto())
-        assertEquals(false, apiResponse.success)
-    }
+        var recipe2 =Recipe.ChangeRecipe(
+                recipeId=recipeId,
+                title = "title",
+                shortDescription = "Diese Muffins lieben alle! So schnell und einfach vorzubereiten und unglaublich saftig – das ist unser beliebtes Schokomuffin-Rezept.",
+                price = 5.00,
+                duration = 10.00,
+                difficultyId = 2,
+                categoryId =  1,
+                longDescription = "null",
+                ingredients = listOf(
+                        IngredientRecipe.WithoutRecipe(
+                                ingredientName = "Milch",
+                                unit = "liter",
+                                amount = 400
+                        )
+                )
+        )
 
-     */
+        val apiResponse = service.updateRecipe(recipe2)
+        assertTrue( apiResponse.success)
+        assertNotEquals("new title", apiResponse.data?.title ?: "")
+    }
+    @Test
+    fun testDeleteRecipe() {
+        val apiResponse=service.deleteRecipeById(recipeId)
+        assertTrue( apiResponse.success)
+        val apiResponse2=service.deleteRecipeById(recipeId+20)
+        assertFalse( apiResponse2.success)
+    }
 
     @Test
-    @Description("Test correct RecipeController.deleteRecipe(id) with existing id")
-    fun testCorrectDeleteRecipe() {
-        controller.deleteRecipe(recipeId)
-        val apiResponse = controller.getRecipeById(recipeId)
-        assertEquals(false, apiResponse.success)
+    fun getRecipes() {
+        val apiResponse=service.getRecipes()
+        assertTrue( apiResponse.success)
+        assertEquals(4, apiResponse.data?.size ?: -1)
+    }
+    @Test
+    fun getRecipesByCreator(){
+        val apiResponse=service.getRecipesByCreator(2)
+        assertTrue(apiResponse.success)
+        assertEquals("Käsemakkaroni", apiResponse.data?.get(0)?.title ?: "")
     }
 
-    @Test
-    @Description("Test faulty RecipeController.deleteRecipe(id) with non-existing id")
-    fun testFaultyDeleteRecipe() {
-        org.junit.jupiter.api.assertThrows<ResponseStatusException> {
-            controller.deleteRecipe(recipeId + 1)
-        }
-    }
+
+
+
 }

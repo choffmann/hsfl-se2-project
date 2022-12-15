@@ -2,8 +2,12 @@ package com.hsfl.springbreak.backend.entity
 
 import com.hsfl.springbreak.backend.model.Recipe
 import com.hsfl.springbreak.backend.model.User
+import java.io.File
+import java.nio.file.Paths
+import java.sql.Blob
 import javax.persistence.*
 
+val defaultImagePath = Paths.get("").toAbsolutePath().toString() + "/src/main/resources/defaultPic.png"
 @Entity(name = "users")
 data class UserEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null,
@@ -11,7 +15,8 @@ data class UserEntity(
     @Column val lastName: String,
     @Column val email: String,
     @Column val password: String,
-    @Column var image: String? = null,
+    //@Column @Lob var image: ByteArray? = null,
+    @Column @Lob var image: ByteArray? = File(defaultImagePath).readBytes(),
     @ManyToMany @JoinTable(
         name = "user_favorite",
         joinColumns = [JoinColumn(name = "users_id")],
@@ -26,13 +31,13 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = "http://localhost:8080/api/user/image/${this.id}.png",
-        favorites = toRecipeDtos(this.favorites)
+        image = this.image,
+        favorites = toRecipeDto(this.favorites)
     )
 
-    private fun toRecipeDtos(favoriteList: MutableList<RecipeEntity>): MutableList<Recipe> {
+    private fun toRecipeDto(dtoList: MutableList<RecipeEntity>): MutableList<Recipe> {
         val resultList = mutableListOf<Recipe>()
-        favoriteList.forEach {
+        dtoList.forEach {
             resultList.add(it.toDto())
         }
         return resultList
@@ -44,7 +49,7 @@ data class UserEntity(
         lastName = this.lastName,
         email = this.email,
         password = this.password,
-        image = "http://localhost:8080/api/user/image/${this.id}.png"
+        image = this.image
     )
 
     companion object {

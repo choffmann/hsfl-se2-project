@@ -7,26 +7,15 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
-/**
- * Call category-related functions from category-repository.
- */
 @CrossOrigin("http://localhost:3000")
 @RestController
 class CategoryController(val categoryRepository: CategoryRepository) {
 
     /**
-     * API-Endpoint for getting a list of all available categories.
-     * @return API-Response with a list of all stored categories or an error
+     * Returns a list of all categories.
      */
     @GetMapping("api/categories")
-    fun retrieveDifficulties(): ApiResponse<List<Category>> {
-        val categoryEntities = categoryRepository.findAll().distinct()
-        return if (categoryEntities.isNotEmpty()) {
-            val categories = categoryEntities.map { it.toDto() }
-            ApiResponse(data = categories, success = true)
-        } else {
-            ApiResponse(error = "No categories available", success = false)
-        }
-
+    fun retrieveCategories(): ApiResponse<List<Category>> {
+        return ApiResponse(data = categoryRepository.findAll().map { it.toDto() }, success = true)
     }
 }
