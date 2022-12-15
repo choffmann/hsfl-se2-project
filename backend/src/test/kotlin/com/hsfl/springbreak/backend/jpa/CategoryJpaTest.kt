@@ -43,7 +43,6 @@ class CategoryJpaTest {
         repository.saveAll(categoryEntities)
     }
 
-
     @Test
     @Description("Test get all categories in database")
     fun retrieveCategories() {
