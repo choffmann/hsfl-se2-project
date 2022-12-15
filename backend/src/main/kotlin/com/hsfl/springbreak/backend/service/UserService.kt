@@ -60,8 +60,6 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
 
     fun setProfilePicture(id: Long, file: MultipartFile): String? {
         return if (userRepository.existsById(id)){
-            val fileName = file.originalFilename
-            val fileType = file.contentType
             val filePath = Paths.get("").toAbsolutePath().toString() +
                     "/backend/src/main/resources/userProfiles/$id" + file.originalFilename
 
@@ -77,10 +75,13 @@ class UserService(val userRepository: UserRepository, val recipeRepository: Reci
     }
 
     fun getProfilePicture(id: Long): ByteArray {
+        val defaultPath = Paths.get("").toAbsolutePath().toString() +
+                "/backend/src/main/resources/userProfiles/defaultPic.png"
         return if (userRepository.existsById(id)) {
             val userProxy = userRepository.findById(id).get()
-            val filePath = userProxy.image
-            Files.readAllBytes(File(filePath).toPath())
+            userProxy.image?.let {
+                Files.readAllBytes(File(it).toPath())
+            } ?: Files.readAllBytes(File(defaultPath).toPath())
         } else {
             byteArrayOf()
         }

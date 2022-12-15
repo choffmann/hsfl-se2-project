@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Description
 import java.io.File
 import java.nio.file.Paths
 import javax.transaction.Transactional
@@ -95,6 +96,7 @@ class UserJpaTest {
     }
 
     @Test
+    @Description("Test register a person")
     fun testRegister() {
         val user = User.Register(
                 firstName = "Max", lastName = "Mustermann", email = "max.mustermann@moster-inc.com",
@@ -104,6 +106,7 @@ class UserJpaTest {
         assertTrue(apiResponse.success)
     }
     @Test
+    @Description("Test login a user")
     fun testLogin() {
         val user1 = User.Login(
                 email = "thaddeus.bile@moster-inc.com", password = "geheim"
@@ -113,6 +116,7 @@ class UserJpaTest {
     }
 
     @Test
+    @Description("Test when the user enters incorrect login data")
     fun testLoginFailed() {
         val user = User.Login(
                 email = "thaddeus.bile@moster-inc.com", password = "ma000"
@@ -122,9 +126,10 @@ class UserJpaTest {
     }
 
     @Test
+    @Description("Test when the user edits his personal data")
     fun testchangeProfile() {
         val user1 = User.ChangeProfile(
-               id= 1,  firstName = "hermin", lastName = "mosa", password = ""
+               id= 1,  firstName = "Hermin", lastName = "Mosa", password = ""
         )
         val apiResponse = service.changeProfile(user1)
         assertTrue(apiResponse.success)
@@ -132,12 +137,13 @@ class UserJpaTest {
     @Test
     fun testChangeProfileFailed() {
         val user1 = User.ChangeProfile(
-                id= 100,  firstName = "hermin", lastName = "mosa", password = ""
+                id= 100,  firstName = "Hermin", lastName = "Mosa", password = ""
         )
         val apiResponse = service.changeProfile(user1)
         assertFalse(apiResponse.success)
     }
     @Test
+    @Description("Test when the user adds a recipe to his favorite list")
     fun testSetFavoriteById() {
         var userId : Long= demoUsers[1].id!!
         var recipeId: Long = 2
@@ -153,6 +159,7 @@ class UserJpaTest {
         assertFalse(apiResponse.success)
     }
     @Test
+    @Description("Test when the user removes a recipe to his favorite list")
     fun deleteFavoriteById() {
         var userId : Long= demoUsers[1].id!!
         var recipeId: Long = 2

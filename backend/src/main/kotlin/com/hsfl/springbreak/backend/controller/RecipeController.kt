@@ -21,7 +21,7 @@ class RecipeController(val recipeService: RecipeService) {
      * @param rId The recipe's ID from the request parameter
      * @return API-Response with the Recipe-DTO or an error
      */
-    @GetMapping("api/recipes", params = ["id"])
+    @GetMapping("api/recipes")
     fun getRecipeById(@RequestParam("rId") rId: Long): ApiResponse<Recipe.Response> = recipeService.getRecipeById(rId)
 
     /*
@@ -35,7 +35,7 @@ class RecipeController(val recipeService: RecipeService) {
      * API-Endpoint for getting all stored recipes.
      * @return API-Response with a list of Recipe-DTOs or an error
      */
-    @GetMapping("api/recipes")
+    @GetMapping("api/recipes", params = ["all"])
     fun getRecipes(): ApiResponse<List<Recipe.Response>> = recipeService.getRecipes()
 
     /**

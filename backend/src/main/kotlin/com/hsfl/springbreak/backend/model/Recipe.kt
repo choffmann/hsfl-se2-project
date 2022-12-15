@@ -22,15 +22,15 @@ data class Recipe(
 ) {
 
     data class CreateRecipe(
-        val title: String,
-        val shortDescription: String?,
-        val price: Double?,
-        val duration: Double?,
-        val difficultyId: Long,
-        val categoryId: Long,
-        val creatorId: Long,
-        val longDescription: String?,
-        val ingredients: List<IngredientRecipe.WithoutRecipe>
+            val title: String,
+            val shortDescription: String?,
+            val price: Double?,
+            val duration: Double?,
+            val difficultyId: Long,
+            var categoryId: Long,
+            val creatorId: Long,
+            val longDescription: String?,
+            val ingredients: List<IngredientRecipe.WithoutRecipe>
     )
 
     data class ChangeRecipe(
