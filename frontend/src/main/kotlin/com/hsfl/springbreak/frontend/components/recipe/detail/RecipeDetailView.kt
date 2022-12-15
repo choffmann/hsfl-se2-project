@@ -285,6 +285,11 @@ val RecipeMetaData = FC<RecipeMetaDataProps> { props ->
             Chip {
                 sx {
                     alignItems = AlignItems.center
+                    MuiChip.root {
+                        display = Display.flex
+                        justifyContent = JustifyContent.center
+                        alignItems = AlignItems.center
+                    }
                 }
                 icon = it
                 label = ReactNode(props.metaDataText)

@@ -136,7 +136,7 @@ class Client : ApiClient {
             formData.append("image", file.slice(), file.name)
         }
         val response = window.fetch(
-            input = "$BASE_URL/user/image?id=$recipeId", init = RequestInit(
+            input = "$BASE_URL/recipe/image?id=$recipeId", init = RequestInit(
                 method = "POST",
                 body = formData
             )

@@ -88,7 +88,6 @@ class CreateRecipeViewModel(
                     recipeImage.value?.let { file ->
                         uploadRecipeImage(recipe.id, file)
                     } ?: UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich erstellt"))
-                    println(recipe)
                 }
             )
         }
@@ -100,7 +99,13 @@ class CreateRecipeViewModel(
     }
 
     private fun uploadRecipeImage(recipeId: Int, file: File) = scope.launch {
-        recipeRepository.uploadImage(recipeId, file)
+        recipeRepository.uploadImage(recipeId, file).collectLatest { response ->
+            response.handleDataResponse<String>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich erstellt"))
+                }
+            )
+        }
     }
 
     private fun onNextStep() {

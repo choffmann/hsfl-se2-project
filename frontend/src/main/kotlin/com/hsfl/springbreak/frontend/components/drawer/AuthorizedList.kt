@@ -27,8 +27,7 @@ val AuthorizedList = FC<Props> {
         NavBarItem("Favoriten", Favorite, "/favorite"),
         NavBarItem("Kategorien", Category, "/categories"),
         NavBarItem("Rezept erstellen", Add, "/create-recipe"),
-        NavBarItem("Meine Rezepte", Book, "/my-recipes"),
-        NavBarItem("Einstellungen", Settings, "/settings"),
+        NavBarItem("Meine Rezepte", Book, "/my-recipes")
     )
     val userState: UserState by di.instance()
     val user = userState.userState.collectAsState()

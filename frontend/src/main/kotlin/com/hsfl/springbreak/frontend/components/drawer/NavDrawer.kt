@@ -43,6 +43,6 @@ val NavDrawer = FC<NavDrawerProps> { props ->
         } else {
             UnauthorizedList()
         }
-        DebugListProvider()
+        //DebugListProvider()
     }
 }

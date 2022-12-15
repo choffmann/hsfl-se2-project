@@ -65,12 +65,6 @@ val Header = FC<HeaderProps> { props ->
                     sx { flexGrow = number(1.0) }
                     +"Studentenküche"
                 }
-                // Search Icon
-                IconButton {
-                    size = Size.large
-                    color = IconButtonColor.inherit
-                    Search()
-                }
                 // If authorized, show login button
                 if (!isAuthorized) {
                     Button {

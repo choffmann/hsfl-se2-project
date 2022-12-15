@@ -59,13 +59,13 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
             }
         }
         CardActionArea {
-            CardMedia {
-                component = img
-                image = props.imageSrc
-            }
             CardContent {
                 onClick = {
                     props.onClick(props.id)
+                }
+                CardMedia {
+                    component = img
+                    image = props.imageSrc
                 }
                 Typography {
                     variant = TypographyVariant.body2

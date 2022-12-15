@@ -42,8 +42,9 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
     val viewModel: RecipeDetailEditViewModel by di.instance()
     val categoryListState = viewModel.categoryList.collectAsState()
     val difficultyListState = viewModel.difficultyList.collectAsState()
+    var selectedImage: File? by useState(null)
 
-    var profileImageState by useState(props.recipe.image)
+    var recipeImageState by useState(props.recipe.image)
     var recipeTitleState by useState(props.recipe.title)
     var recipeSubtitleState by useState(props.recipe.shortDescription)
     var recipeDifficultyState by useState(props.recipe.difficulty.id.toString())
@@ -58,7 +59,7 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
     }
 
     Box {
-        profileImageState?.let { image ->
+        recipeImageState?.let { image ->
             if (image.isNotEmpty()) {
                 Box {
                     ReactHTML.div {
@@ -87,7 +88,10 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                                 alignItems = AlignItems.center
                             }
                             UploadRecipeImageButton {
-                                onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
+                                onProfileImageChanged = {
+                                    selectedImage = it
+                                    recipeImageState = URL.createObjectURL(it)
+                                }
                             }
                         }
                     }
@@ -99,7 +103,10 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                     paddingTop = 16.px
                 }
                 UploadRecipeImageButton {
-                    onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
+                    onProfileImageChanged = {
+                        selectedImage = it
+                        recipeImageState = URL.createObjectURL(it)
+                    }
                 }
             }
         } ?: Box {
@@ -109,7 +116,10 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                 paddingTop = 16.px
             }
             UploadRecipeImageButton {
-                onProfileImageChanged = { profileImageState = URL.createObjectURL(it) }
+                onProfileImageChanged = {
+                    selectedImage = it
+                    recipeImageState = URL.createObjectURL(it)
+                }
             }
         }
 
@@ -176,7 +186,7 @@ val RecipeDetailEdit = FC<RecipeDetailEditProps> { props ->
                         Ingredient.Create(name = it.item.name, unit = it.item.unit, amount = it.item.amount)
                     }
                 )
-                props.onSave(recipe, null)
+                props.onSave(recipe, selectedImage)
             }
             onCancel = props.onCancel
         }

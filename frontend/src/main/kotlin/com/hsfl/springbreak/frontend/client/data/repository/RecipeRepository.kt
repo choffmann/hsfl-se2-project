@@ -46,7 +46,7 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
 
     override suspend fun uploadImage(recipeId: Int, recipeImage: File): Flow<DataResponse<String>> = flow {
         emit(DataResponse.Loading())
-        val image = client.updateProfileImage(recipeId, recipeImage).data as? String
+        val image = client.updateRecipeImage(recipeId, recipeImage).data as? String
         image?.let {
             emit(DataResponse.Success(it))
         } ?: emit(DataResponse.Error("Fehler beim hochladen vom Rezept Bild."))

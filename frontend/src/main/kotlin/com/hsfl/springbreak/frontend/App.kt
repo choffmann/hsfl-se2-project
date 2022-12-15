@@ -92,10 +92,6 @@ private val App = FC<AppProps> { props ->
                     element = ProtectedRoute.create { RecipeList { listType = RecipeListType.MyRecipeList } }
                 }
                 Route {
-                    path = "/settings"
-                    element = ProtectedRoute.create { Settings() }
-                }
-                Route {
                     path = "/user"
                     element = ProtectedRoute.create { MyUser() }
                 }

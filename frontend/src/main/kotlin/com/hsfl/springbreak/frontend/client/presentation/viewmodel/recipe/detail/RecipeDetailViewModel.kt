@@ -104,7 +104,7 @@ class RecipeDetailViewModel(
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> = _isFavorite
 
-    private val _recipe = MutableStateFlow(testRecipe)
+    private val _recipe = MutableStateFlow(emptyRecipe)
     val recipe: StateFlow<Recipe> = _recipe
 
     private val _openDeleteDialog = MutableStateFlow(false)
