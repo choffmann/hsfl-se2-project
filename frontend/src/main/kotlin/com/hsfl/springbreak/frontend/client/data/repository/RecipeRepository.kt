@@ -11,7 +11,7 @@ import web.file.File
 interface RecipeRepository {
     suspend fun createRecipe(recipe: Recipe.Create): Flow<DataResponse<Recipe>>
     suspend fun updateRecipe(recipe: Recipe.Update): Flow<DataResponse<Recipe>>
-    suspend fun deleteRecipe(recipeId: Long): Flow<DataResponse<Recipe>>
+    suspend fun deleteRecipe(recipeId: Int): Flow<DataResponse<Recipe>>
     suspend fun uploadImage(recipeId: Int, recipeImage: File): Flow<DataResponse<String>>
     suspend fun getAllRecipes(): Flow<DataResponse<List<Recipe>>>
     suspend fun getRecipeById(recipeId: Int): Flow<DataResponse<Recipe>>
@@ -37,7 +37,7 @@ class RecipeRepositoryImpl(private val client: Client) : RecipeRepository {
         }
     }
 
-    override suspend fun deleteRecipe(recipeId: Long): Flow<DataResponse<Recipe>> = flow {
+    override suspend fun deleteRecipe(recipeId: Int): Flow<DataResponse<Recipe>> = flow {
         repositoryHelper {
             val response: Recipe.Response = client.deleteRecipe(recipeId)
             APIResponse.fromResponse(response.error, response.data, response.success)

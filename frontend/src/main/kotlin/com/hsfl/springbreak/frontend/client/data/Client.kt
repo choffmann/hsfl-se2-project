@@ -28,7 +28,7 @@ interface ApiClient {
     suspend fun getAllRecipes(): Recipe.ResponseList
     suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response
     suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response
-    suspend fun deleteRecipe(recipeId: Long): Recipe.Response
+    suspend fun deleteRecipe(recipeId: Int): Recipe.Response
     suspend fun updateRecipeImage(recipeId: Int, recipeImage: File): Recipe.ImageResponse
     suspend fun getRecipeById(recipeId: Int): Recipe.Response
     suspend fun getRecipeByPopularity(): Recipe.ResponseList
@@ -125,8 +125,8 @@ class Client : ApiClient {
         }.body()
     }
 
-    override suspend fun deleteRecipe(recipeId: Long): Recipe.Response {
-        return client.delete(urlString = "$BASE_URL/recipes$recipeId").body()
+    override suspend fun deleteRecipe(recipeId: Int): Recipe.Response {
+        return client.delete(urlString = "$BASE_URL/recipes?rId=$recipeId").body()
     }
 
     override suspend fun updateRecipeImage(recipeId: Int, recipeImage: File): dynamic {

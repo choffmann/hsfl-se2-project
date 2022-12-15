@@ -35,7 +35,7 @@ class CreateRecipeDataVM(
     private val _recipeDifficulty = MutableStateFlow(FormTextFieldState("", required = true))
     val recipeDifficulty: StateFlow<FormTextFieldState<String>> = _recipeDifficulty
 
-    private val _recipeCategory = MutableStateFlow(FormTextFieldState(""))
+    private val _recipeCategory = MutableStateFlow(FormTextFieldState("", required = true))
     val recipeCategory: StateFlow<FormTextFieldState<String>> = _recipeCategory
 
     private val _validateInputs = MutableStateFlow(true)
@@ -92,6 +92,7 @@ class CreateRecipeDataVM(
                 fetchCategories()
                 fetchDifficulties()
             }
+
             LifecycleEvent.OnUnMount -> clearStates()
         }
     }
@@ -119,7 +120,7 @@ class CreateRecipeDataVM(
     private fun clearStates() {
         _recipeName.value = FormTextFieldState("", required = true)
         _recipeDifficulty.value = FormTextFieldState("", required = true)
-        _recipeCategory.value = FormTextFieldState("")
+        _recipeCategory.value = FormTextFieldState("", required = true)
         _recipePrice.value = FormTextFieldState(0.0)
         _recipeDuration.value = FormTextFieldState(0)
         _recipeShortDesc.value = FormTextFieldState("")
@@ -129,13 +130,16 @@ class CreateRecipeDataVM(
     }
 
     private fun validateInput() {
-        if (recipeName.value.value.isEmpty() && recipeDifficulty.value.value.isEmpty()) {
+        if (recipeName.value.value.isEmpty() && recipeDifficulty.value.value.isEmpty() && recipeCategory.value.value.isEmpty()) {
             setTextError(_recipeName, "Rezeptname muss angegeben werden")
             setTextError(_recipeDifficulty, "Schwierigkeitsgrad muss angegeben werden")
+            setTextError(_recipeCategory, "Kategorie muss angegeben werden")
         } else if (recipeName.value.value.isEmpty()) {
             setTextError(_recipeName, "Rezeptname muss angegeben werden")
         } else if (recipeDifficulty.value.value.isEmpty()) {
             setTextError(_recipeDifficulty, "Schwierigkeitsgrad muss angegeben werden")
+        } else if (recipeCategory.value.value.isEmpty()) {
+            setTextError(_recipeCategory, "Kategorie muss angegeben werden")
         } else {
             _validateInputs.value = true
         }

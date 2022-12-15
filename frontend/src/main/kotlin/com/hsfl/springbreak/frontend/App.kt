@@ -11,6 +11,7 @@ import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.Recipe
 import com.hsfl.springbreak.frontend.components.Header
 import com.hsfl.springbreak.frontend.components.notfound.NotFound404
 import com.hsfl.springbreak.frontend.components.recipe.RecipeList
+import com.hsfl.springbreak.frontend.components.recipe.detail.RecipeDetail
 import com.hsfl.springbreak.frontend.components.routes.*
 import com.hsfl.springbreak.frontend.components.snackbar.MessageSnackbar
 import com.hsfl.springbreak.frontend.context.AuthorizedContext
@@ -36,6 +37,8 @@ private val Root = FC<Props> {
     val authorized = authorizedState.authorized.collectAsState()
     val recipeListState = viewModel.recipeList.collectAsState()
     val categoryListState = viewModel.categoryList.collectAsState()
+    // Force rerender Ui from ViewModel
+    viewModel.forceUpdateState.collectAsState()
 
     useEffect(Unit) {
         viewModel.onEvent(LifecycleEvent.OnMount)

@@ -6,6 +6,8 @@ sealed interface RecipeDetailEvent {
     object OnFavorite : RecipeDetailEvent
     object OnUnFavorite : RecipeDetailEvent
     object OnDelete : RecipeDetailEvent
+    object OnDeleteDialogConfirm : RecipeDetailEvent
+    object OnDeleteDialogAbort : RecipeDetailEvent
     object CancelEdit : RecipeDetailEvent
     data class OnScoreChanged(val score: Double) : RecipeDetailEvent
 }

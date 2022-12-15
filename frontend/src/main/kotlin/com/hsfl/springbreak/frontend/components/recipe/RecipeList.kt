@@ -9,6 +9,7 @@ import com.hsfl.springbreak.frontend.components.notfound.EmptyFavorite
 import com.hsfl.springbreak.frontend.components.notfound.EmptyOwnRecipe
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
+import com.hsfl.springbreak.frontend.utils.convertToDate
 import csstype.Display
 import csstype.JustifyContent
 import csstype.number
@@ -21,6 +22,7 @@ import org.kodein.di.instance
 import react.FC
 import react.Props
 import react.useEffect
+import kotlin.js.Date
 
 external interface RecipeListProps : Props {
     var listType: RecipeListType
@@ -70,7 +72,7 @@ val RecipeList = FC<RecipeListProps> { props ->
                     RecipeCard {
                         id = it.recipe.id
                         title = it.recipe.title
-                        createdDate = "Bla"
+                        createdDate = Date(it.recipe.createTime).convertToDate()
                         creator = "${it.recipe.creator.firstName} ${it.recipe.creator.lastName}"
                         imageSrc = it.recipe.image ?: ""
                         shortDescription = it.recipe.shortDescription
@@ -83,6 +85,7 @@ val RecipeList = FC<RecipeListProps> { props ->
                         }
                         isMyRecipe = it.isMyRecipe
                         isFavorite = it.isFavorite
+                        score = it.recipe.score
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.components.routes.create
+package com.hsfl.springbreak.frontend.components.recipe.create
 
 import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsDialogEvent

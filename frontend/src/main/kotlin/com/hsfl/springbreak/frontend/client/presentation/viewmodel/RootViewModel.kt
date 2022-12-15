@@ -30,6 +30,9 @@ class RootViewModel(
     private val _categoryList = MutableStateFlow<MutableList<Category>>(mutableListOf())
     val categoryList: StateFlow<List<Category>> = _categoryList
 
+    private val _forceUpdateState = MutableStateFlow(0)
+    val forceUpdateState: StateFlow<Int> = _forceUpdateState
+
     fun onEvent(event: RootEvent) {
         when (event) {
             LifecycleEvent.OnMount -> {
@@ -39,7 +42,13 @@ class RootViewModel(
             }
             LifecycleEvent.OnUnMount -> clearStates()
             is RootEvent.OnNewRecipe -> _recipeList.value.add(event.recipe)
+            is RootEvent.OnDeleteRecipe -> _recipeList.value.remove(event.recipe)
         }
+        forceUpdate()
+    }
+
+    private fun forceUpdate() {
+        _forceUpdateState.value = forceUpdateState.value + 1
     }
 
     private fun clearStates() {

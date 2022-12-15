@@ -9,9 +9,11 @@ import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.MessageViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.RootViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.SnackbarEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RootEvent
 import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -103,11 +105,16 @@ class RecipeDetailViewModel(
     private val _recipe = MutableStateFlow(emptyRecipe)
     val recipe: StateFlow<Recipe> = _recipe
 
+    private val _openDeleteDialog = MutableStateFlow(false)
+    val openDeleteDialog: StateFlow<Boolean> = _openDeleteDialog
+
     fun onEvent(event: RecipeDetailEvent) {
         when (event) {
             LifecycleEvent.OnMount -> {}
             LifecycleEvent.OnUnMount -> clearStates()
-            RecipeDetailEvent.OnDelete -> TODO()
+            RecipeDetailEvent.OnDelete -> openDeleteDialog()
+            RecipeDetailEvent.OnDeleteDialogAbort -> closeDeleteDialog()
+            RecipeDetailEvent.OnDeleteDialogConfirm -> deleteRecipe()
             RecipeDetailEvent.OnEdit -> _editMode.value = true
             RecipeDetailEvent.CancelEdit -> _editMode.value = false
             RecipeDetailEvent.OnFavorite -> onFavorite()
@@ -123,6 +130,31 @@ class RecipeDetailViewModel(
                 else UiEventState.onEvent(UiEvent.ShowMessage("Bitte melde dich an um dieses Rezept zu bewerten"))
             }
         }
+    }
+
+    private fun openDeleteDialog() {
+        _openDeleteDialog.value = true
+    }
+
+    private fun closeDeleteDialog() {
+        _openDeleteDialog.value = false
+    }
+
+    private fun deleteRecipe() = scope.launch {
+        recipeRepository.deleteRecipe(recipe.value.id).collectLatest { response ->
+            response.handleDataResponse<Recipe>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich gelöscht"))
+                    closeDeleteDialog()
+                    deleteRecipeInRouter(it)
+                }
+            )
+        }
+    }
+
+    private fun deleteRecipeInRouter(recipe: Recipe) {
+        val rootViewModel: RootViewModel by di.instance()
+        rootViewModel.onEvent(RootEvent.OnDeleteRecipe(recipe))
     }
 
     private fun sendRating(stars: Double) = scope.launch {
@@ -141,6 +173,7 @@ class RecipeDetailViewModel(
         _editMode.value = false
         _isMyRecipe.value = false
         _recipe.value = emptyRecipe
+        _openDeleteDialog.value = true
     }
 
     private fun fetchRecipe(recipeId: Int) = scope.launch {

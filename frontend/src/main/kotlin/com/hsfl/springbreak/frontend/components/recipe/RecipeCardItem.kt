@@ -100,7 +100,7 @@ val RecipeCardItem = FC<RecipeCardItemProps> { props ->
             disableSpacing = true
             IconButton {
                 onClick = { props.onFavoriteClick(props.id) }
-                disabled = props.isMyRecipe && !props.isFavorite
+                //disabled = props.isMyRecipe && !props.isFavorite
                 Tooltip {
                     title = Typography.create {
                         if (props.isFavorite) +"Aus Favoriten entfernen"

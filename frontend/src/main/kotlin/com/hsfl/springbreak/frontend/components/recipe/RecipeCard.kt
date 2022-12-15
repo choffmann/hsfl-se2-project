@@ -19,6 +19,7 @@ val RecipeCard = FC<RecipeCardItemProps> { props ->
         cost = props.cost
         duration = props.duration
         difficulty = props.difficulty
+        score = props.score
         onClick = {
             navigator("/recipe/$it")
         }

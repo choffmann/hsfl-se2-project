@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import mui.material.*
 import react.useEffect
 import react.useState
+import kotlin.js.Date
 
 // Add color property to TypographyProps
 inline var TypographyProps.color: String
@@ -55,4 +56,25 @@ fun <T> StateFlow<T>.collectAsState(): T {
         }
     }
     return state
+}
+
+fun Date.convertToDate(): String {
+    val month = when (this.getMonth()) {
+        0 -> "Januar"
+        1 -> "Februar"
+        2 -> "März"
+        3 -> "April"
+        4 -> "Mai"
+        5 -> "Juni"
+        6 -> "Juli"
+        7 -> "August"
+        8 -> "September"
+        9 -> "Oktober"
+        10 -> "November"
+        11 -> "Dezember"
+        else -> {
+            ""
+        }
+    }
+    return "$month ${this.getDate()}, ${this.getFullYear()}"
 }

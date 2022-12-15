@@ -8,12 +8,14 @@ import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserStateEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.ProfileEvent
+import com.hsfl.springbreak.frontend.di.di
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.kodein.di.instance
 import web.file.File
 import web.storage.localStorage
 
@@ -43,8 +45,7 @@ class ProfileViewModel(
     private val _profileImage = MutableStateFlow("")
     val profileImage: StateFlow<String> = _profileImage
 
-    private val _selectedProfileImage = MutableStateFlow<File?>(null)
-    val selectedProfileImage: StateFlow<File?> = _selectedProfileImage
+    private val selectedProfileImage = MutableStateFlow<File?>(null)
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
@@ -53,13 +54,17 @@ class ProfileViewModel(
             is ProfileEvent.EmailChanged -> _emailState.value = event.value
             is ProfileEvent.PasswordChanged -> _passwordState.value = event.value
             is ProfileEvent.ConfirmedPasswordChanged -> _confirmedPasswordState.value = event.value
-            is ProfileEvent.ProfileImageChanged -> _selectedProfileImage.value = event.file
+            is ProfileEvent.ProfileImageChanged -> selectedProfileImage.value = event.file
             is ProfileEvent.OnAbort -> exitEditMode()
             is ProfileEvent.OnEdit -> enterEditMode()
             is ProfileEvent.OnSave -> if (validateConfirmedPassword()) saveEditValues()
             LifecycleEvent.OnMount -> setFlowsToUser()
-            LifecycleEvent.OnUnMount -> {}
+            LifecycleEvent.OnUnMount -> clearStates()
         }
+    }
+
+    private fun clearStates() {
+        _editMode.value = false
     }
 
     private fun setFlowsToUser() = MainScope().launch {
@@ -94,23 +99,35 @@ class ProfileViewModel(
                 id = userState.userState.value.id,
                 firstName = firstNameState.value,
                 lastName = lastNameState.value,
-                password = if(passwordState.value.isNotEmpty()) passwordState.value else null
+                password = passwordState.value.ifEmpty { null }
             )
         ).collectLatest { response ->
             response.handleDataResponse<User>(
-                onSuccess = {
-                    UiEventState.onEvent(UiEvent.Idle)
-                    savetoUserState(it)
-                    updateLocalStorage(it)
+                onSuccess = { user ->
+                    savetoUserState(user)
+                    updateLocalStorage(user)
                     exitEditMode()
-                    showMessage("Dein Profil wurde erfolgreich aktualisiert")
+                    selectedProfileImage.value?.let {
+                        uploadProfileImage(user, it)
+                    } ?: UiEventState.onEvent(UiEvent.ShowMessage("Dein Profil wurde erfolgreich aktualisiert"))
                 }
             )
         }
     }
 
-    private fun showMessage(msg: String) {
-        MessageViewModel.onEvent(SnackbarEvent.Show(msg))
+    private fun uploadProfileImage(user: User, profileImage: File) = scope.launch {
+        userRepository.uploadProfileImage(user.id, profileImage).collectLatest { response ->
+            response.handleDataResponse<String>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.ShowMessage("Dein Account wurde erfolgreich registriert"))
+                    val userState: UserState by di.instance()
+                    localStorage.setItem("userImage", it)
+                    user.image = it
+                    _profileImage.value = it
+                    userState.onEvent(UserStateEvent.SetUser(user))
+                }
+            )
+        }
     }
 
     private fun savetoUserState(user: User) {

@@ -1,4 +1,4 @@
-package com.hsfl.springbreak.frontend.components.routes.create
+package com.hsfl.springbreak.frontend.components.recipe.create
 
 import mui.material.*
 import mui.material.styles.TypographyVariant
