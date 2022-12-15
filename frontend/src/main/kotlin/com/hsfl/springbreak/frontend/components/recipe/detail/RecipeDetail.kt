@@ -28,7 +28,9 @@ val RecipeDetail = FC<RecipeDetailProps> { props ->
     if (editModeState) {
         RecipeDetailEdit {
             recipe = recipeState
-            onSave = {}
+            onSave = { recipe, file ->
+                viewModel.onEvent(RecipeDetailEvent.OnSaveEdit(recipe, file))
+            }
             onCancel = {
                 viewModel.onEvent(RecipeDetailEvent.CancelEdit)
             }

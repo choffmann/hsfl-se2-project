@@ -1,8 +1,10 @@
 package com.hsfl.springbreak.frontend.components.recipe.create
 
+import com.hsfl.springbreak.frontend.client.data.model.Ingredient
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.IngredientsTableEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableRow
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.IngredientsTableVM
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.RecipeIngredient
 import com.hsfl.springbreak.frontend.di.di
 import com.hsfl.springbreak.frontend.utils.collectAsState
 import com.hsfl.springbreak.frontend.utils.color
@@ -10,24 +12,36 @@ import csstype.Color
 import csstype.Display
 import csstype.JustifyContent
 import csstype.px
+import mui.icons.material.Add
 import mui.icons.material.Delete
 import mui.icons.material.Edit
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import org.kodein.di.instance
-import react.FC
-import react.Props
-import react.create
+import react.*
 import react.dom.html.TdAlign
 
+external interface IngredientsTableProps : Props {
+    var editMode: Boolean
+    var ingredientsList: List<Ingredient>
+    var onNewIngredient: () -> Unit
+}
 
-val IngredientsTable = FC<Props> {
+val IngredientsTable = FC<IngredientsTableProps> { props ->
     val viewModel: IngredientsTableVM by di.instance()
     val selectedIngredients = viewModel.selectedIngredients.collectAsState()
     val ingredientsList = viewModel.ingredientsList.collectAsState()
     // TODO: this is called to update ui when list is updated...
     viewModel.randomState.collectAsState()
+
+    useEffect(Unit) {
+        if (props.editMode) {
+            viewModel.onEvent(IngredientsTableEvent.OnNewData(props.ingredientsList.map {
+                RecipeIngredient(name = it.name, unit = it.unit, amount = it.amount)
+            }))
+        }
+    }
 
     TableContainer {
         Toolbar {
@@ -45,7 +59,7 @@ val IngredientsTable = FC<Props> {
                     +"${selectedIngredients.size} ausgewählt"
                 }
                 Box {
-                    if(selectedIngredients.size == 1) Tooltip {
+                    if (selectedIngredients.size == 1) Tooltip {
                         title = Typography.create { +"Bearbeiten" }
                         IconButton {
                             onClick = {
@@ -68,6 +82,15 @@ val IngredientsTable = FC<Props> {
                 Typography {
                     variant = TypographyVariant.h6
                     +"Zutatenliste"
+                }
+                if (props.editMode) {
+                    Tooltip {
+                        title = ReactNode("Zutat hinzufügen")
+                        IconButton {
+                            onClick = { props.onNewIngredient() }
+                            Add()
+                        }
+                    }
                 }
             }
         }

@@ -119,7 +119,7 @@ class Client : ApiClient {
     }
 
     override suspend fun updateRecipe(recipe: Recipe.Update): Recipe.Response {
-        return client.patch(urlString = "$BASE_URL/recipes") {
+        return client.put(urlString = "$BASE_URL/recipes") {
             contentType(ContentType.Application.Json)
             setBody(recipe)
         }.body()

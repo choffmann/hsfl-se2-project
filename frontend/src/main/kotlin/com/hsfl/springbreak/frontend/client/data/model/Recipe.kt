@@ -1,5 +1,6 @@
 package com.hsfl.springbreak.frontend.client.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -49,15 +50,15 @@ data class Recipe(
 
     @Serializable
     data class Update(
-        val id: Long,
+        @SerialName("recipeId") val id: Int,
         val title: String? = null,
         val shortDescription: String? = null,
         val price: Double? = null,
         val duration: Double? = null,
-        val difficultyId: Long? = null,
-        val categoryId: Long? = null,
+        val difficultyId: Int? = null,
+        val categoryId: Int? = null,
         val longDescription: String? = null,
-        val ingredients: List<Ingredient>? = null
+        val ingredients: List<Ingredient.Create>? = null
     )
 
     @Serializable

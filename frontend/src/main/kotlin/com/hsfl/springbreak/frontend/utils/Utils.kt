@@ -50,9 +50,10 @@ fun <T> StateFlow<T>.collectAsState(): T {
     val (state, setStat) = useState(this.value)
     this.let { flow ->
         useEffect(Unit) {
-            MainScope().launch {
+            val job = MainScope().launch {
                 flow.collectLatest { setStat(it) }
             }
+            cleanup { job.cancel() }
         }
     }
     return state

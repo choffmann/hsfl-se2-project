@@ -8,6 +8,7 @@ import com.hsfl.springbreak.frontend.client.presentation.state.UserState
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.*
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.RecipeListViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.create.*
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailEditViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail.RecipeDetailViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list.CategoryListViewModel
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.list.FavoritesListViewModel
@@ -46,6 +47,7 @@ val di = DI {
     bindSingleton { FavoritesListViewModel(instance(), instance()) }
     bindSingleton { ProfileRecipeListTableVM(instance(), instance()) }
     bindSingleton { RecipeListViewModel(instance(), instance(), instance(), instance(), instance()) }
+    bindSingleton { RecipeDetailEditViewModel(instance(), instance()) }
 
     // States
     bindSingleton { AuthState() }

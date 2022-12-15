@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
+import web.file.File
 
 class RecipeDetailViewModel(
     private val recipeRepository: RecipeRepository,
@@ -31,7 +32,7 @@ class RecipeDetailViewModel(
     private val authState: AuthState,
     private val scope: CoroutineScope = MainScope()
 ) {
-    /*private val testRecipe = Recipe(
+    private val testRecipe = Recipe(
         id = 1,
         title = "Chicken Tikka Masala",
         creator = User(
@@ -66,10 +67,11 @@ class RecipeDetailViewModel(
             Ingredient(id = 5, name = "Naturjoghurt", amount = 200, unit = "g"),
         ),
         longDescription = "1. Knoblauch und Ingwer mit dem feinsten Aufsatz der Käsereibe reiben und in eine Schüssel geben. Die Chilis so fein wie möglich schneiden und mit dem Knoblauch und Ingwer mischen. Einen guten Schuss Olivenöl in einer Pfanne erhitzen und die Senfsaat hinengeben. Sobald sie zu platzen beginnen, zusammen mit Cumin, Paprikapulver, dem gemahlenen Koriander und 2 El Garam Masala zur Knoblauch-Ingwer-Mischung geben. Die Hälfte der Mischung mit dem Joghurt vermengen, mit den Putenstücken in eine Schüssel geben, umrühren und ca.eine halbe Stunde marinieren.\n\n2. Butter schmelzen, Zwiebeln und die übrige Hälfte der Gewürzmischung dazugeben, ca. 15 min. köcheln lassen ohne es zu sehr braun werden zu lassen- es sollte angenehm riechen! Tomatenmark, die gemahlenen Nüsse, einen halben Liter Wasser und einen halben Tl Salz dazugeben. Gut umrühren und einige Minuten köcheln lassen bis die Soße reduziert hat und leicht dick geworden ist und zur Seite stellen.\n\n3. Die marinierten Putenstücke in eine heiße Pfanne geben und anbraten.\n\n4. Die Soße erhitzen und Crème Double und den anderen El Garam Masala hinzugeben. Sobald es zu kochen beginnt, Herd abschalten und die gebratenen Putenstücke dazugeben. Gegebenenfalls nachwürzen und mit gehacktem Koriander und Limettensaft servieren. Dazu passt Basmatireis.",
-        views = 120
-    )*/
+        views = 120,
+        score = 2.5
+    )
 
-    val emptyRecipe = Recipe(
+    private val emptyRecipe = Recipe(
         id = -1,
         title = "",
         creator = User(
@@ -96,13 +98,13 @@ class RecipeDetailViewModel(
     private val _editMode = MutableStateFlow(false)
     val editMode: StateFlow<Boolean> = _editMode
 
-    private val _isMyRecipe = MutableStateFlow(false)
+    private val _isMyRecipe = MutableStateFlow(true)
     val isMyRecipe: StateFlow<Boolean> = _isMyRecipe
 
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> = _isFavorite
 
-    private val _recipe = MutableStateFlow(emptyRecipe)
+    private val _recipe = MutableStateFlow(testRecipe)
     val recipe: StateFlow<Recipe> = _recipe
 
     private val _openDeleteDialog = MutableStateFlow(false)
@@ -115,10 +117,9 @@ class RecipeDetailViewModel(
             RecipeDetailEvent.OnDelete -> openDeleteDialog()
             RecipeDetailEvent.OnDeleteDialogAbort -> closeDeleteDialog()
             RecipeDetailEvent.OnDeleteDialogConfirm -> deleteRecipe()
-            RecipeDetailEvent.OnEdit -> _editMode.value = true
-            RecipeDetailEvent.CancelEdit -> _editMode.value = false
+            RecipeDetailEvent.OnEdit -> enterEditMode()
+            RecipeDetailEvent.CancelEdit -> exitEditMode()
             RecipeDetailEvent.OnFavorite -> onFavorite()
-            RecipeDetailEvent.OnUnFavorite -> TODO()
             is RecipeDetailEvent.RecipeId -> {
                 fetchRecipe(event.id)
                 // Only fetch favorite when user is logged in
@@ -129,7 +130,46 @@ class RecipeDetailViewModel(
                 if (authState.authorized.value) sendRating(event.score)
                 else UiEventState.onEvent(UiEvent.ShowMessage("Bitte melde dich an um dieses Rezept zu bewerten"))
             }
+
+            is RecipeDetailEvent.OnSaveEdit -> updateRecipe(event.recipe, event.recipeImage)
         }
+    }
+
+    private fun enterEditMode() {
+        _editMode.value = true
+    }
+
+    private fun exitEditMode() {
+        _editMode.value = false
+    }
+
+    private fun updateRecipe(recipe: Recipe.Update, recipeImage: File?) = scope.launch {
+        recipeRepository.updateRecipe(recipe).collectLatest { response ->
+            response.handleDataResponse<Recipe>(
+                onSuccess = { recipe ->
+                    _recipe.value = recipe
+                    recipeImage?.let { file ->
+                        uploadRecipeImage(recipe.id, file)
+                    } ?: afterRecipeUpdate()
+                }
+            )
+        }
+    }
+
+    private fun uploadRecipeImage(recipeId: Int, recipeImage: File) = scope.launch {
+        recipeRepository.uploadImage(recipeId, recipeImage).collectLatest { response ->
+            response.handleDataResponse<String>(
+                onSuccess = {
+                    _recipe.value = recipe.value.copy(image = it)
+                    afterRecipeUpdate()
+                }
+            )
+        }
+    }
+
+    private fun afterRecipeUpdate() {
+        exitEditMode()
+        UiEventState.onEvent(UiEvent.ShowMessage("Das Rezept wurde erfolgreich aktualisiert"))
     }
 
     private fun openDeleteDialog() {
@@ -173,7 +213,7 @@ class RecipeDetailViewModel(
         _editMode.value = false
         _isMyRecipe.value = false
         _recipe.value = emptyRecipe
-        _openDeleteDialog.value = true
+        _openDeleteDialog.value = false
     }
 
     private fun fetchRecipe(recipeId: Int) = scope.launch {
