@@ -27,52 +27,53 @@ import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.span
 import web.file.File
 
-external interface RecipeDetailProps: Props {
+external interface RecipeDetailProps : Props {
     var recipeId: Int
 }
 
-val RecipeDetail = FC<RecipeDetailProps> {props ->
+val RecipeDetail = FC<RecipeDetailProps> { props ->
     val viewModel: RecipeDetailViewModel by di.instance()
     val recipeState = viewModel.recipe.collectAsState()
     val myRecipeState = viewModel.isMyRecipe.collectAsState()
     val editModeState = viewModel.editMode.collectAsState()
+    val isFavoriteState = viewModel.isFavorite.collectAsState()
 
     useEffect(Unit) {
         viewModel.onEvent(RecipeDetailEvent.RecipeId(props.recipeId))
         cleanup { viewModel.onEvent(LifecycleEvent.OnUnMount) }
     }
 
-    recipeState?.let {
-        if (editModeState) {
-            RecipeDetailEdit {
-                recipe = it
-                onSave = {}
-                onCancel = {
-                    viewModel.onEvent(RecipeDetailEvent.CancelEdit)
-                }
-            }
-        } else {
-            RecipeDetailView {
-                recipe = it
-                isMyRecipe = myRecipeState
-                onFavoriteClick = {}
-                onLikeClick = {}
-                onDislikeClick = {}
-                onEditClick = {
-                    viewModel.onEvent(RecipeDetailEvent.OnEdit)
-                }
-                onDeleteClick = {}
+    if (editModeState) {
+        RecipeDetailEdit {
+            recipe = recipeState
+            onSave = {}
+            onCancel = {
+                viewModel.onEvent(RecipeDetailEvent.CancelEdit)
             }
         }
+    } else {
+        RecipeDetailView {
+            recipe = recipeState
+            isMyRecipe = myRecipeState
+            isFavorite = isFavoriteState
+            onFavoriteClick = {
+                viewModel.onEvent(RecipeDetailEvent.OnFavorite)
+            }
+            onLikeClick = {}
+            onDislikeClick = {}
+            onEditClick = {
+                viewModel.onEvent(RecipeDetailEvent.OnEdit)
+            }
+            onDeleteClick = {}
+        }
     }
-
 
 
 }
 
 private external interface RecipeDetailEditProps : Props {
     var recipe: Recipe
-    var onProfileImageChanged: (File) -> Unit
+    var onRecipeImageChanged: (File) -> Unit
     var onCancel: () -> Unit
     var onSave: () -> Unit
 }
@@ -285,14 +286,14 @@ private val RecipeActionEdit = FC<RecipeActionEditProps> { props ->
     }
 }
 
-private external interface RecipeIngredientTableEditProps: Props {
+private external interface RecipeIngredientTableEditProps : Props {
     var recipe: Recipe
     var selectedIngredients: List<Ingredient>
 }
 
 private val RecipeIngredientTableEdit = FC<RecipeIngredientTableEditProps> { props ->
     TableContainer {
-        if(props.selectedIngredients.isNotEmpty()) {
+        if (props.selectedIngredients.isNotEmpty()) {
             Toolbar {
                 sx {
                     display = Display.flex
@@ -549,42 +550,29 @@ private val RecipeAction = FC<RecipeActionProps> { props ->
             value = 2.5
             precision = 0.5
         }
-        /*Tooltip {
-            title = ReactNode("Bewerte dieses Rezept")
-            IconButton {
-                onClick = { props.onFavoriteClick() }
-                Star {
-                    color = SvgIconColor.inherit
+        if (props.isFavorite) {
+            Tooltip {
+                title = ReactNode("Favorite entfernen")
+                IconButton {
+                    onClick = { props.onFavoriteClick() }
+                    Favorite {
+                        sx {
+                            color = Color("red")
+                        }
+                    }
                 }
             }
-        }*/
-        Tooltip {
-            title = ReactNode("Als Favorite speichern")
-            IconButton {
-                onClick = { props.onFavoriteClick() }
-                Favorite {
-                    color = SvgIconColor.inherit
-                }
-            }
-        }
-        /*Tooltip {
-            title = ReactNode("Das Rezept gefällt mir")
-            IconButton {
-                onClick = { props.onLikeClick() }
-                ThumbUp {
-                    color = SvgIconColor.inherit
+        } else {
+            Tooltip {
+                title = ReactNode("Als Favorite speichern")
+                IconButton {
+                    onClick = { props.onFavoriteClick() }
+                    Favorite {
+                        color = SvgIconColor.inherit
+                    }
                 }
             }
         }
-        Tooltip {
-            title = ReactNode("Das Rezept gefällt mir nicht")
-            IconButton {
-                onClick = { props.onDislikeClick() }
-                ThumbDown {
-                    color = SvgIconColor.inherit
-                }
-            }
-        }*/
 
         if (props.myRecipe) {
             Tooltip {

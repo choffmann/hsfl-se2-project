@@ -1,10 +1,14 @@
 package com.hsfl.springbreak.frontend.client.presentation.viewmodel.recipe.detail
 
 import com.hsfl.springbreak.frontend.client.data.model.*
+import com.hsfl.springbreak.frontend.client.data.repository.FavoritesRepository
 import com.hsfl.springbreak.frontend.client.data.repository.RecipeRepository
+import com.hsfl.springbreak.frontend.client.presentation.state.AuthState
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEvent
 import com.hsfl.springbreak.frontend.client.presentation.state.UiEventState
 import com.hsfl.springbreak.frontend.client.presentation.state.UserState
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.MessageViewModel
+import com.hsfl.springbreak.frontend.client.presentation.viewmodel.SnackbarEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.LifecycleEvent
 import com.hsfl.springbreak.frontend.client.presentation.viewmodel.events.RecipeDetailEvent
 import com.hsfl.springbreak.frontend.di.di
@@ -18,6 +22,9 @@ import org.kodein.di.instance
 
 class RecipeDetailViewModel(
     private val recipeRepository: RecipeRepository,
+    private val favoritesRepository: FavoritesRepository,
+    private val userState: UserState,
+    private val authState: AuthState,
     private val scope: CoroutineScope = MainScope()
 ) {
     /*private val testRecipe = Recipe(
@@ -58,14 +65,41 @@ class RecipeDetailViewModel(
         views = 120
     )*/
 
+    val emptyRecipe = Recipe(
+        id = -1,
+        title = "",
+        creator = User(
+            id = -1,
+            firstName = "",
+            lastName = "",
+            email = "",
+            password = "",
+            image = ""
+        ),
+        price = 0.0,
+        createTime = "",
+        image = null,
+        shortDescription = "",
+        duration = 0.0,
+        difficulty = Difficulty(id = -1, name = ""),
+        category = Category(id = -1, name = ""),
+        ingredients = listOf(),
+        longDescription = "",
+        views = 0,
+        score = 0.0
+    )
+
     private val _editMode = MutableStateFlow(false)
     val editMode: StateFlow<Boolean> = _editMode
 
     private val _isMyRecipe = MutableStateFlow(false)
     val isMyRecipe: StateFlow<Boolean> = _isMyRecipe
 
-    private val _recipe = MutableStateFlow<Recipe?>(null)
-    val recipe: StateFlow<Recipe?> = _recipe
+    private val _isFavorite = MutableStateFlow(false)
+    val isFavorite: StateFlow<Boolean> = _isFavorite
+
+    private val _recipe = MutableStateFlow<Recipe>(emptyRecipe)
+    val recipe: StateFlow<Recipe> = _recipe
 
     fun onEvent(event: RecipeDetailEvent) {
         when (event) {
@@ -74,10 +108,12 @@ class RecipeDetailViewModel(
             RecipeDetailEvent.OnDelete -> TODO()
             RecipeDetailEvent.OnEdit -> _editMode.value = true
             RecipeDetailEvent.CancelEdit -> _editMode.value = false
-            RecipeDetailEvent.OnFavorite -> TODO()
+            RecipeDetailEvent.OnFavorite -> onFavorite()
             RecipeDetailEvent.OnUnFavorite -> TODO()
             is RecipeDetailEvent.RecipeId -> {
                 fetchRecipe(event.id)
+                // Only fetch favorite when user is logged in
+                if (authState.authorized.value) fetchIsFavorite()
             }
         }
     }
@@ -85,7 +121,7 @@ class RecipeDetailViewModel(
     private fun clearStates() {
         _editMode.value = false
         _isMyRecipe.value = false
-        _recipe.value = null
+        _recipe.value = emptyRecipe
     }
 
     private fun fetchRecipe(recipeId: Int) = scope.launch {
@@ -98,11 +134,54 @@ class RecipeDetailViewModel(
                 }
             )
         }
+    }
 
+    private fun fetchIsFavorite() = scope.launch {
+        favoritesRepository.getFavorites(userState.userState.value.id).collectLatest { response ->
+            response.handleDataResponse<List<Recipe>>(
+                onSuccess = { list ->
+                    _isFavorite.value = list.find { it.id == recipe.value.id } != null
+                }
+            )
+        }
     }
 
     private fun checkIsMyRecipe(recipe: Recipe) {
         val userState: UserState by di.instance()
         _isMyRecipe.value = userState.userState.value.id == recipe.creator.id
+    }
+
+    private fun onFavorite() = scope.launch {
+        if (!authState.authorized.value) {
+            UiEventState.onEvent(UiEvent.ShowMessage("Du musst dich zuerst anmelden um ein Rezept zu speichern."))
+        } else if (isFavorite.value) {
+            deleteFavorite()
+        } else {
+            setFavorite()
+        }
+    }
+
+    private fun deleteFavorite() = scope.launch {
+        favoritesRepository.deleteFavorite(userState.userState.value.id, recipe.value.id).collectLatest { response ->
+            response.handleDataResponse<Recipe>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
+                    _isFavorite.value = false
+                    MessageViewModel.onEvent(SnackbarEvent.Show("Das Rezept wurde von deiner Favoritenliste entfernt."))
+                }
+            )
+        }
+    }
+
+    private fun setFavorite() = scope.launch {
+        favoritesRepository.setFavorite(userState.userState.value.id, recipe.value.id).collectLatest { response ->
+            response.handleDataResponse<Recipe>(
+                onSuccess = {
+                    UiEventState.onEvent(UiEvent.Idle)
+                    _isFavorite.value = true
+                    MessageViewModel.onEvent(SnackbarEvent.Show("Das Rezept wurde zu deinen Favoriten hinzugefügt."))
+                }
+            )
+        }
     }
 }

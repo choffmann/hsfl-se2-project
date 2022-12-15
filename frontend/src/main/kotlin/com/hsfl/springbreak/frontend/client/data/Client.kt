@@ -105,7 +105,9 @@ class Client : ApiClient {
     }
 
     override suspend fun getAllRecipes(): Recipe.ResponseList {
-        return client.get(urlString = "$BASE_URL/recipes").body()
+        return client.submitForm(url = "$BASE_URL/recipes", formParameters = Parameters.build {
+            append("all", "true")
+        }, encodeInQuery = true).body()
     }
 
     override suspend fun createRecipe(recipe: Recipe.Create): Recipe.Response {
