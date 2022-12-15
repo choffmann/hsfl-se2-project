@@ -73,6 +73,7 @@ class RecipeTest {
        recipeId = controller.createRecipe(recipe[0]).data?.id ?: 0;
         var recipeId2 = controller.createRecipe(recipe[1]).data?.id ?: 0;
     }
+
     @Test
     fun createRecipe() {
         val apiResponse = service.createRecipe(recipe[0])
