@@ -49,3 +49,16 @@ create user spring with password 'super_mega_secret_password';
 grant all on schema public to spring;
 alter user spring set search_path to public;
 ```
+
+### Datenbank Dump
+Ein Dump mit Demo Datensätzen steht unter dem Ordner `dump/db.dump` bereit
+
+## Backend starten
+Wenn die Datenbank mit Docker gestartet ist, kann die App mit folgenden Shell Script gebaut und ausgeführt werden
+```bash
+./gradlew frontend:build --stacktrace
+rm -rf backend/src/main/resources/static/
+cp -r frontend/build/distributions backend/src/main/resources/static
+./gradlew backend:build --stacktrace
+java -jar backend/build/libs/backend-0.0.1-SNAPSHOT.jar
+```
