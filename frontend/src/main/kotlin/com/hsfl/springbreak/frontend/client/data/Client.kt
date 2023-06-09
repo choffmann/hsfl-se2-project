@@ -51,7 +51,7 @@ class Client : ApiClient {
     }
 
     companion object {
-        const val BASE_URL = "http://cloud.jgdperl.com:8080/api"
+        const val BASE_URL = "http://localhost:8080/api"
     }
 
     override suspend fun login(user: User.Login): User.Response {
