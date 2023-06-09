@@ -47,8 +47,6 @@ val Header = FC<HeaderProps> { props ->
                         color = Color.currentcolor
                     }
                     IconButton {
-                        //component = link
-                        //to = "/haha"
                         size = Size.large
                         edge = IconButtonEdge.start
                         color = IconButtonColor.inherit
@@ -63,7 +61,7 @@ val Header = FC<HeaderProps> { props ->
                     component = div
                     noWrap = true
                     sx { flexGrow = number(1.0) }
-                    +"Studentenküche ..."
+                    +"Studentenküche"
                 }
                 // If authorized, show login button
                 if (!isAuthorized) {
